@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,4 +17,7 @@ Route::get('/', function () {
 });
 Route::get('/home', function () {
     return view('layout.master');
+});
+Route::get('/user', function () {
+    return view('user.index');
 });
