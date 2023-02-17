@@ -21,3 +21,6 @@ Route::get('/home', function () {
 Route::get('/user', function () {
     return view('user.index');
 });
+Route::get('/cong-van', function () {
+    return view('document.index');
+});

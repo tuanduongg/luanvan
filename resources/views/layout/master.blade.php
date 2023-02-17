@@ -31,19 +31,33 @@
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('dist/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-
+    
     <!-- Page CSS -->
 
     <!-- Helpers -->
     <script src="{{ asset('dist/js/helpers.js') }}"></script>
-
+    
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="{{ asset('dist/js/config.js') }}"></script>
+        <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+        <script src="{{ asset('dist/js/config.js') }}"></script>
+        
+        {{-- datatables --}}
+        
+        
+        {{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.2/b-2.3.4/b-html5-2.3.4/fc-4.2.1/fh-3.3.1/r-2.4.0/datatables.min.css"/> --}}
+        <link rel="stylesheet" href="{{ asset('dist/css/buttons.bootstrap5.css') }}" />
+        <link rel="stylesheet" href="{{ asset('dist/css/datatables.bootstrap5.css') }}" />
+        <link rel="stylesheet" href="{{ asset('dist/css/responsive.bootstrap5.css') }}" />
+    
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/dt-1.13.2/b-2.3.4/b-html5-2.3.4/fc-4.2.1/fh-3.3.1/r-2.4.0/datatables.min.css"/> --}}
+    
+    
+    {{-- enddatatables --}}
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.css">
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css"
-        href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.13.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/fh-3.3.1/r-2.4.0/datatables.min.css" />
+        href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.13.2/b-2.3.4/b-colvis-2.3.4/b-html5-2.3.4/fh-3.3.1/r-2.4.0/datatables.min.css" /> --}}
 
 
 </head>
@@ -93,27 +107,32 @@
     <!-- Core JS -->
     <!-- build:js dist/vendor/js/core.js -->
     <script src="{{ asset('dist/libs/jquery/jquery.js') }}"></script>
+    {{-- datables --}}
     <script src="{{ asset('dist/libs/popper/popper.js') }}"></script>
+    <!-- endbuild -->
+    {{--     
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.4/js/dataTables.buttons.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.4/js/buttons.html5.min.js"></script>
+        --}}
+   
+    {{-- <script type="text/javascript"
+        src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.13.2/b-2.3.4/b-html5-2.3.4/fc-4.2.1/fh-3.3.1/r-2.4.0/datatables.min.js">
+    </script> --}}
+
     <script src="{{ asset('dist/js/bootstrap.js') }}"></script>
     <script src="{{ asset('dist/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
-
     <script src="{{ asset('dist/js/menu.js') }}"></script>
-    <!-- endbuild -->
-    {{-- datables --}}
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/fixedcolumns/4.2.1/js/dataTables.fixedColumns.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript"
-        src="https://cdn.datatables.net/v/dt/dt-1.13.2/b-2.3.4/b-html5-2.3.4/fc-4.2.1/fh-3.3.1/r-2.4.0/datatables.min.js">
-    </script>
-
-
-    <!-- Vendors JS -->
-
     <!-- Main JS -->
     <script src="{{ asset('dist/js/main.js') }}"></script>
+
+    <script type="text/javascript" src="{{asset('dist/js/datatables-bootstrap5.js')}}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
 
     <!-- Page JS -->
 
