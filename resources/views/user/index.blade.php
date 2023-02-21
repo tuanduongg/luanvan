@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-6">
+        <div class="col-sm-12">
             <h3>Quản Lý Người Dùng</h3>
         </div>
     </div>
@@ -33,59 +33,6 @@
     <script>
         $(document).ready(function() {
 
-            // var data = [
-            //     [
-            //         "Tiger Nixon",
-            //         "abc",
-            //         "System Architect",
-            //         "Edinburgh",
-            //         "5421",
-            //         "2011/04/25",
-            //         "$3,120",
-            //         ''
-            //     ],
-            //     [
-            //         "Tiger Nixon",
-            //         "abc",
-            //         "System Architect",
-            //         "Edinburgh",
-            //         "5421",
-            //         "2011/04/25",
-            //         "$3,120",
-            //         ''
-            //     ],
-            //     [
-            //         "Tiger Nixon",
-            //         "abc",
-            //         "System Architect",
-            //         "Edinburgh",
-            //         "5421",
-            //         "2011/04/25",
-            //         "$3,120",
-            //         ''
-            //     ],
-            //     [
-            //         "Tiger Nixon",
-            //         "abc",
-            //         "System Architect",
-            //         "Edinburgh",
-            //         "5421",
-            //         "2011/04/25",
-            //         "$3,120",
-            //         ''
-            //     ],
-            //     [
-            //         "Garrett Winters",
-            //         "abc",
-            //         "Director",
-            //         "Edinburgh",
-            //         "8422",
-            //         "2011/07/25",
-            //         "$5,300",
-            //         ''
-            //     ],
-
-            // ]
             var assetsPath = "{{ asset('dist/img/avatars') }}";
             $(function() {
                 'use strict';
@@ -279,7 +226,7 @@
                                         text: '<i class="bx bx-printer me-1" ></i>Print',
                                         className: 'dropdown-item',
                                         exportOptions: {
-                                            columns: [3, 4, 5, 6, 7]
+                                            columns: [1,2,3, 4, 5]
                                         }
                                     },
                                     {
@@ -287,7 +234,7 @@
                                         text: '<i class="bx bx-file me-1" ></i>Csv',
                                         className: 'dropdown-item',
                                         exportOptions: {
-                                            columns: [3, 4, 5, 6, 7]
+                                            columns: [1,2,3, 4, 5]
                                         }
                                     },
                                     {
@@ -295,7 +242,7 @@
                                         text: 'Excel',
                                         className: 'dropdown-item',
                                         exportOptions: {
-                                            columns: [3, 4, 5, 6, 7]
+                                            columns: [1,2,3, 4, 5]
                                         }
                                     },
                                     {
@@ -303,7 +250,7 @@
                                         text: '<i class="bx bxs-file-pdf me-1"></i>Pdf',
                                         className: 'dropdown-item',
                                         exportOptions: {
-                                            columns: [3, 4, 5, 6, 7]
+                                            columns: [1,2,3, 4, 5]
                                         }
                                     },
                                     {
@@ -311,7 +258,7 @@
                                         text: '<i class="bx bx-copy me-1" ></i>Copy',
                                         className: 'dropdown-item',
                                         exportOptions: {
-                                            columns: [3, 4, 5, 6, 7]
+                                            columns: [1,2,3, 4, 5]
                                         }
                                     }
                                 ]

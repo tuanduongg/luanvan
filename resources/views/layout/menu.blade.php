@@ -84,13 +84,18 @@
 
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="layouts-without-menu.html" class="menu-link">
+                    <a href="/cong-van" class="menu-link">
                         <div data-i18n="Công văn đến">Công văn đến</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="layouts-without-navbar.html" class="menu-link">
+                    <a href="#" class="menu-link">
                         <div data-i18n="Công văn đi">Công văn đi</div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/loai-cong-van" class="menu-link">
+                        <div data-i18n="Công văn đi">Loại công văn</div>
                     </a>
                 </li>
 
@@ -105,7 +110,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="#" class="menu-link">
+                    <a href="/luan-van" class="menu-link">
                         <div data-i18n="Luận văn sinh viên">Luận văn sinh viên</div>
                     </a>
                 </li>
@@ -119,12 +124,12 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="auth-login-basic.html" class="menu-link" target="_blank">
+                    <a href="" class="menu-link">
                         <div data-i18n="Basic">Giảng viên</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="auth-register-basic.html" class="menu-link" target="_blank">
+                    <a href="" class="menu-link">
                         <div data-i18n="Basic">Sinh viên</div>
                     </a>
                 </li>
@@ -138,12 +143,12 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="auth-login-basic.html" class="menu-link" target="_blank">
+                    <a href="auth-login-basic.html" class="menu-link">
                         <div data-i18n="Basic">Giảng viên</div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="auth-register-basic.html" class="menu-link" target="_blank">
+                    <a href="/sinh-vien" class="menu-link">
                         <div data-i18n="Basic">Sinh viên</div>
                     </a>
                 </li>

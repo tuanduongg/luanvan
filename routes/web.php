@@ -22,5 +22,17 @@ Route::get('/user', function () {
     return view('user.index');
 });
 Route::get('/cong-van', function () {
-    return view('document.index');
+    return view('official_dispatch.index');
+});
+Route::get('/luan-van', function () {
+    return view('dissertation.index');
+});
+Route::get('/nghien-cuu-khoa-hoc', function () {
+    return view('scientific_research.index');
+});
+Route::get('/sinh-vien', function () {
+    return view('student.index');
+});
+Route::get('/loai-cong-van', function () {
+    return view('dispatch_type.index');
 });
