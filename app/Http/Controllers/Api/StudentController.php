@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Validation\Rule;
+Use App\Traits\ResponseTrait;
 use App\Http\Controllers\Controller;
-use App\Models\DispatchType;
+use App\Models\Student;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use App\Traits\ResponseTrait;
-class DispatchTypeController extends Controller
+
+class StudentController extends Controller
 {
     use ResponseTrait;
 
     private $model;
-    public function __construct(DispatchType $dispatchType)
+    public function __construct(Student $student)
     {
-        $this->model = $dispatchType;
+        $this->model = $student;
     }
     public function getAll() {
         $data = $this->model->all();
@@ -29,8 +30,10 @@ class DispatchTypeController extends Controller
 
     public function store(Request $request) {
         $rules = [
-            'type_code' => 'required|unique:dispatch_types',
-            'type_name' => 'required',
+            'student_code' => 'required|unique:students',
+            'student_name' => 'required',
+            'student_class' => 'required',
+            'student_school_year' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -52,8 +55,10 @@ class DispatchTypeController extends Controller
     }
     public function update(Request $request) {
         $rules = [
-            'type_code' => ['required', Rule::unique('dispatch_types')->ignore($request->get('id'))],
-            'type_name' => ['required'],
+            'student_code' => ['required', Rule::unique('students')->ignore($request->get('id'))],
+            'student_name' => 'required',
+            'student_class' => 'required',
+            'student_school_year' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -62,16 +67,27 @@ class DispatchTypeController extends Controller
             return $this->responseError($validator->errors());
         }
         // dd($request->all());
-        $dispatchType = $this->model->find($request->get('id'));
-        $dispatchType->type_code = $request->get('type_code');
-        $dispatchType->type_name = $request->get('type_name');
-        $dispatchType->save();
+        $student = $this->model->find($request->get('id'));
+        $student->student_code = $request->get('student_code');
+        $student->student_name = $request->get('student_name');
+        $student->student_class = $request->get('student_class');
+        $student->student_school_year = $request->get('student_school_year');
+        $student->save();
         return $this->responseSuccess('','Thay đổi thông tin thành công!');
     }
 
     public function distroy(Request $request) {
-        $dispatchType = $this->model->findOrFail($request->get('id'));
-        $dispatchType->delete();
+        $student = $this->model->findOrFail($request->get('id'));
+        $student->delete();
         return $this->responseSuccess('','Xoá thành công!');
+    }
+    public function filter(Request $request) {
+        $student_school_year = $request->get('student_school_year') ?? '';
+        if(!empty($student_school_year)) {
+            $data = $this->model->where('student_school_year',$request->get('student_school_year'))->get();
+        }else {
+            $data = $this->model->all();
+        }
+        return $this->responseSuccess($data);
     }
 }

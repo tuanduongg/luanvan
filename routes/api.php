@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\DispatchTypeController;
+use App\Http\Controllers\Api\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,5 +30,18 @@ Route::group(
         Route::post('/store', [DispatchTypeController::class, 'store'])->name('api.dispatch-type.store');
         Route::put('/update', [DispatchTypeController::class, 'update'])->name('api.dispatch-type.update');
         Route::post('/distroy', [DispatchTypeController::class, 'distroy'])->name('api.dispatch-type.distroy');
+    }
+);
+Route::group(
+    [
+        'prefix' => 'student'
+    ],
+    function () {
+        Route::get('/get-all', [StudentController::class, 'getAll'])->name('api.student.getAll');
+        Route::get('/find', [StudentController::class, 'find'])->name('api.student.find');
+        Route::post('/store', [StudentController::class, 'store'])->name('api.student.store');
+        Route::put('/update', [StudentController::class, 'update'])->name('api.student.update');
+        Route::post('/distroy', [StudentController::class, 'distroy'])->name('api.student.distroy');
+        Route::get('/filter', [StudentController::class, 'filter'])->name('api.student.filter');
     }
 );

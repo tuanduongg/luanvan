@@ -87,7 +87,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Đóng</button>
                     <button type="button" id="btn-store-dispatch-type" class="btn btn-primary">Tạo mới</button>
-                    <button type="button" id="btn-update-dispatch-type" class="btn btn-primary">Cập nhật</button>
+                    <button type="button" id="btn-update-dispatch-type" style="display: none;" class="btn btn-primary">Cập
+                        nhật</button>
                 </div>
             </div>
         </div>
@@ -101,13 +102,14 @@
 
             //load all data from server to table
             function loadAllData() {
+                $('#btn-update-dispatch-type').hide();
                 $('#table-dispatch-type > tbody').empty();
                 $.ajax({
                     type: "get",
                     url: "{{ route('api.dispatch-type.getAll') }}",
                     data: "json",
                     success: function(response) {
-                        $.each(response, function(index, value) {
+                        $.each(response.data, function(index, value) {
                             $('#table-dispatch-type > tbody').append(`
                             <tr>
                                 <td><span class="badge bg-label-primary me-1">${value.type_code}</span></td>
@@ -140,12 +142,14 @@
             loadAllData();
 
             //handle search
-            $("#input-search").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                $("#table-dispatch-type > tbody > tr").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
+            // $("#input-search").on("keyup", function() {
+            //     var value = $(this).val().toLowerCase();
+            //     $("#table-dispatch-type > tbody > tr").filter(function() {
+            //         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            //     });
+            // });
+
+            handleSearchTable("#input-search","#table-dispatch-type > tbody > tr");
 
             //handle edit dispatch type
             $(document).on('click', '#btn-edit-dispatch-type', function(e) {
@@ -165,8 +169,9 @@
                     },
                     dataType: 'json',
                     success: function(response) {
-                        $('input[name=type_code]').val(response.type_code);
-                        $('input[name=type_name]').val(response.type_name);
+                        console.log(response);
+                        $('input[name=type_code]').val(response.data.type_code);
+                        $('input[name=type_name]').val(response.data.type_name);
                         $('input[name=id]').val(id);
                         $('.modal-title').text('Chỉnh sửa thông tin');
 
@@ -188,28 +193,29 @@
                     data: data,
                     dataType: "json",
                     success: function(response) {
-                        switch (response.status_code) {
-                            case 400:
-                                // $('input[name=type_code]').addClass('is-invalid');
-                                $.each(response.message, function(index, value) {
-                                    $(`input[name=${index}]`).addClass('is-invalid');
-                                    $(`.error-${index}`).text(value[0]);
-                                });
-                                break;
-                            case 200:
-                                let type_code = $('input[name=type_code]').val();
-                                let type_name = $('input[name=type_name]').val();
-                                $('#modal-dispatch-type').modal('hide');
-                                loadAllData();
-                                toastr["success"](response.message, "Thông báo");
-                                break;
+                        let type_code = $('input[name=type_code]').val();
+                        let type_name = $('input[name=type_name]').val();
+                        $('#modal-dispatch-type').modal('hide');
+                        loadAllData();
+                        toastr["success"](response.message, "Thông báo");
+                        // break;
+                        // switch (response.status_code) {
+                        //     case 400:
 
-                            default:
-                                break;
-                        }
+                        //         break;
+                        //     case 200:
+
+                        //     default:
+                        //         break;
+                        // }
                     },
                     error: function(response) {
                         console.error(response);
+                        // $('input[name=type_code]').addClass('is-invalid');
+                        $.each(response.responseJSON.errors, function(index, value) {
+                            $(`input[name=${index}]`).addClass('is-invalid');
+                            $(`.error-${index}`).text(value[0]);
+                        });
                     }
                 });
             });
@@ -238,28 +244,31 @@
                     data: data,
                     dataType: "json",
                     success: function(response) {
-                        switch (response.status_code) {
-                            case 400:
-                                // $('input[name=type_code]').addClass('is-invalid');
-                                $.each(response.message, function(index, value) {
-                                    $(`input[name=${index}]`).addClass('is-invalid');
-                                    $(`.error-${index}`).text(value[0]);
-                                });
-                                break;
-                            case 200:
-                                let type_code = $('input[name=type_code]').val();
-                                let type_name = $('input[name=type_name]').val();
-                                $('#modal-dispatch-type').modal('hide');
-                                loadAllData();
-                                toastr["success"](response.message, "Thông báo");
-                                break;
+                        console.log(response);
+                        // switch (response.status_code) {
+                        // case 400:
+                        //     
+                        //     break;
+                        // case 200:
+                        let type_code = $('input[name=type_code]').val();
+                        let type_name = $('input[name=type_name]').val();
+                        $('#modal-dispatch-type').modal('hide');
+                        loadAllData();
+                        toastr["success"](response.message, "Thông báo");
+                        //     break;
 
-                            default:
-                                break;
-                        }
+                        // default:
+                        //     break;
+                        // }
                     },
                     error: function(response) {
                         console.error(response);
+                        // $('input[name=type_code]').addClass('is-invalid');
+                        $.each(response.responseJSON.errors, function(index, value) {
+                            // console.log(index);
+                            $(`input[name=${index}]`).addClass('is-invalid');
+                            $(`.error-${index}`).text(value[0]);
+                        });
                     }
                 });
             });
@@ -288,21 +297,22 @@
                             },
                             dataType: "json",
                             success: function(response) {
-                                switch (response.status_code) {
-                                    case 400:
-                                        alert('lỗi truy vấn');
-                                    case 200:
+                                console.log(response);
+                                // switch (response.status_code) {
+                                //     case 400:
+                                //         alert('lỗi truy vấn');
+                                //     case 200:
                                         Swal.fire(
                                             'Thông Báo!',
-                                            'Xoá thành công.',
+                                            response.message,
                                             'success'
                                         )
                                         loadAllData();
-                                        break;
+                                //         break;
 
-                                    default:
-                                        break;
-                                }
+                                //     default:
+                                //         break;
+                                // }
                             },
                             error: function(response) {
                                 console.error(response);
