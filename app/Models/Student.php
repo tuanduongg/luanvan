@@ -19,4 +19,9 @@ class Student extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function theses_student()
+    {
+        return $this->belongsTo(ThesesStudent::class);
+    }
 }

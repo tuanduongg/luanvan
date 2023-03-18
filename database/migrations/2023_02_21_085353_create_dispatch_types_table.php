@@ -15,7 +15,7 @@ class CreateDispatchTypesTable extends Migration
     {
         Schema::create('dispatch_types', function (Blueprint $table) {
             $table->id();
-            $table->string('type_code');
+            $table->string('type_code')->unique();
             $table->string('type_name');
             $table->timestamps();
         });

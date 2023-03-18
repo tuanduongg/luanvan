@@ -14,12 +14,12 @@
                 <div class="card-header">
                     <form action="" method="get">
                         <div class="row">
-                            <div class="col-md-4 mb-2">
+                            <div class="col-md-2 mb-2">
                                 <input class="form-control" type="search" value="" placeholder="Tìm kiếm ..."
                                     id="input-search">
                             </div>
 
-                            <div class="col-md-8 text-end">
+                            <div class="col-md-10 text-end">
                                 <div class="btn btn-primary" data-bs-toggle="modal" id="btn-create-dispatch-type"
                                     data-bs-target="#modal-dispatch-type">Thêm mới
                                 </div>

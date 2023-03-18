@@ -19,15 +19,12 @@
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
             <!-- Place this tag where you want the button to render. -->
-
-            <div class="btn-group dropstart  me-5 d-none d-md-block">
-                <div class="dropdown-toggle hide-arrow position-relative" data-bs-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    <i class='bx bxs-bell-ring '></i>
-                    <span
-                        class="flex-shrink-0 position-absolute badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                </div>
-                <ul class="dropdown-menu mt-lg-0 mt-md-5">
+            
+            <div class="btn-group dropstart d-none d-md-block">
+                <button type="button" class="btn p-1" data-bs-toggle="dropdown" aria-haspopup="true">
+                    <i class='bx bxs-bell-ring'><span class="flex-shrink-0  badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span></i> 
+                  </button>
+                <ul class="dropdown-menu mt-3">
                     <li> <a class="dropdown-item" href="javascript:void(0);">Tháng này có 2 người sinh nhật</a> </li>
                     <li> <a class="dropdown-item" href="javascript:void(0);">Tháng này có 2 người sinh nhật</a> </li>
                     <li>
@@ -40,7 +37,7 @@
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <div class="avatar me-2">
-                            <span class="avatar-initial rounded-circle bg-label-secondary">DNT</span>
+                            <span class="avatar-initial rounded-circle bg-label-secondary">{{Auth::user()->format_name ?? '' }}</span>
                         </div>
                     </div>
                 </a>
@@ -51,13 +48,13 @@
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
                                         <div class="avatar me-2">
-                                            <span class="avatar-initial rounded-circle bg-label-secondary">DNT</span>
+                                            <span class="avatar-initial rounded-circle bg-label-secondary">{{Auth::user()->format_name ?? '' }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex-grow-1">
-                                    <span class="fw-semibold d-block">Dương Ngô Tuấn</span>
-                                    <small class="text-muted">Admin</small>
+                                <div class="d-flex align-items-center">
+                                    <span class="fw-semibold d-block">{{Auth::user()->name ?? '' }}</span>
+                                    {{-- <small class="text-muted">Admin</small> --}}
                                 </div>
                             </div>
                         </a>
@@ -92,7 +89,7 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="auth-login-basic.html">
+                        <a class="dropdown-item" href="{{ route('auth.logout') }}">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle">Đăng xuất</span>
                         </a>

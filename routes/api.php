@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\DispatchTypeController;
+use App\Http\Controllers\Api\LecturerController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\ThesesController;
+use App\Models\Theses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,5 +46,32 @@ Route::group(
         Route::put('/update', [StudentController::class, 'update'])->name('api.student.update');
         Route::post('/distroy', [StudentController::class, 'distroy'])->name('api.student.distroy');
         Route::get('/filter', [StudentController::class, 'filter'])->name('api.student.filter');
+        Route::get('/select-two', [StudentController::class, 'selectTwo'])->name('api.student.select2');
+    }
+);
+Route::group(
+    [
+        'prefix' => 'lecturer'
+    ],
+    function () {
+        Route::get('/get-all', [LecturerController::class, 'getAll'])->name('api.lecturer.getAll');
+        Route::get('/find', [LecturerController::class, 'find'])->name('api.lecturer.find');
+        Route::post('/store', [LecturerController::class, 'store'])->name('api.lecturer.store');
+        Route::put('/update', [LecturerController::class, 'update'])->name('api.lecturer.update');
+        Route::post('/distroy', [LecturerController::class, 'distroy'])->name('api.lecturer.distroy');
+        Route::get('/filter', [LecturerController::class, 'filter'])->name('api.lecturer.filter');
+    }
+);
+Route::group(
+    [
+        'prefix' => 'theses'
+    ],
+    function () {
+        Route::get('/get-all', [ThesesController::class, 'getAll'])->name('api.theses.getAll');
+        Route::get('/find', [ThesesController::class, 'find'])->name('api.theses.find');
+        Route::post('/store', [ThesesController::class, 'store'])->name('api.theses.store');
+        Route::put('/update', [ThesesController::class, 'update'])->name('api.theses.update');
+        Route::post('/distroy', [ThesesController::class, 'distroy'])->name('api.theses.distroy');
+        Route::get('/filter', [ThesesController::class, 'filter'])->name('api.theses.filter');
     }
 );

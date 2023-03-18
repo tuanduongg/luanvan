@@ -159,12 +159,20 @@ return [
     */
 
     'attributes' => [
+        // loại công văn
         'type_code' => 'Mã loại',
         'type_name' => 'Tên loại',
         'student_code' => 'Mã sinh viên',
         'student_name' => 'Tên sinh viên',
         'student_class' => 'Lớp học',
         'student_school_year' => 'Niên khoá',
+        //giảng viên
+        'password' => 'Mật khẩu',
+        'email' => 'Email',
+        'code' => 'Mã',
+        'name' => 'Tên',
+        'phone' => 'Số điện thoại',
+
     ],
 
 ];

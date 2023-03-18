@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Validation\Rule;
-Use App\Traits\ResponseTrait;
+use App\Traits\ResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use Illuminate\Support\Facades\Validator;
@@ -18,17 +18,20 @@ class StudentController extends Controller
     {
         $this->model = $student;
     }
-    public function getAll() {
-        $data = $this->model->all();
+    public function getAll(Request $request)
+    {
+        $data = $this->model->orderBy('created_at', 'DESC')->paginate(10)->onEachSide(1);
         return $this->responseSuccess($data);
     }
 
-    public function find(Request $request) {
+    public function find(Request $request)
+    {
         $data = $this->model->findOrFail($request->input('id'));
         return $this->responseSuccess($data);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $rules = [
             'student_code' => 'required|unique:students',
             'student_name' => 'required',
@@ -51,9 +54,10 @@ class StudentController extends Controller
         //     'message' => 'Thêm mới thành công!',
         //     'status_code' => 200,
         // ]);
-        return $this->responseSuccess(null,'Thêm mới thành công!');
+        return $this->responseSuccess(null, 'Thêm mới thành công!');
     }
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         $rules = [
             'student_code' => ['required', Rule::unique('students')->ignore($request->get('id'))],
             'student_name' => 'required',
@@ -73,21 +77,54 @@ class StudentController extends Controller
         $student->student_class = $request->get('student_class');
         $student->student_school_year = $request->get('student_school_year');
         $student->save();
-        return $this->responseSuccess('','Thay đổi thông tin thành công!');
+        return $this->responseSuccess('', 'Thay đổi thông tin thành công!');
     }
 
-    public function distroy(Request $request) {
+    public function distroy(Request $request)
+    {
         $student = $this->model->findOrFail($request->get('id'));
         $student->delete();
-        return $this->responseSuccess('','Xoá thành công!');
+        return $this->responseSuccess('', 'Xoá thành công!');
     }
-    public function filter(Request $request) {
-        $student_school_year = $request->get('student_school_year') ?? '';
-        if(!empty($student_school_year)) {
-            $data = $this->model->where('student_school_year',$request->get('student_school_year'))->get();
-        }else {
-            $data = $this->model->all();
+    public function filter(Request $request)
+    {
+        // if ($request->has('search')) {
+        //     $searchVal = $request->get('search');
+        //     $data = $this->model->where('name', 'like', '%' . $searchVal . '%')->paginate(10)->onEachSide(1);
+        //     return $this->responseSuccess($data);
+        // }
+        $student_school_year = $request->get('student_school_year');
+        $name = $request->get('search');
+        $data = [];
+        $query = $this->model
+            ->where(
+                'student_name',
+                'like',
+                '%' . $name . '%',
+            );
+        if (!empty($student_school_year)  || !empty($name)) {
+            if ((int)$student_school_year != -1) {
+                $query = $query->where('student_school_year', $student_school_year);
+            }
+            $data = $query
+                ->paginate(10)
+                ->onEachSide(1);
+        } else {
+            $data = $this->model->paginate(10)->onEachSide(1);
         }
         return $this->responseSuccess($data);
+    }
+
+    public function selectTwo(Request $request) {
+        $request->get('student_name');
+        if(!empty($request->get('student_name'))) {
+
+            $data = $this->model::query()
+            ->where('student_name','like','%' . $request->get('student_name').'%')
+            ->select(['student_code','student_name'])
+            ->get();
+            return $this->responseSuccess($data);
+        }
+        return; 
     }
 }
