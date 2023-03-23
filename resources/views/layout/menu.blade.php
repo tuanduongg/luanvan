@@ -74,7 +74,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="" class="menu-link text-white">
+                    <a href="{{ route('studentresearch') }}" class="menu-link text-white">
                         <div data-i18n="Basic">Sinh viên</div>
                     </a>
                 </li>
@@ -89,7 +89,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="{{ route('creative_idea')}}" class="menu-link text-white">
+                    <a href="{{ route('creativeidea')}}" class="menu-link text-white">
                         <div data-i18n="Basic">Sinh viên</div>
                     </a>
                 </li>

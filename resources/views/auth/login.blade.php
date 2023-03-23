@@ -111,7 +111,7 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" checked type="checkbox" id="remember-me" />
+                                    <input class="form-check-input" name="remember" checked type="checkbox" id="remember-me" />
                                     <label class="form-check-label" for="remember-me"> Ghi nhớ tài khoản </label>
                                 </div>
                             </div>

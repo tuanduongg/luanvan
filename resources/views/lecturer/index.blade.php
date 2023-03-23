@@ -449,17 +449,30 @@
             });
 
             //hanle submit form search
-            $(document).on('submit', '#form-search', function(e) {
-                e.preventDefault();
-                let searchVal = $('#input-search').val();
-                let student_school_year = $('#filter-student-school-year').val();
-                $('input[name=hidden-search').val(searchVal);
-                let data = {
-                    'search': searchVal,
-                };
-                getAjax("{{ route('api.lecturer.filter') }}", data, data);
-            });
+            // $(document).on('submit', '#form-search', function(e) {
+            //     e.preventDefault();
+            //     let searchVal = $('#input-search').val();
+            //     $('input[name=hidden-search').val(searchVal);
+            //     let data = {
+            //         'search': searchVal,
+            //     };
+            //     getAjax("{{ route('api.lecturer.filter') }}", data, data);
+            // });
 
+            var debounce = null;
+            $('#input-search').on('input', function(e) {
+                clearTimeout(debounce);
+                debounce = setTimeout(function() {
+                    e.preventDefault();
+                    let searchVal = $('#input-search').val();
+                    $('input[name=hidden-search').val(searchVal);
+                    let data = {
+                        
+                        'search': searchVal,
+                    };
+                    getAjax("{{ route('api.lecturer.filter') }}", data);
+                }, 1000);
+            });
 
 
 

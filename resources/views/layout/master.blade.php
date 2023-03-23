@@ -37,7 +37,6 @@
 
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" /> --}}
 
-    @stack('css')
     <!-- Page CSS -->
 
     <!-- Helpers -->
@@ -54,9 +53,16 @@
     <link rel="stylesheet" href="{{ asset('dist/css/buttons.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('dist/css/datatables.bootstrap5.css') }}" />
     <link rel="stylesheet" href="{{ asset('dist/css/responsive.bootstrap5.css') }}" />
+    @stack('css')
     <!-- Include Choices CSS -->
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" /> --}}
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
+    <style>
+        body {
+            background-image: url("{{ asset('dist/img/backgrounds/bg_lotus.gif') }}");
+            background-repeat: repeat;
+        }
+    </style>
 </head>
 
 <body>
@@ -135,8 +141,8 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     {{-- <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
+    {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+
     <!-- Page JS -->
     <script type="text/javascript" src="{{ asset('dist/js/ium.js') }}"></script>
 

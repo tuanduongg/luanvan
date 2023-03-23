@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use SplFileInfo;
 
 class Theses extends Model
 {
@@ -14,8 +15,7 @@ class Theses extends Model
         'content',
         'start_date',
         'end_date',
-        'student_id',
-        'lecturer_code',
+        'lecturer_id',
         'school_year',
         'archivist',
         'storage_location',
@@ -29,6 +29,11 @@ class Theses extends Model
     public function lecturer()
     {
         return $this->belongsTo(Lecturer::class);
+    }
+
+    public function getExtensionFileAttribute() {
+        // return explode('.',$this->file)[1]
+        return (new SplFileInfo($this->file))->getExtension();
     }
     
 }

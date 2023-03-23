@@ -10,7 +10,12 @@ class ThesesStudent extends Model
     use HasFactory;
     public $timestamps = false;
 
-    public function student()
+    public $fillable = [
+        'student_id',
+        'theses_id',
+    ];
+
+    public function students()
     {
         return $this->hasMany(Student::class);
     }

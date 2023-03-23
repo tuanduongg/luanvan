@@ -88,11 +88,7 @@ class StudentController extends Controller
     }
     public function filter(Request $request)
     {
-        // if ($request->has('search')) {
-        //     $searchVal = $request->get('search');
-        //     $data = $this->model->where('name', 'like', '%' . $searchVal . '%')->paginate(10)->onEachSide(1);
-        //     return $this->responseSuccess($data);
-        // }
+
         $student_school_year = $request->get('student_school_year');
         $name = $request->get('search');
         $data = [];
@@ -107,6 +103,7 @@ class StudentController extends Controller
                 $query = $query->where('student_school_year', $student_school_year);
             }
             $data = $query
+            
                 ->paginate(10)
                 ->onEachSide(1);
         } else {
@@ -116,15 +113,15 @@ class StudentController extends Controller
     }
 
     public function selectTwo(Request $request) {
-        $request->get('student_name');
-        if(!empty($request->get('student_name'))) {
+        // $request->get('student_name');
+        // if(!empty($request->get('student_name'))) {
 
             $data = $this->model::query()
-            ->where('student_name','like','%' . $request->get('student_name').'%')
+            // ->where('student_name','like','%' . $request->get('student_name').'%')
             ->select(['student_code','student_name'])
             ->get();
             return $this->responseSuccess($data);
-        }
-        return; 
+        // }
+        // return; 
     }
 }

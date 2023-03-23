@@ -28,7 +28,7 @@ class AuthController extends Controller
             ]);
         }
         if (Hash::check($request->password, $lecturer->password)) { //check password nếu thành công -> login
-            auth()->login($lecturer);
+            auth()->login($lecturer,$request->get('remember'));
             return redirect()->route('home'); //route
         } else {
             return back()->withErrors([

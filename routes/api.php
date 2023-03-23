@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\CreativeIdeaController;
 use App\Http\Controllers\Api\DispatchTypeController;
 use App\Http\Controllers\Api\LecturerController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\ThesesController;
-use App\Models\Theses;
+use App\Http\Controllers\Api\StudentResearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -70,8 +71,34 @@ Route::group(
         Route::get('/get-all', [ThesesController::class, 'getAll'])->name('api.theses.getAll');
         Route::get('/find', [ThesesController::class, 'find'])->name('api.theses.find');
         Route::post('/store', [ThesesController::class, 'store'])->name('api.theses.store');
-        Route::put('/update', [ThesesController::class, 'update'])->name('api.theses.update');
+        Route::post('/update', [ThesesController::class, 'update'])->name('api.theses.update');
         Route::post('/distroy', [ThesesController::class, 'distroy'])->name('api.theses.distroy');
         Route::get('/filter', [ThesesController::class, 'filter'])->name('api.theses.filter');
+    }
+);
+Route::group(
+    [
+        'prefix' => 'creativeidea'
+    ],
+    function () {
+        Route::get('/get-all', [CreativeIdeaController::class, 'getAll'])->name('api.creativeidea.getAll');
+        Route::get('/find', [CreativeIdeaController::class, 'find'])->name('api.creativeidea.find');
+        Route::post('/store', [CreativeIdeaController::class, 'store'])->name('api.creativeidea.store');
+        Route::post('/update', [CreativeIdeaController::class, 'update'])->name('api.creativeidea.update');
+        Route::post('/distroy', [CreativeIdeaController::class, 'distroy'])->name('api.creativeidea.distroy');
+        Route::get('/filter', [CreativeIdeaController::class, 'filter'])->name('api.creativeidea.filter');
+    }
+);
+Route::group(
+    [
+        'prefix' => 'studentresearch'
+    ],
+    function () {
+        Route::get('/get-all', [StudentResearchController::class, 'getAll'])->name('api.studentresearch.getAll');
+        Route::get('/find', [StudentResearchController::class, 'find'])->name('api.studentresearch.find');
+        Route::post('/store', [StudentResearchController::class, 'store'])->name('api.studentresearch.store');
+        Route::post('/update', [StudentResearchController::class, 'update'])->name('api.studentresearch.update');
+        Route::post('/distroy', [StudentResearchController::class, 'distroy'])->name('api.studentresearch.distroy');
+        Route::get('/filter', [StudentResearchController::class, 'filter'])->name('api.studentresearch.filter');
     }
 );

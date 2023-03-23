@@ -21,7 +21,7 @@ Route::get('/', function () {
 Route::group(
     [
         'prefix' => 'auth',
-        
+
     ],
     function () {
         Route::get('/login', [AuthController::class, 'login'])->name('auth.login');
@@ -37,9 +37,47 @@ Route::get('/giang-vien', function () {
 Route::get('/cong-van', function () {
     return view('official_dispatch.index');
 });
-Route::get('/luan-van', function () {
-    return view('theses.index');
-})->name('theses');
+Route::group(
+    [
+        'prefix' => 'luan-van',
+
+    ],
+    function () {
+
+        Route::get('/', function () {
+            return view('theses.index');
+        })->name('theses');
+        Route::get('/{id}',[App\Http\Controllers\ThesesController::class, 'show'])->name('theses.view');
+    }
+);
+
+Route::group(
+    [
+        'prefix' => 'y-tuong-sang-tao',
+
+    ],
+    function () {
+
+        Route::get('/', function () {
+            return view('creative_idea.index');
+        })->name('creativeidea');
+        Route::get('/{id}',[App\Http\Controllers\CreativeIdeaController::class, 'show'])->name('creativeidea.view');
+    }
+);
+
+Route::group(
+    [
+        'prefix' => 'nghien-cuu-khoa-hoc-sinh-vien',
+
+    ],
+    function () {
+
+        Route::get('/', function () {
+            return view('student_research.index');
+        })->name('studentresearch');
+        Route::get('/{id}',[App\Http\Controllers\StudentResearchController::class, 'show'])->name('studentresearch.view');
+    }
+);
 
 Route::get('/nghien-cuu-khoa-hoc', function () {
     return view('scientific_research.index');
@@ -52,6 +90,3 @@ Route::get('/loai-cong-van', function () {
     return view('dispatch_type.index');
 });
 
-Route::get('/y-tuong-sang-tao', function () {
-    return view('creative_idea.index');
-})->name('creative_idea');

@@ -252,8 +252,6 @@
             let data = {
                 'page': page,
             };
-            // let oldFilter = '';
-            console.log(filter);
             if (filter != '') {
                 url = "{{ route('api.student.filter') }}";
                 data = {
@@ -435,23 +433,51 @@
 
             });
 
-            $(document).on('submit', '#form-search', function(e) {
-                e.preventDefault();
-                let searchVal = $('#input-search').val();
-                let student_school_year = $('#filter-student-school-year').val();
-                $('input[name=hidden-search').val(searchVal);
-                $('input[name=hidden-student_school_year').val(student_school_year);
-                let data = {
-                    'student_school_year': student_school_year,
-                    'search': searchVal,
-                };
-                getAjax("{{ route('api.student.filter') }}", data, data);
+            var debounce = null;
+            $('#input-search').on('input', function(e) {
+                clearTimeout(debounce);
+                debounce = setTimeout(function() {
+                    e.preventDefault();
+                    let searchVal = $('#input-search').val();
+                    let student_school_year = $('#filter-student-school-year').val();
+                    $('input[name=hidden-search').val(searchVal);
+                    $('input[name=hidden-student_school_year').val(student_school_year);
+                    let data = {
+                        'student_school_year': student_school_year,
+                        'search': searchVal,
+                    };
+                    getAjax("{{ route('api.student.filter') }}", data);
+                }, 1000);
             });
 
-            //handle filter student_school_year
-            $(document).on('change', '#filter-student-school-year', function() {
-                $('#form-search').submit();
+            $(document).on('change', '#filter-student-school-year', function(e) {
+                let searchVal = $('#input-search').val();
+                $('input[name=hidden-search').val(searchVal);
+                $('input[name=hidden-student_school_year').val(e.target.value);
+                let data = {
+                    'student_school_year': e.target.value,
+                    'search': searchVal,
+                };
+                getAjax("{{ route('api.student.filter') }}", data);
             });
+
+            // $(document).on('submit', '#form-search', function(e) {
+            //     e.preventDefault();
+            //     let searchVal = $('#input-search').val();
+            //     let student_school_year = $('#filter-student-school-year').val();
+            //     $('input[name=hidden-search').val(searchVal);
+            //     $('input[name=hidden-student_school_year').val(student_school_year);
+            //     let data = {
+            //         'student_school_year': student_school_year,
+            //         'search': searchVal,
+            //     };
+            //     getAjax("{{ route('api.student.filter') }}", data, data);
+            // });
+
+            // //handle filter student_school_year
+            // $(document).on('change', '#filter-student-school-year', function() {
+            //     $('#form-search').submit();
+            // });
 
             //hanle submit form search
 
