@@ -79,7 +79,7 @@ class CreativeIdeaController extends Controller
         }
 
         //validate mã sinh viên
-        $arrStudentIds = StringHepler::changeFormatStudentId($request->get('student_id'));
+        $arrStudentIds = StringHepler::changeFormatArrId($request->get('student_id'));
         if (empty($arrStudentIds) ||  count($arrStudentIds) != 2) {
             return $this->responseError('', 'Bắt buộc phải thêm 2 mã sinh viên!');
         }
@@ -136,7 +136,7 @@ class CreativeIdeaController extends Controller
         }
 
         //handle mã sinh viên
-        $arrStudentIds = StringHepler::changeFormatStudentId($request->get('student_id'));
+        $arrStudentIds = StringHepler::changeFormatArrId($request->get('student_id'));
         if (empty($arrStudentIds) ||  count($arrStudentIds) != 2) {
             return $this->responseError('', 'Bắt buộc phải thêm 2 mã sinh viên!');
         }

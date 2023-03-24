@@ -69,7 +69,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="" class="menu-link text-white">
+                    <a href="{{ route('basicresearch') }}" class="menu-link text-white">
                         <div data-i18n="Basic">Giảng viên</div>
                     </a>
                 </li>

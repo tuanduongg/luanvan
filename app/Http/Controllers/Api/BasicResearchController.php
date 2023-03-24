@@ -8,19 +8,18 @@ use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\StringHepler;
-use App\Helpers\DateHelper;
+use App\Models\BasicResearch;
+use App\Models\BasicResearchLecturer;
+use App\Models\Lecturer;
 use App\Models\Student;
-use App\Models\StudentResearch;
+use App\Repositories\BasicResearchLecturer\BasicResearchLecturerRepository;
 use App\Repositories\Lecturer\LecturerRepository;
-use App\Repositories\Student\StudentRepository;
-use App\Repositories\StudentResearchStudent\StudentResearchStudentRepository;
-use Carbon\Carbon;
 
-class StudentResearchController extends Controller
+class BasicResearchController extends Controller
 {
     use ResponseTrait;
     private $model;
-    public function __construct(StudentResearch $obj)
+    public function __construct(BasicResearch $obj)
     {
         $this->model = $obj;
     }
@@ -34,41 +33,45 @@ class StudentResearchController extends Controller
     public function find(Request $request)
     {
         $id = $request->get('id');
-
-        $data = $this->model->with('lecturer:id,code')
+        $leaderId = (new BasicResearchLecturerRepository())->getLeaderIdByBasicResearch($id);
+        $leaderCode  = (new LecturerRepository())->getCodeById($leaderId);
+        $data = $this->model
             ->findOrFail($id); //tìm kiếm lecturer theo id
 
 
-        $students = Student::query()
+        $lecturers = Lecturer::query()
             ->whereIn('id', function ($query) use ($id) {
-                $query->select(DB::raw('student_id'))
-                    ->from('student_research_students')
-                    ->whereRaw('student_research_students.student_research_id = ' . $id . '');
+                $query->select(DB::raw('lecturer_id'))
+                    ->from('basic_research_lecturers')
+                    ->whereRaw('basic_research_lecturers.basic_research_id = ' . $id . '')
+                    ->whereRaw('basic_research_lecturers.isLeader = 0');
             })
-            ->get(['student_code', 'student_name']); // lấy mã sv,tên sv theo từng luận văn
-
+            ->get(['code', 'name']); // lấy mã sv,tên sv theo từng luận văn
+        $leaderCode  = (new LecturerRepository())->getCodeById((new BasicResearchLecturerRepository())->getLeaderIdByBasicResearch($id));
         // DB::raw("SELECT students.student_code FROM `students`
         // WHERE students.id in (SELECT student_id FROM `theses_students` WHERE theses_students.theses_id = " . $request->get('id') . ")");
         // $result = array_merge($data->toArray(),$students->toArray());
         $result = $data;
-        $result['students'] = $students;
+        $result['lecturers'] = $lecturers;
+        $result['leader_id'] = $leaderCode;
         return $this->responseSuccess($result);
     }
 
+
     public function store(Request $request)
     {
-        // dd($request->all());
-        // dd((new LecturerRepository())->getIdByCode($request->get('lecturer_id')));
+        // dd($request->get('lecturer_id'));
+
         $rules = [
             // 'code' => 'required',
             'tittle' => 'required|string|max:200',
             'content' => 'required|string|max:500',
             // 'student_id' => 'required',
-            'lecturer_id' => 'required',
+            'leader_id' => 'required|exists:App\Models\Lecturer,code',
             'year' => 'required',
             'archivist' => 'required',
             'storage_location' => 'required',
-            'result' => 'required',
+            'result' => 'required|string|max:100',
             'file' => 'max:10000|mimes:doc,docx,pdf,jpg,png',
         ];
         $validator = Validator::make($request->all(), $rules);
@@ -77,21 +80,28 @@ class StudentResearchController extends Controller
             return $this->responseError($validator->errors());
         }
 
-        //validate mã sinh viên
-        $arrStudentIds = StringHepler::changeFormatArrId($request->get('student_id'));
-        if (empty($arrStudentIds) ||  count($arrStudentIds) != 2) {
-            return $this->responseError('', 'Bắt buộc phải thêm 2 mã sinh viên!');
-        }
         //validate mã giảng viên
-        $lecturerId = (new LecturerRepository())->getIdByCode($request->get('lecturer_id'));
-        if (empty($lecturerId)) {
-            return $this->responseError('', 'Mã giảng viên không tồn tại!');
+        $arrLecturerIds = StringHepler::changeFormatArrId($request->get('lecturer_id'));
+        if (empty($arrLecturerIds)) {
+            return $this->responseError('', 'Mã thành viên không được để trống!');
+        } else {
+            if (count($arrLecturerIds) > 5) {
+                return $this->responseError('', 'Chỉ thêm tối đa 5 thành viên!');
+            }
         }
+
+        //validate mã leader có trong mã giảng viên ?
+
+        if(preg_match('/'. $request->get('leader_id') .'/',$request->get('lecturer_id'))) {
+            return $this->responseError('', 'Mã thành viên phải khác mã trưởng nhóm!');
+        }
+
+        
+        //validate mã giảng viên
 
         $newObj = new $this->model();
         $newObj->tittle = $request->get('tittle');
         $newObj->content = $request->get('content');
-        $newObj->lecturer_id = $lecturerId; // layas id giarng vien ddeer themv ao
         $newObj->year = $request->get('year');
         $newObj->archivist = $request->get('archivist');
         $newObj->result = $request->get('result');
@@ -104,19 +114,24 @@ class StudentResearchController extends Controller
             $newObj->file = $nameFile;
         }
         $newObj->save();
-        // dd();
 
-        // dd();
-
-
-        foreach ($arrStudentIds as $item) {
-            (new StudentResearchStudentRepository())->createModel([
-                'student_id' => (new StudentRepository())->getIdByCode($item),
-                'student_research_id' => $newObj->id,
+        //add to table basiclecturerslecturer
+        foreach ($arrLecturerIds as $item) {
+            $lecturer_id = (new LecturerRepository)->getIdByCode($item);
+            if(empty($lecturer_id)) {
+                return $this->responseError('', 'Mã thành viên '. $item .' không tồn tại!');
+            }
+            (new BasicResearchLecturerRepository())->createModel([
+                'lecturer_id' =>  $lecturer_id,
+                'basic_research_id' => $newObj->id,
             ]);
         }
+        (new BasicResearchLecturerRepository())->createModel([
+            'lecturer_id' => (new LecturerRepository)->getIdByCode($request->get('leader_id')),
+            'basic_research_id' => $newObj->id,
+            'isLeader' => true,
+        ]);
 
-        // $this->model->create($request->all());
         return $this->responseSuccess(null, 'Thêm mới thành công!');
     }
 
@@ -127,12 +142,12 @@ class StudentResearchController extends Controller
             'id' => 'required',
             'tittle' => 'required|string|max:200',
             'content' => 'required|string|max:500',
-            // 'student_id' => 'required',
             'lecturer_id' => 'required',
+            'leader_id' => 'required|exists:App\Models\Lecturer,code',
             'year' => 'required',
-            'result' => 'required',
             'archivist' => 'required',
             'storage_location' => 'required',
+            'result' => 'required|string|max:100',
             'file' => 'max:10000|mimes:doc,docx,pdf,jpg,png',
         ];
         $validator = Validator::make($request->all(), $rules);
@@ -141,47 +156,60 @@ class StudentResearchController extends Controller
             return $this->responseError($validator->errors());
         }
 
-        //handle mã sinh viên
-        $arrStudentIds = StringHepler::changeFormatArrId($request->get('student_id'));
-        if (empty($arrStudentIds) ||  count($arrStudentIds) != 2) {
-            return $this->responseError('', 'Bắt buộc phải thêm 2 mã sinh viên!');
+        //validate mã giảng viên
+        $arrLecturerIds = StringHepler::changeFormatArrId($request->get('lecturer_id'));
+        if (empty($arrLecturerIds)) {
+            return $this->responseError('', 'Mã thành viên không được để trống!');
+        } else {
+            if (count($arrLecturerIds) > 5) {
+                return $this->responseError('', 'Chỉ thêm tối đa 5 thành viên!');
+            }
         }
 
+        //validate mã leader có trong mã giảng viên ?
 
-
-        $lecturerId = (new LecturerRepository())->getIdByCode($request->get('lecturer_id'));
-        if (empty($lecturerId)) {
-            return $this->responseError('', 'Mã giảng viên không tồn tại!');
+        if(preg_match('/'. $request->get('leader_id') .'/',$request->get('lecturer_id'))) {
+            return $this->responseError('', 'Mã thành viên phải khác mã trưởng nhóm!');
         }
 
         $obj = $this->model->find($request->get('id'));
         if ($obj) {
             $obj->tittle = $request->get('tittle');
             $obj->content = $request->get('content');
-            //handle lấy id giảng viên
-            $obj->lecturer_id = $lecturerId;
             $obj->year = $request->get('year');
             $obj->archivist = $request->get('archivist');
+            $obj->result = $request->get('result');
             $obj->storage_location = $request->get('storage_location');
             if ($request->hasFile('file')) {
 
                 $file = $request->file('file');
                 $nameFile = date('YmdHi') . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('uploads\storage'), $nameFile);
-                if(!empty($obj->file)) {
+                if (!empty($obj->file)) {
 
                     $link = '\\' . $obj->file;
                     unlink(public_path('uploads\storage' . $link . ''));
                 }
-                // Storage::delete($obj->file); //xoa file
-                //http://luanvan-app.test/storage/uploads/kTKMZUu0r2sRNwCAMN93iUUmfnnfpOqtfHAR2i8f.png
                 $obj->file = $nameFile;
             }
-            $arrStudentId = [];
-            foreach ($arrStudentIds as $item) {
-                $arrStudentId[] = (new StudentRepository())->getIdByCode($item);
+
+            (new BasicResearchLecturerRepository())->deleteByIdBasicResearch($obj->id);
+
+            foreach ($arrLecturerIds as $item) {
+                $lecturer_id = (new LecturerRepository)->getIdByCode($item);
+                if(empty($lecturer_id)) {
+                    return $this->responseError('', 'Mã thành viên '. $item .' không tồn tại!');
+                }
+                (new BasicResearchLecturerRepository())->createModel([
+                    'lecturer_id' =>  $lecturer_id,
+                    'basic_research_id' => $obj->id,
+                ]);
             }
-            (new StudentResearchStudentRepository())->updateByIdStudentResearch($obj->id, $arrStudentId);
+            (new BasicResearchLecturerRepository())->createModel([
+                'lecturer_id' => (new LecturerRepository)->getIdByCode($request->get('leader_id')),
+                'basic_research_id' => $obj->id,
+                'isLeader' => true,
+            ]);
 
             $obj->save();
             return $this->responseSuccess('', 'Thay đổi thông tin thành công!');
@@ -191,12 +219,13 @@ class StudentResearchController extends Controller
 
     public function distroy(Request $request)
     {
-        $student = $this->model->findOrFail($request->get('id'));
-        if ($student) {
-            (new StudentResearchStudentRepository())->deleteByIdStudenResearch($request->get('id'));
-            $student->delete();
-        }
-        return $this->responseSuccess('', 'Xoá thành công!');
+            $basicResearch = $this->model->find($request->get('id'));
+            if ($basicResearch) {
+                (new BasicResearchLecturerRepository())->deleteByIdBasicResearch($request->get('id'));
+                $basicResearch->delete();
+                return $this->responseSuccess('', 'Xoá thành công!');
+            }
+            return $this->responseError('', 'Không tìm thấy dữ liệu!');
     }
     public function filter(Request $request)
     {

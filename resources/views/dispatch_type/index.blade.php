@@ -99,7 +99,9 @@
     <script>
         $(document).ready(function() {
 
-
+            $(document).on('focus', 'input,textarea', (e) => {
+                $(e.target).removeClass('is-invalid');
+            });
             //load all data from server to table
             function loadAllData() {
                 $('#btn-update-dispatch-type').hide();

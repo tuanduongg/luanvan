@@ -53,6 +53,12 @@ class LecturerRepository extends BaseRepository {
         
     }
 
+    public function getCodeById($id) {
+        return $this->model::query()
+            ->where('id',$id)
+            ->get('code')[0]->code ?? '';
+    }
+
     /**
      * hàm thêm mới 1 giảng viên vào db
      * @param array data
@@ -62,4 +68,6 @@ class LecturerRepository extends BaseRepository {
 
         $this->model::query()->create($data);
     }
+
+    
 }

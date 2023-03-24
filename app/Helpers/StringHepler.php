@@ -9,7 +9,7 @@ namespace App\Helpers;
  */
 class StringHepler {
 
-    public static function changeFormatStudentId($ids)
+    public static function changeFormatArrId($ids)
     {
         if (!empty($ids)) {
             $matches = [];
@@ -20,4 +20,6 @@ class StringHepler {
         }
         return $ids;
     }
+
+    
 }

@@ -17,8 +17,6 @@ class CreateBasicResearchTable extends Migration
             $table->id();
             $table->text('tittle');
             $table->text('content');
-            $table->unsignedBigInteger('lecturer_id');
-            $table->foreign('lecturer_id')->references('id')->on('lecturers');
             $table->string('year');
             $table->string('result');
             $table->text('archivist');

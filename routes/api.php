@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\LecturerController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\ThesesController;
 use App\Http\Controllers\Api\StudentResearchController;
+use App\Http\Controllers\Api\BasicResearchController;
+use App\Models\BasicResearch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +63,7 @@ Route::group(
         Route::put('/update', [LecturerController::class, 'update'])->name('api.lecturer.update');
         Route::post('/distroy', [LecturerController::class, 'distroy'])->name('api.lecturer.distroy');
         Route::get('/filter', [LecturerController::class, 'filter'])->name('api.lecturer.filter');
+        Route::get('/select-two', [LecturerController::class, 'selectTwo'])->name('api.lecturer.select2');
     }
 );
 Route::group(
@@ -100,5 +103,19 @@ Route::group(
         Route::post('/update', [StudentResearchController::class, 'update'])->name('api.studentresearch.update');
         Route::post('/distroy', [StudentResearchController::class, 'distroy'])->name('api.studentresearch.distroy');
         Route::get('/filter', [StudentResearchController::class, 'filter'])->name('api.studentresearch.filter');
+    }
+);
+
+Route::group(
+    [
+        'prefix' => 'basicresearch'
+    ],
+    function () {
+        Route::get('/get-all', [BasicResearchController::class, 'getAll'])->name('api.basicresearch.getAll');
+        Route::get('/find', [BasicResearchController::class, 'find'])->name('api.basicresearch.find');
+        Route::post('/store', [BasicResearchController::class, 'store'])->name('api.basicresearch.store');
+        Route::post('/update', [BasicResearchController::class, 'update'])->name('api.basicresearch.update');
+        Route::post('/distroy', [BasicResearchController::class, 'distroy'])->name('api.basicresearch.distroy');
+        Route::get('/filter', [BasicResearchController::class, 'filter'])->name('api.basicresearch.filter');
     }
 );

@@ -433,6 +433,10 @@
 
             });
 
+            $(document).on('focus', 'input,textarea', (e) => {
+                $(e.target).removeClass('is-invalid');
+            });
+
             var debounce = null;
             $('#input-search').on('input', function(e) {
                 clearTimeout(debounce);

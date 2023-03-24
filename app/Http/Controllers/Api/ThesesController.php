@@ -61,14 +61,9 @@ class ThesesController extends Controller
         // dd($request->all());
         // dd((new LecturerRepository())->getIdByCode($request->get('lecturer_id')));
         $rules = [
-            // 'code' => 'required',
             'tittle' => 'required|string|max:200',
             'content' => 'required|string|max:500',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date',
-            // 'student_id' => 'required',
-            'lecturer_id' => 'required',
-            'school_year' => 'required',
+            'year' => 'required',
             'archivist' => 'required',
             'storage_location' => 'required',
             'file' => 'max:10000|mimes:doc,docx,pdf,jpg,png',
@@ -80,7 +75,7 @@ class ThesesController extends Controller
         }
 
         //validate mã sinh viên
-        $arrStudentIds = StringHepler::changeFormatStudentId($request->get('student_id'));
+        $arrStudentIds = StringHepler::changeFormatArrId($request->get('student_id'));
         if (empty($arrStudentIds) ||  count($arrStudentIds) != 2) {
             return $this->responseError('', 'Bắt buộc phải thêm 2 mã sinh viên!');
         }
@@ -155,7 +150,7 @@ class ThesesController extends Controller
         }
 
         //handle mã sinh viên
-        $arrStudentIds = StringHepler::changeFormatStudentId($request->get('student_id'));
+        $arrStudentIds = StringHepler::changeFormatArrId($request->get('student_id'));
         if (empty($arrStudentIds) ||  count($arrStudentIds) != 2) {
             return $this->responseError('', 'Bắt buộc phải thêm 2 mã sinh viên!');
         }

@@ -105,4 +105,17 @@ class LecturerController extends Controller
         }
         return $this->responseSuccess($data);
     }
+
+    public function selectTwo(Request $request) {
+        // $request->get('student_name');
+        // if(!empty($request->get('student_name'))) {
+
+            $data = $this->model::query()
+            // ->where('student_name','like','%' . $request->get('student_name').'%')
+            ->select(['code','name'])
+            ->get();
+            return $this->responseSuccess($data);
+        // }
+        // return; 
+    }
 }

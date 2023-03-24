@@ -459,6 +459,10 @@
             //     getAjax("{{ route('api.lecturer.filter') }}", data, data);
             // });
 
+            $(document).on('focus', 'input,textarea', (e) => {
+                $(e.target).removeClass('is-invalid');
+            });
+            
             var debounce = null;
             $('#input-search').on('input', function(e) {
                 clearTimeout(debounce);

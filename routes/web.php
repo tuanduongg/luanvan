@@ -79,6 +79,20 @@ Route::group(
     }
 );
 
+Route::group(
+    [
+        'prefix' => 'nghien-cuu-khoa-hoc-giang-vien',
+
+    ],
+    function () {
+
+        Route::get('/', function () {
+            return view('basic_research.index');
+        })->name('basicresearch');
+        Route::get('/{id}',[App\Http\Controllers\BasicResearchController::class, 'show'])->name('basicresearch.view');
+    }
+);
+
 Route::get('/nghien-cuu-khoa-hoc', function () {
     return view('scientific_research.index');
 });

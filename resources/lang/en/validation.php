@@ -46,7 +46,7 @@ return [
     'email' => 'Không đúng định dạng email.',
     'ends_with' => 'The :attribute must end with one of the following: :values.',
     'enum' => 'The selected :attribute is invalid.',
-    'exists' => 'The selected :attribute is invalid.',
+    'exists' => ':attribute không tồn tại.',
     'file' => 'The :attribute must be a file.',
     'filled' => 'The :attribute field must have a value.',
     'gt' => [
@@ -177,6 +177,7 @@ return [
         'tittle' => 'Tên đề tài',
         'content' => 'Nội dung',
         'lecturer_id' => 'Mã giảng viên',
+        'leader_id' => 'Mã trưởng nhóm',
         'start_date' => 'Ngày bắt đầu',
         'end_date' => 'Ngày kết thúc',
         'storage_location' => 'Vị trí lưu trữ',

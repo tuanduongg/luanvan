@@ -325,11 +325,12 @@
 
 
         $(document).ready(function() {
+            
+            $(document).on('focus', 'input,textarea', (e) => {
+                $(e.target).removeClass('is-invalid');
+            });
 
             var whitelists = [];
-
-
-
             const TagifyStudentListEl = document.querySelector("#input-student_id");
             const TagifyStudentList = new Tagify(TagifyStudentListEl, {
                 // email address validation (https://stackoverflow.com/a/46181/104380)

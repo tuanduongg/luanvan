@@ -314,6 +314,10 @@
 
         $(document).ready(function() {
 
+            $(document).on('focus', 'input,textarea', (e) => {
+                $(e.target).removeClass('is-invalid');
+            });
+
             var whitelists = [];
 
 

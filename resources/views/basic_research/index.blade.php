@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-12">
             <div class="h1">
-                Ý tưởng sáng tạo khởi nghiệp sinh viên
+                Nghiên cứu khoa học giảng viên
             </div>
         </div>
     </div>
@@ -21,16 +21,11 @@
                                     placeholder="Nhập tên đề tài..." id="input-search">
                             </div>
                             <div class="col-md-2 mb-2">
-                                <select class="form-select " id="filter-school-year">
-                                    <option value="-1">Niên Khoá</option>
-                                    <option value="16">K16</option>
-                                    <option value="15">K15</option>
-                                    <option value="14">K14</option>
-                                    <option value="13">K13</option>
-                                    <option value="12">K12</option>
-                                    <option value="11">K11</option>
-                                    <option value="10">K10</option>
-                                    <option value="9">K9</option>
+                                <select class="form-select " id="filter-year">
+                                    <option value="-1">Năm thực hiện</option>
+                                    @for ($i = (int) date('Y'); $i >= 2010; $i--)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
                                 </select>
                             </div>
                             <div class="col-md-3 mb-2">
@@ -40,8 +35,8 @@
                                 </button>
                             </div>
                             <div class="col-md-5 text-end">
-                                <button class="btn btn-primary" type="button" id="btn-create-theses" data-bs-toggle="modal"
-                                    data-bs-target="#modal-data">
+                                <button class="btn btn-primary" type="button" id="btn-create" data-bs-toggle="modal"
+                                    data-bs-target="#modal-basic-research">
                                     <span class="tf-icons bx bx-plus-circle me-1"></span>
                                     Thêm mới
                                 </button>
@@ -57,21 +52,21 @@
                             <thead class="">
                                 <tr>
                                     <th>Tên đề tài</th>
-                                    <th style="min-width: 170px;">Ngày bắt đầu</th>
-                                    <th>Niên khoá</th>
+                                    <th>Tóm tắt nội dung</th>
+                                    <th>Năm thực hiện</th>
+                                    <th>Kết quả</th>
                                     <th>Vị trí lưu trữ</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <input type="hidden" name="hidden-search">
-                    <input type="hidden" name="hidden-school_year">
+                    <input type="hidden" name="hidden-year">
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center ">
                         </ul>
@@ -81,7 +76,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="modal-data" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-basic-research" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -110,53 +105,55 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row g-2 mb-3">
-                            <div class="col mb-0">
-                                <label for="start_date" class="form-label">Ngày bắt đầu</label>
-                                <input type="date" id="input-start_date" name="start_date" class="form-control"
-                                    placeholder="">
-                                <div class="invalid-feedback error-start_date">
-
-                                </div>
-                            </div>
-                            <div class="col mb-0">
-                                <label for="input-lecturer_id" class="form-label">Mã giảng viên</label>
-                                <input type="text" name="lecturer_id" id="input-lecturer_id" class="form-control"
-                                    placeholder="Nhập mã giảng viên">
-                                <div class="invalid-feedback error-lecturer_id"></div>
-                            </div>
-                        </div>
-
-                        <div class="row g-2 mb-3">
-                            <div class="col mb-0">
-                                <label for="school_year" class="form-label">Niên khoá</label>
-                                <select id="input-school_year" name="school_year" class="form-select">
-                                    <option value="13">K13</option>
-                                    <option value="12">K12</option>
-                                    <option value="11">K11</option>
-                                </select>
-                                <div class="invalid-feedback error-school_year">
-
-                                </div>
-                            </div>
-                           
-                        </div>
-
-                        <input type="hidden" name="id">
                         <div class="row">
+                            <div class="col mb-3">
+                                <label for="input-leader_id" class="form-label">Mã trưởng nhóm</label>
+                                <input type="text" name="leader_id" id="input-leader_id" class="form-control"
+                                    placeholder="Nhập mã trưởng nhóm">
+                                <div class="invalid-feedback error-leader_id"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+
                             <div class="mb-3">
-                                <label for="input-student_id_creative" class="form-label d-block">Sinh viên</label>
-                                <input id="input-student_id_creative" required class="tagify-email-list" name="student_id"
+                                <label for="input-lecturer_id" class="form-label d-block">Thành viên</label>
+                                <input id="input-lecturer_id" required class="tagify-email-list" name="lecturer_id"
                                     value="">
-                                <button type="button" id="btn-add-input-msv"
+                                <button type="button" id="btn-add-input-mgv"
                                     class="btn btn-outline-primary btn-icon rounded-pill"><span
                                         class="tf-icons bx bx-plus"></span></button>
                             </div>
                         </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col mb-0">
+                                <label for="year" class="form-label">Năm thực hiện</label>
+                                <select id="input-year" name="year" class="form-select">
+                                    @for ($i = (int) date('Y'); $i >= 2010; $i--)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
+                                <div class="invalid-feedback error-year">
+
+                                </div>
+                            </div>
+                            <div class="col mb-0">
+                                <label for="input-result" class="form-label">Kết quả</label>
+                                <input type="text" id="input-result" name="result"
+                                    placeholder="Nhập kết quả đạt được" class="form-control" id="">
+                                <div class="invalid-feedback error-result">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="id">
+
                         <div class="row row g-2 mb-3">
                             <div class="col">
                                 <label for="input-archivist" class="form-label">Người lưu trữ</label>
-                                <input class="form-control" name="archivist" type="text" placeholder="Người lưu trữ" id="input-archivist">
+                                <input class="form-control" name="archivist" type="text" placeholder="Người lưu trữ"
+                                    id="input-archivist">
                                 <div class="invalid-feedback error-archivist"></div>
                             </div>
                             <div class="col mb-0">
@@ -166,6 +163,14 @@
                                 <div class="invalid-feedback error-storage_location">
 
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col">
+                                <label for="file" class="form-label">File</label>
+                                <input class="form-control" type="file" name="file" id="input-file">
+                                <div class="invalid-feedback error-file"></div>
                             </div>
                         </div>
 
@@ -189,7 +194,7 @@
             event.preventDefault();
             if (currentPage >= 1 && currentPage <= lastPage) {
                 let filter = {
-                    "school_year": $('input[name=hidden-school_year').val(),
+                    "year": $('input[name=hidden-year').val(),
                     "name": $('input[name=hidden-search').val()
                 }
                 getData(currentPage, filter);
@@ -219,16 +224,16 @@
         }
 
         function getData(page = 1, filter = '') {
-            let url = "{{ route('api.creativeidea.getAll') }}";
+            let url = "{{ route('api.basicresearch.getAll') }}";
             let data = {
                 'page': page,
             };
             // let oldFilter = '';
             if (filter != '') {
-                url = "{{ route('api.creativeidea.filter') }}";
+                url = "{{ route('api.basicresearch.filter') }}";
                 data = {
                     "page": page,
-                    'school_year': filter.school_year,
+                    'year': filter.year,
                     'search': filter.name,
                 }
             }
@@ -274,14 +279,14 @@
             });
 
             $.each(data, function(index, value) {
-                let urlView = "{{ route('creativeidea.view', 'id') }}";
+                let urlView = "{{ route('studentresearch.view', 'id') }}";
                 urlView = urlView.replace('id', value.id);
                 $('#table-data > tbody').append(`
-                
                         <tr>
-                            <td class="fw-bold">${value.tittle}</td>
-                            <td>${formatDate(value.start_date)}</td>
-                            <td><span class="badge bg-label-secondary me-1 ">${value.school_year}</span></td>
+                            <td class="fw-bold">${value.tittle.length > 100 ? value.tittle.substring(0,100) + '...' : value.tittle}</td>
+                            <td>${value.content.length > 100 ? value.content.substring(0,100) + '...' : value.content}</td>
+                            <td><span class="badge bg-label-secondary me-1 ">${value.year}</span></td>
+                            <td>${value.result}</td>
                             <td>${value.storage_location}</td>
                                 <td>
                                     <div class="dropdown">
@@ -292,11 +297,11 @@
                                                 <i class="bx bx-detail me-1"></i>
                                                 Xem chi tiết
                                             </a>
-                                            <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-data" data-id=${value.id} href="javascript:void(0);">
+                                            <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-basic-research" data-id=${value.id} href="javascript:void(0);">
                                                 <i class="bx bx-edit-alt me-1"></i>
                                                 Sửa
                                             </a>
-                                            <a class="dropdown-item" id='btn-delete-theses' data-id=${value.id} href="javascript:void(0);">
+                                            <a class="dropdown-item" id='btn-delete' data-id=${value.id} href="javascript:void(0);">
                                                 <i class="bx bx-trash me-1"></i>
                                                 Xoá
                                             </a>
@@ -314,16 +319,18 @@
 
 
 
-            const TagifyStudentListEl = document.querySelector("#input-student_id_creative");
+            const TagifyStudentListEl = document.querySelector("#input-lecturer_id");
             const TagifyStudentList = new Tagify(TagifyStudentListEl, {
+                // email address validation (https://stackoverflow.com/a/46181/104380)
+                // pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                 texts: {
                     empty: "Không được để trống",
-                    exceed: "Tối đa 2 sinh viên",
+                    exceed: "Tối đa 5 sinh viên",
                     pattern: "Không đúng định dạng",
                     duplicate: "Đã tồn tại dữ liệu",
                 },
                 whitelist: whitelists,
-                maxTags: 2,
+                maxTags: 5,
                 callbacks: {
                     'invalid': onInvalidTag,
                 },
@@ -333,13 +340,14 @@
                     enabled: 1, // show suggestions dropdown after 1 typed character
                 }
             });
+            //handle on change
             const button = TagifyStudentListEl.nextElementSibling; // "add new tag" action-button
 
             button.addEventListener("click", onAddButtonClick);
 
             function onAddButtonClick(e) {
 
-                let inputVal = $('#input-student_id_creative').val();
+                let inputVal = $('#input-lecturer_id').val();
                 // if (inputVal) {
 
                 if (inputVal == '') {
@@ -347,14 +355,14 @@
                     TagifyStudentList.addEmptyTag();
                     return;
                 } else {
-                    if (JSON.parse(inputVal).length < 2) { //litmit add tags = 2
-                        // $('#btn-add-input-msv').addClass('d-none');
+                    if (JSON.parse(inputVal).length < 5) { //litmit add tags = 5
                         TagifyStudentList.addEmptyTag();
                         return;
                     }
 
                 }
             }
+
 
             function onInvalidTag(e) {
                 toastr["error"](e.detail.message, "Thông báo");
@@ -364,26 +372,29 @@
             // handle onclick button add input-msv
 
             let couter = false;
-            $(document).on('click', '#btn-add-input-msv', () => {
+            let temp = false;
+            $(document).on('click', '#btn-add-input-mgv', () => {
                 if (couter != true) {
                     let data = [];
-                    $.ajax({
-                        type: "get",
-                        url: "{{ route('api.student.select2') }}",
-                        dataType: "json",
-                        success: function(response) {
-                            response.data.forEach(element => {
-                                data.push(element.student_code +
-                                    `(${element.student_name})`)
-                            });
-                            TagifyStudentList.settings.whitelist = data;
-                        }
-                    });
+                    if (!temp) {
+                        $.ajax({
+                            type: "get",
+                            url: "{{ route('api.lecturer.select2') }}",
+                            dataType: "json",
+                            success: function(response) {
+                                response.data.forEach(element => {
+                                    data.push(element.code +
+                                        `(${element.name})`)
+                                });
+                                TagifyStudentList.settings.whitelist = data;
+                                temp = true;
+                            }
+                        });
+                    }
                 }
                 couter = true;
                 // return data;
             });
-
 
 
             function emptyInput() {
@@ -391,16 +402,18 @@
                 $('textarea[name=content]').val('');
                 $('input[name=student_id]').val('');
                 $('input[name=lecturer_id]').val('');
+                $('input[name=leader_id]').val('');
                 $('input[name=archivist]').val('');
-                $('input[name=start_date]').val('');
+                $('input[name=result]').val('');
                 $('input[name=storage_location]').val('');
-                // $('select[name=role]').val('');
-                $("select[name=role]").prop("selectedIndex", 0);
-                $('select[name=email]').val('');
-                $('select[name=password]').val('');
                 resetClassInput('is-invalid');
 
             }
+
+            //remove validate onfocus input
+            $(document).on('focus', 'input,textarea', (e) => {
+                $(e.target).removeClass('is-invalid');
+            });
 
             function resetClassInput(className) {
                 $('textarea[name=tittle]').removeClass(className);
@@ -408,16 +421,13 @@
                 $('input[name=student_id]').removeClass(className);
                 $('input[name=lecturer_id]').removeClass(className);
                 $('input[name=archivist]').removeClass(className);
-                $('input[name=start_date]').removeClass(className);
+                $('input[name=result]').removeClass(className);
+                $('input[name=leader_id]').removeClass(className);
                 $('input[name=storage_location]').removeClass(className);
             }
 
             //load all data from server to table
             getData();
-            
-            $(document).on('focus', 'input,textarea', (e) => {
-                $(e.target).removeClass('is-invalid');
-            });
 
             //handle edit dispatch type
             $(document).on('click', '#btn-edit', function(e) {
@@ -429,26 +439,28 @@
                 let id = $(this).data('id');
                 $.ajax({
                     type: "get",
-                    url: "{{ route('api.creativeidea.find') }}",
+                    url: "{{ route('api.basicresearch.find') }}",
                     data: {
                         "id": id
                     },
                     dataType: 'json',
                     success: function(response) {
+                        $('input[name=leader_id]').val(response.data.leader_id);
                         $('input[name=id]').val(id);
                         $('textarea[name=tittle]').val(response.data.tittle);
-                        $('input[name=start_date]').val(response.data.start_date);
                         $('textarea[name=content]').val(response.data.content);
                         $('input[name=storage_location]').val(response.data.storage_location);
-                        $('input[name=lecturer_id]').val(response.data.lecturer.code);
-                        if (response.data.students.length > 0) {
+                        $('input[name=result]').val(response.data.result);
+
+                        if (response.data.lecturers.length > 0) {
                             let result = '';
-                            response.data.students.forEach((element, index) => {
-                                let seperate = ',';
-                                result += element.student_code + `(${element.student_name})` + seperate;
+                            response.data.lecturers.forEach((element, index) => {
+                                let sepe = ',';
+                                result += element.code +
+                                    `(${element.name})` + sepe;
                             });
                             result = result.trim().slice(0, -1);
-                            $('#input-student_id_creative').val(`${result}`);
+                            $('#input-lecturer_id').val(`${result}`);
                         }
 
                         $('input[name=archivist]').val(response.data.archivist);
@@ -465,13 +477,13 @@
                 resetClassInput('is-invalid');
                 $.ajax({
                     type: "post",
-                    url: "{{ route('api.creativeidea.update') }}",
+                    url: "{{ route('api.basicresearch.update') }}",
                     data: new FormData(document.getElementById('form-data-theses')),
                     dataType: "json",
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        $('#modal-data').modal('hide');
+                        $('#modal-basic-research').modal('hide');
                         getData();
                         toastr["success"](response.message, "Thông báo");
                     },
@@ -487,7 +499,7 @@
                         } else {
                             if (response.responseJSON.errors) {
 
-                                $.each(response.responseJSON.errors, function(index,value) {
+                                $.each(response.responseJSON.errors, function(index, value) {
                                     $(`#input-${index}`).addClass(
                                         'is-invalid');
                                     $(`.error-${index}`).text(value[0]);
@@ -501,7 +513,7 @@
             });
             //handle create dispatch type
 
-            $(document).on('click', '#btn-create-theses', function() {
+            $(document).on('click', '#btn-create', function() {
 
                 $('#btn-store').show();
                 $('#btn-update').hide();
@@ -514,13 +526,13 @@
                 resetClassInput('is-invalid');
                 $.ajax({
                     type: "post",
-                    url: "{{ route('api.creativeidea.store') }}",
+                    url: "{{ route('api.basicresearch.store') }}",
                     data: new FormData(document.getElementById('form-data-theses')),
                     dataType: "json",
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        $('#modal-data').modal('hide');
+                        $('#modal-basic-research').modal('hide');
                         getData();
                         toastr["success"](response.message, "Thông báo");
                     },
@@ -541,7 +553,7 @@
             });
 
             //handle delete dispatch type
-            $(document).on('click', '#btn-delete-theses', function(e) {
+            $(document).on('click', '#btn-delete', function(e) {
                 e.preventDefault();
                 let id = $(this).data('id');
                 Swal.fire({
@@ -558,7 +570,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "post",
-                            url: "{{ route('api.creativeidea.distroy') }}",
+                            url: "{{ route('api.basicresearch.distroy') }}",
                             data: {
                                 "id": id
                             },
@@ -580,39 +592,53 @@
                 })
 
             });
-            
+
+            // $(document).on('input', '#input-search', (e) => {
+            //     e.preventDefault();
+            //     $.debounce(250, function() {
+            //         let searchVal = $('#input-search').val();
+            //         let year = $('#filter-year').val();
+            //         $('input[name=hidden-search').val(searchVal);
+            //         $('input[name=hidden-year').val(year);
+            //         let data = {
+            //             'year': year,
+            //             'search': searchVal,
+            //         };
+            //         getAjax("{{ route('api.basicresearch.filter') }}", data, data);
+            //     })
+            // });
             var debounce = null;
             $('#input-search').on('input', function(e) {
                 clearTimeout(debounce);
                 debounce = setTimeout(function() {
                     e.preventDefault();
                     let searchVal = $('#input-search').val();
-                    let school_year = $('#filter-school-year').val();
+                    let year = $('#filter-year').val();
                     $('input[name=hidden-search').val(searchVal);
-                $('input[name=hidden-school_year').val(school_year);
+                    $('input[name=hidden-year').val(year);
                     let data = {
-                        'school_year': school_year,
+                        'year': year,
                         'search': searchVal,
                     };
-                    getAjax("{{ route('api.creativeidea.filter') }}", data);
+                    getAjax("{{ route('api.basicresearch.filter') }}", data);
                 }, 1000);
             });
 
-            $(document).on('change', '#filter-school-year', function(e) {
+            $(document).on('change', '#filter-year', function(e) {
                 let searchVal = $('#input-search').val();
                 $('input[name=hidden-search').val(searchVal);
-                $('input[name=hidden-school_year').val(e.target.value);
+                $('input[name=hidden-year').val(e.target.value);
                 let data = {
-                    'school_year': e.target.value,
+                    'year': e.target.value,
                     'search': searchVal,
                 };
-                getAjax("{{ route('api.creativeidea.filter') }}", data);
+                getAjax("{{ route('api.basicresearch.filter') }}", data);
             });
 
             //handle button reset
             $(document).on('click', '#btn-reset', function(event) {
                 event.preventDefault();
-                window.location.href = "{{ route('creativeidea') }}";
+                window.location.href = "{{ route('basicresearch') }}";
             })
 
         });
