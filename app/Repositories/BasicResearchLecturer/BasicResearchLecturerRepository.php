@@ -3,6 +3,7 @@
 namespace App\Repositories\BasicResearchLecturer;
 
 use App\Models\BasicResearchLecturer;
+use App\Models\Lecturer;
 use App\Models\Student;
 use App\Models\StudentResearchStudent;
 use App\Repositories\BaseRepository;
@@ -34,6 +35,23 @@ class BasicResearchLecturerRepository extends BaseRepository
             ['isLeader','=',1],
         ])
         ->get('lecturer_id')[0]->lecturer_id ?? '';
+    }
+
+    public function getLeaderByBasicResearch($basicResearchId) {
+        return Lecturer::where('id',  $this->getLeaderIdByBasicResearch($basicResearchId))->first() ?? '';
+        
+    }
+
+    public function getAllLecturerByBasicResearch($basicResearchId) {
+        $data = Lecturer::whereIn('id',  function($query) use ($basicResearchId) {
+            $query->select('lecturer_id')
+            ->from(with(new $this->model)->getTable())
+            ->where([
+                ['basic_research_id','=', $basicResearchId],
+                ['isLeader','=',0],
+            ]);
+        })->get();
+        return $data;
     }
 
     // public function updateByIdStudentResearch($id, $idStudents = [])

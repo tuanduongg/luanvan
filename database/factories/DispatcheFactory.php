@@ -23,12 +23,13 @@ class DispatcheFactory extends Factory
             'receiver' => $this->faker->firstName() . ' ' . $this->faker->lastName(),
             'signer' => $this->faker->firstName() . ' ' . $this->faker->lastName(),
             'sign_date' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
-            'date_issued' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
+            'issued_date' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
             'published_place' => $this->faker->randomElement(['Trường ĐHKTKTCN','Bộ Giáo Dục','Thành Phố Hà Nội']), //nơi ban hành
             'effective_date' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
             'expiration_date' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
             'archivist' => $this->faker->randomElement(['Đường Tuấn Hải','Lê Thu Hiền','Nguyễn Văn Ánh']),
             'storage_location' => 'Thư Viện HA10LN',
+            'role' => $this->faker->randomElement([1,2]),
         ];
     }
 }

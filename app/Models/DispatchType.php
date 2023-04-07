@@ -17,4 +17,8 @@ class DispatchType extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function dispatches() {
+        return $this->hasMany(Dispatche::class);
+    }
 }

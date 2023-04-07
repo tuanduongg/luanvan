@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -28,8 +29,8 @@ class AuthController extends Controller
             ]);
         }
         if (Hash::check($request->password, $lecturer->password)) { //check password nếu thành công -> login
-            auth()->login($lecturer,$request->get('remember'));
-            return redirect()->route('home'); //route
+                Auth::login($lecturer,$request->get('remember'));
+                return redirect()->route('home'); //route
         } else {
             return back()->withErrors([
                 'password' => 'Mật khẩu không chính xác!',
@@ -43,7 +44,7 @@ class AuthController extends Controller
     }
 
     public function logout() {
-        auth()->logout();
+        Auth::logout();
         return redirect()->route('auth.login');
     }
 }

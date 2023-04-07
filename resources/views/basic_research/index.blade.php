@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-12">
             <div class="h1">
-                Nghiên cứu khoa học giảng viên
+                Nghiên cứu khoa học cơ sở
             </div>
         </div>
     </div>
@@ -23,12 +23,12 @@
                             <div class="col-md-2 mb-2">
                                 <select class="form-select " id="filter-year">
                                     <option value="-1">Năm thực hiện</option>
-                                    @for ($i = (int) date('Y'); $i >= 2010; $i--)
-                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @for ($i = date("Y"); $i >= 2015; $i--)
+                                        <option value="{{ ($i-1) .'-'.$i }}">{{ ($i-1) .'-'. $i }}</option>
                                     @endfor
                                 </select>
                             </div>
-                            <div class="col-md-3 mb-2">
+                            <div class="col-md-3 mb-3">
                                 <button class="btn btn-outline-secondary" id="btn-reset" type="button">
                                     <span class="tf-icons bx bx-refresh me-1"></span>
                                     Làm mới
@@ -51,12 +51,12 @@
                         <table class="table card-table " id="table-data">
                             <thead class="">
                                 <tr>
-                                    <th>Tên đề tài</th>
-                                    <th>Tóm tắt nội dung</th>
-                                    <th>Năm thực hiện</th>
-                                    <th>Kết quả</th>
-                                    <th>Vị trí lưu trữ</th>
-                                    <th>Hành động</th>
+                                    <th class="text-primary text-center" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">STT</th>
+                                    <th class="text-primary text-center" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Tên đề tài</th>
+                                    <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Năm thực<br>hiện</th>
+                                    <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Kết quả</th>
+                                    <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Vị trí<br>lưu trữ</th>
+                                    <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +75,7 @@
             </div>
         </div>
     </div>
+    <div class="loading"></div>
     <!-- Modal -->
     <div class="modal fade" id="modal-basic-research" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -127,10 +128,10 @@
 
                         <div class="row g-2 mb-3">
                             <div class="col mb-0">
-                                <label for="year" class="form-label">Năm thực hiện</label>
+                                <label for="year" class="form-label">Năm học</label>
                                 <select id="input-year" name="year" class="form-select">
-                                    @for ($i = (int) date('Y'); $i >= 2010; $i--)
-                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @for ($i = date("Y"); $i >= 2015; $i--)
+                                        <option value="{{ ($i-1) .'-'.$i }}">{{ ($i-1) .'-'. $i }}</option>
                                     @endfor
                                 </select>
                                 <div class="invalid-feedback error-year">
@@ -168,7 +169,7 @@
                         <div class="row">
 
                             <div class="col">
-                                <label for="file" class="form-label">File</label>
+                                <label for="file" class="form-label">File<span class="text-lowercase"> (nếu có)</span></label>
                                 <input class="form-control" type="file" name="file" id="input-file">
                                 <div class="invalid-feedback error-file"></div>
                             </div>
@@ -207,6 +208,9 @@
                 url: url,
                 data: data,
                 dataType: "json",
+                beforeSend: function() {
+                    $(".loading").show();
+                },
                 success: function(response) {
                     $('.pagination').empty();
                     $('#table-data > tbody').empty();
@@ -216,6 +220,7 @@
                     }
                     let student = response.data;
                     showData(student.data, student.current_page, student.last_page, student.links);
+                    $('.loading').hide();
                 },
                 error: function(response) {
                     console.error(response);
@@ -277,26 +282,25 @@
                         </li>
                     `);
             });
-
+            let start = ((current_page - 1) * 10) + 1;
             $.each(data, function(index, value) {
-                let urlView = "{{ route('studentresearch.view', 'id') }}";
+                let urlView = "{{ route('basicresearch.view', 'id') }}";
                 urlView = urlView.replace('id', value.id);
                 $('#table-data > tbody').append(`
                         <tr>
-                            <td class="fw-bold">${value.tittle.length > 100 ? value.tittle.substring(0,100) + '...' : value.tittle}</td>
-                            <td>${value.content.length > 100 ? value.content.substring(0,100) + '...' : value.content}</td>
+                            <td class="text-center">${start++}</td>
+                            <td class=""><a class="text-normal " style="color: #697a8d" href="${urlView}">
+                                    ${value.tittle}
+                                    </a>    </td>
                             <td><span class="badge bg-label-secondary me-1 ">${value.year}</span></td>
                             <td>${value.result}</td>
                             <td>${value.storage_location}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                    <div class="dropdown d-flex">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow me-2"
                                             data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                            <a href="${urlView}" class="btn hide-arrow p-0"><i class='bx bx-show-alt'></i></a>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="${urlView}">
-                                                <i class="bx bx-detail me-1"></i>
-                                                Xem chi tiết
-                                            </a>
                                             <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-basic-research" data-id=${value.id} href="javascript:void(0);">
                                                 <i class="bx bx-edit-alt me-1"></i>
                                                 Sửa
@@ -593,20 +597,6 @@
 
             });
 
-            // $(document).on('input', '#input-search', (e) => {
-            //     e.preventDefault();
-            //     $.debounce(250, function() {
-            //         let searchVal = $('#input-search').val();
-            //         let year = $('#filter-year').val();
-            //         $('input[name=hidden-search').val(searchVal);
-            //         $('input[name=hidden-year').val(year);
-            //         let data = {
-            //             'year': year,
-            //             'search': searchVal,
-            //         };
-            //         getAjax("{{ route('api.basicresearch.filter') }}", data, data);
-            //     })
-            // });
             var debounce = null;
             $('#input-search').on('input', function(e) {
                 clearTimeout(debounce);

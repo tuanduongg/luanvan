@@ -45,5 +45,23 @@ class Lecturer extends Authenticatable
         }
         return $str;
     }
+
+    public function getNameRoleAttribute() {
+        $nameRole = '';
+        switch ((int)$this->role) {
+            case 1:
+                $nameRole = 'Trưởng Khoa';
+                break;
+            case 2:
+                $nameRole = 'Phó Khoa';
+                break;
+            case 3:
+                $nameRole = 'Giảng Viên';
+                break;
+            default:
+                break;
+        }
+        return $nameRole;
+    }
 }
 

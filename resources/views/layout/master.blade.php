@@ -8,7 +8,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Home IUM</title>
+    <title> IUM {{$tittlePage ?? '' }}</title>
 
     <meta name="description" content="" />
 
@@ -27,6 +27,7 @@
 
     <!-- Core CSS -->
     <link rel="stylesheet" href="{{ asset('dist/css/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('dist/css/ium.css') }}" />
     <link rel="stylesheet" href="{{ asset('dist/css/theme-default.css') }}" class="template-customizer-theme-css" />
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('dist/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
@@ -61,6 +62,7 @@
         body {
             background-image: url("{{ asset('dist/img/backgrounds/bg_lotus.gif') }}");
             background-repeat: repeat;
+
         }
     </style>
 </head>
@@ -86,7 +88,7 @@
                 <div class="content-wrapper">
                     <!-- Content -->
 
-                    <div class="container-xxl flex-grow-1 container-p-y">
+                    <div class="container-xxl flex-grow-1 container-p-y" style="margin-bottom: 100px;">
                         @yield('content')
                     </div>
                     <!-- / Content -->
@@ -166,7 +168,10 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
+
+        
     </script>
+
     @stack('scripts')
 </body>
 

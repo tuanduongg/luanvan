@@ -40,12 +40,13 @@
                         <table class="table card-table " id="table-lecturer">
                             <thead class="">
                                 <tr>
-                                    <th>Mã giảng viên</th>
-                                    <th>Họ tên</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Email</th>
-                                    <th>Chức vụ</th>
-                                    <th>Hành động</th>
+                                    <th class="text-primary text-center">STT</th>
+                                    <th class="text-primary">Mã giảng viên</th>
+                                    <th class="text-primary">Họ tên</th>
+                                    <th class="text-primary">Số điện thoại</th>
+                                    <th class="text-primary">Email</th>
+                                    <th class="text-primary">Chức vụ</th>
+                                    <th class="text-primary">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,6 +65,7 @@
             </div>
         </div>
     </div>
+    <div class="loading"></div>
     <!-- Modal -->
     <div class="modal fade" id="modal-lecturer" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -95,7 +97,7 @@
                             </div>
                         </div>
                         <div class="row g-2 mb-3">
-                            <div class="col-12 col-md-6 mb-0">
+                            <div class="col mb-0">
                                 <label for="input-email" class="form-label">Email</label>
                                 <input type="text" placeholder="Nhập email..." id="input-email" required name="email"
                                     class="form-control" placeholder="">
@@ -103,12 +105,22 @@
 
                                 </div>
                             </div>
-                            <input type="hidden" name="id">
+                        </div>
+                        <input type="hidden" name="id">
+                        <div class="row g-2 mb-3">
                             <div class="col-12 col-md-6 mb-0">
                                 <label for="input-password" class="form-label">Mật khẩu</label>
-                                <input type="text" placeholder="Nhập mật khẩu..." id="input-password" required
-                                    name="password" class="form-control">
+                                <input type="password" placeholder="Nhập mật khẩu..." id="input-password" min="6"
+                                    required name="password" class="form-control">
                                 <div class="invalid-feedback error-password">
+
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-0">
+                                <label for="input-confirm_password" class="form-label">Nhập lại mật khẩu</label>
+                                <input type="password" placeholder="Nhập lại mật khẩu..." id="input-confirm_password"
+                                    min="6" required name="confirm_password" class="form-control" placeholder="">
+                                <div class="invalid-feedback error-confirm_password">
 
                                 </div>
                             </div>
@@ -157,10 +169,11 @@
             $('input[name=phone]').val('');
             // $('select[name=role]').val('');
             $("select[name=role]").prop("selectedIndex", 0);
-            $('select[name=email]').val('');
-            $('select[name=password]').val('');
+            $('input[name=email]').val('');
+            $('input[name=password]').val('');
+            $('input[name=confirm_password]').val('');
             resetClassInput('is-invalid');
-            
+
         }
 
         function resetClassInput(className) {
@@ -169,12 +182,13 @@
             $('input[name=password]').removeClass(className);
             $('input[name=name]').removeClass(className);
             $('input[name=phone]').removeClass(className);
+            $('input[name=confirm_password]').removeClass(className);
             $('select[name=role]').removeClass(className);
         }
 
         //hàm show data on view
         // 
-        function showData(data, current_page, last_page, links) {
+        function showData(data, current_page = 1, last_page, links) {
             $('#table-lecturer > tbody').empty(); // xoá dữ liệu trong tbody
             $('.pagination').empty();
             // for (let i = response.data.from; i < response.data.to; i++) {
@@ -209,6 +223,7 @@
                         </li>
                     `);
             });
+            let start = ((current_page - 1) * 10) + 1;
 
             $.each(data, function(index, value) {
                 let roleName = '';
@@ -233,8 +248,9 @@
                 }
                 $('#table-lecturer > tbody').append(`
                         <tr>
+                            <td>${start++}</td>
                             <td>${value.code}</td>
-                            <td class="fw-bold">${value.name}</td>
+                            <td class="">${value.name}</td>
                             <td>${value.phone}</td>
                             <td>${value.email}</td>
                             <td><span class="badge bg-label-${classColor} me-1 ">${roleName}</span></td>
@@ -274,6 +290,9 @@
                 url: url,
                 data: data,
                 dataType: "json",
+                beforeSend: function() {
+                    $(".loading").show();
+                },
                 success: function(response) {
                     $('.pagination').empty();
                     $('#table-lecturer > tbody').empty();
@@ -283,6 +302,7 @@
                     }
                     let student = response.data;
                     showData(student.data, student.current_page, student.last_page, student.links);
+                    $('.loading').hide();
                 },
                 error: function(response) {
                     console.error(response);
@@ -462,7 +482,7 @@
             $(document).on('focus', 'input,textarea', (e) => {
                 $(e.target).removeClass('is-invalid');
             });
-            
+
             var debounce = null;
             $('#input-search').on('input', function(e) {
                 clearTimeout(debounce);
@@ -471,10 +491,27 @@
                     let searchVal = $('#input-search').val();
                     $('input[name=hidden-search').val(searchVal);
                     let data = {
-                        
+
                         'search': searchVal,
                     };
                     getAjax("{{ route('api.lecturer.filter') }}", data);
+                }, 1000);
+            });
+
+            var debounce = null;
+            $('#input-confirm_password').on('input', function(e) {
+                clearTimeout(debounce);
+                let password = $('#input-password').val();
+                debounce = setTimeout(function() {
+                    e.preventDefault();
+                    if (e.target.value !== '') {
+                        if (e.target.value !== password) {
+                            $(`input[name=confirm_password]`).addClass('is-invalid');
+                            $(`.error-confirm_password`).text("Mật khẩu không khớp!");
+                        }
+                    } else {
+                        $(`input[name=confirm_password]`).removeClass('is-invalid');
+                    }
                 }, 1000);
             });
 

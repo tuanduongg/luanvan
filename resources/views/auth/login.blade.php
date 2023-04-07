@@ -8,7 +8,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Login IT Uneti Manager</title>
+    <title>Đăng Nhập - IUM</title>
 
     <meta name="description" content="" />
 
@@ -80,7 +80,8 @@
                                     class="form-control  @if ($errors->has('email') || $errors->has('error')) is-invalid @endif"
                                     id="email" name="email"
                                     value="{{ old('email') ?? $errors->first('oldEmail') }}" placeholder="Nhập email"
-                                    autofocus />
+                                    autofocus
+                                     />
                                 <div class="invalid-feedback">
                                     @if ($errors->has('email'))
                                         {{ $errors->first('email') }}

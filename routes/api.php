@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\ThesesController;
 use App\Http\Controllers\Api\StudentResearchController;
 use App\Http\Controllers\Api\BasicResearchController;
+use App\Http\Controllers\Api\DispatcheController;
 use App\Models\BasicResearch;
+use App\Repositories\DispatchType\DispatchTypeRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,9 +24,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::group(
+    [
+        'prefix' => 'dispatche'
+    ],
+    function () {
+        Route::get('/get-all/{type}', [DispatcheController::class, 'getAll'])->name('api.dispatche.getAll');
+        Route::get('/find', [DispatcheController::class, 'find'])->name('api.dispatche.find');
+        Route::post('/store', [DispatcheController::class, 'store'])->name('api.dispatche.store');
+        Route::post('/store-multiple/{type}', [DispatcheController::class, 'storeMultiple'])->name('api.dispatche.storeMultiple');
+        Route::post('/update', [DispatcheController::class, 'update'])->name('api.dispatche.update');
+        Route::post('/distroy', [DispatcheController::class, 'distroy'])->name('api.dispatche.distroy');
+        Route::get('/filter/{type}', [DispatcheController::class, 'filter'])->name('api.dispatche.filter');
+        Route::get('/get-codes', [DispatcheController::class, 'getAllCode'])->name('api.dispatche.getAllCode');
+        Route::get('/check-code/{type}', [DispatcheController::class, 'checkCodeExist'])->name('api.dispatche.checkCodeExist');
+        Route::get('/get-receive-by-week', [DispatcheController::class, 'getDispatcheReceiveByWeek'])->name('api.dispatche.getDispatcheReceiveByWeek');
+    }
+);
 
 Route::group(
     [
@@ -36,6 +56,7 @@ Route::group(
         Route::post('/store', [DispatchTypeController::class, 'store'])->name('api.dispatch-type.store');
         Route::put('/update', [DispatchTypeController::class, 'update'])->name('api.dispatch-type.update');
         Route::post('/distroy', [DispatchTypeController::class, 'distroy'])->name('api.dispatch-type.distroy');
+        Route::get('/test/{name}', [DispatchTypeRepository::class, 'getIdByName']);
     }
 );
 Route::group(
@@ -119,3 +140,4 @@ Route::group(
         Route::get('/filter', [BasicResearchController::class, 'filter'])->name('api.basicresearch.filter');
     }
 );
+

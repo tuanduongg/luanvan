@@ -338,7 +338,7 @@ CREATE TABLE `dispatches` (
   `receiver` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `signer` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sign_date` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `date_issued` datetime NOT NULL,
+  `issued_date` datetime NOT NULL,
   `published_place` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `effective_date` date NOT NULL,
   `expiration_date` date NOT NULL,

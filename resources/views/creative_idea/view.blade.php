@@ -7,7 +7,6 @@
                     <p class="card-title">
                         <span class="fw-bold" style="font-size: 18px">Đề tài: </span>
                         <span style="font-size: 18px">
-
                             {{ $creativeidea->tittle }}
                         </span>
                     </p>
@@ -19,7 +18,10 @@
                                 <span class="fw-bold">
                                     Thời gian bắt đầu :
                                 </span>
-                                {{ date('d-m-Y', strtotime($creativeidea->start_date)) }}
+
+                                <span class="text-primary">
+                                    {{ date('d-m-Y', strtotime($creativeidea->start_date)) }}
+                                </span>
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
@@ -28,10 +30,18 @@
                             <div class="ms-3">
                                 <ul class="">
                                     <li>
-                                        Họ và tên: {{ $creativeidea->lecturer->name }}
+                                        Họ và tên:
+                                        <span class="text-primary">
+                                            {{ $creativeidea->lecturer->name }}
+                                        </span>
+
                                     </li>
                                     <li>
-                                        Mã giảng viên: {{ $creativeidea->lecturer->code }}
+                                        Mã giảng viên:
+                                        <span class="text-primary">
+                                            {{ $creativeidea->lecturer->code }}
+                                        </span>
+
                                     </li>
                                 </ul>
                             </div>
@@ -45,13 +55,25 @@
                                 @forelse ($listStudent as $student)
                                     <ul class="">
                                         <li>
-                                            Họ và tên: {{ $student->student_name }}
+                                            Họ và tên:
+                                            <span class="text-primary">
+                                                {{ $student->student_name }}
+                                            </span>
+
                                         </li>
                                         <li>
-                                            Mã sinh viên: {{ $student->student_code }}
+                                            Mã sinh viên:
+                                            <span class="text-primary">
+                                                {{ $student->student_code }}
+                                            </span>
+
                                         </li>
                                         <li>
-                                            Lớp: {{ $student->student_class }}
+                                            Lớp:
+                                            <span class="text-primary">
+                                                {{ $student->student_class }}
+                                            </span>
+
 
                                         </li>
                                     </ul>
@@ -62,9 +84,13 @@
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
-                                    Niên khoá :
+                                    Năm học:
                                 </span>
-                                {{ $creativeidea->school_year }}
+
+                                <span class="text-primary">
+                                    {{ $creativeidea->school_year }}
+                                </span>
+
                             </p>
                         </div>
                         <div class="col-12 col-md-7">
@@ -73,20 +99,34 @@
                                 <span class="fw-bold">
                                     Nơi lưu trữ :
                                 </span>
-                                {{ $creativeidea->storage_location }}
+
+                                <span class="text-primary">
+                                    {{ $creativeidea->storage_location }}
+                                </span>
+
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
                                     Người lưu trữ :
                                 </span>
-                                {{ $creativeidea->archivist }}
+
+                                <span class="text-primary">
+                                    {{ $creativeidea->archivist }}
+                                </span>
+
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
                                     Tóm tắt nội dung :
                                 </span>
-                                {{ $creativeidea->content }}
+                                    {{ $creativeidea->content }}
+
                             </p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-4 text-start">
+                            <a href="javascript:history.back()"><i class='bx bx-arrow-back'></i>Trở lại</a>
                         </div>
                     </div>
 

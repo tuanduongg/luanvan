@@ -54,11 +54,13 @@
                         <table class="table card-table " id="table-student">
                             <thead class="">
                                 <tr>
-                                    <th>Mã sinh viên</th>
-                                    <th>Họ Tên</th>
-                                    <th>Lớp</th>
-                                    <th>Niên khoá</th>
-                                    <th>Hành động</th>
+
+                                    <th class="text-primary text-center">STT</th>
+                                    <th class="text-primary">Mã sinh viên</th>
+                                    <th class="text-primary">Họ Tên</th>
+                                    <th class="text-primary">Lớp</th>
+                                    <th class="text-primary">Niên khoá</th>
+                                    <th class="text-primary">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -78,6 +80,7 @@
             </div>
         </div>
     </div>
+    <div class="loading"></div>
     <!-- Modal -->
     <div class="modal fade" id="modal-student" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -186,12 +189,14 @@
                         </li>
                     `);
             });
-
+            //
+            let start = ((current_page - 1) * 10) + 1;
             $.each(data, function(index, value) {
                 $('#table-student > tbody').append(`
                         <tr>
+                            <td class="text-center">${start++}</td>
                             <td>${value.student_code}</td>
-                            <td class="fw-bold">${value.student_name}</td>
+                            <td class="">${value.student_name}</td>
                             <td>${value.student_class}</td>
                             <td><span class="badge bg-label-primary me-1  ">${value.student_school_year}</span></td>
                             <td>
@@ -225,12 +230,15 @@
             }
         }
 
-        function getAjax(url, data) {
+        function getAjax(url, data,page = 1) {
             $.ajax({
                 type: "get",
                 url: url,
                 data: data,
                 dataType: "json",
+                beforeSend: function() {
+                    $(".loading").show();
+                },
                 success: function(response) {
                     $('.pagination').empty();
                     $('#table-student > tbody').empty();
@@ -240,6 +248,7 @@
                     }
                     let student = response.data;
                     showData(student.data, student.current_page, student.last_page, student.links);
+                    $('.loading').hide();
                 },
                 error: function(response) {
                     console.error(response);
@@ -263,7 +272,7 @@
 
             $('#btn-update-student').hide();
             $('#table-student > tbody').empty();
-            getAjax(url, data);
+            getAjax(url, data,page);
         };
         $(document).ready(function() {
 

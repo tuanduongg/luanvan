@@ -18,26 +18,47 @@
         <!-- /Search -->
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
-            <!-- Place this tag where you want the button to render. -->
-            
-            <div class="btn-group dropstart d-none d-md-block">
-                <button type="button" class="btn p-1" data-bs-toggle="dropdown" aria-haspopup="true">
-                    <i class='bx bxs-bell-ring'><span class="flex-shrink-0  badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span></i> 
-                  </button>
-                <ul class="dropdown-menu mt-3">
-                    <li> <a class="dropdown-item" href="javascript:void(0);">Tháng này có 2 người sinh nhật</a> </li>
-                    <li> <a class="dropdown-item" href="javascript:void(0);">Tháng này có 2 người sinh nhật</a> </li>
-                    <li>
-                        <hr class="dropdown-divider">
+
+            <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1" id="icon-show-noti">
+                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside" aria-expanded="false">
+                    <i class="bx bx-bell bx-sm"></i>
+                    <span class="badge bg-danger rounded-pill badge-notifications" id="total_noti"></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end py-0" id="dropdown-noti" style="width: 300px; ">
+                    <li class="dropdown-menu-header border-bottom">
+                        <div class="dropdown-header d-flex align-items-center py-3">
+                            <h5 class="text-body mb-0 me-auto">Công văn đến trong tuần</h5>
+                            <a href="javascript:void(0)" class="dropdown-notifications-all text-body"
+                                data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Mark all as read"
+                                data-bs-original-title="Thông báo"><i class="bx fs-4 bx-envelope-open"></i></a>
+                        </div>
                     </li>
-                    <li> <a class="dropdown-item" href="javascript:void(0);">Tháng này có 4 công văn đến</a> </li>
+                    <li class="dropdown-notifications-list scrollable-container  ps ps--active-y">
+                        <ul class="list-group list-group-flush " id="ul-noti"
+                            style="height: 250px; overflow-y: auto;">
+                        </ul>
+                        <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                            <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                        </div>
+                        <div class="ps__rail-y" style="top: 0px; right: 0px; height: 480px;">
+                            <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 260px;"></div>
+                        </div>
+                    </li>
+                    <li class="dropdown-menu-footer border-top">
+                        <a href="{{route('dispatche.receive')}}" class="dropdown-item d-flex justify-content-center p-3">
+                            Xem tất cả
+                        </a>
+                    </li>
                 </ul>
-            </div>
+            </li>
+
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
                         <div class="avatar me-2">
-                            <span class="avatar-initial rounded-circle bg-label-secondary">{{Auth::user()->format_name ?? '' }}</span>
+                            <span
+                                class="avatar-initial rounded-circle bg-label-secondary">{{ Auth::user()->format_name ?? '' }}</span>
                         </div>
                     </div>
                 </a>
@@ -48,30 +69,21 @@
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
                                         <div class="avatar me-2">
-                                            <span class="avatar-initial rounded-circle bg-label-secondary">{{Auth::user()->format_name ?? '' }}</span>
+                                            <span
+                                                class="avatar-initial rounded-circle bg-label-secondary">{{ Auth::user()->format_name ?? '' }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <span class="fw-semibold d-block">{{Auth::user()->name ?? '' }}</span>
-                                    {{-- <small class="text-muted">Admin</small> --}}
+                                    <span
+                                        class="fw-semibold d-block span-name-profile">{{ Auth::user()->name ?? '' }}</span>
                                 </div>
                             </div>
                         </a>
                     </li>
                     <li>
                         <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                            <span class="d-flex align-items-center align-middle">
-                                <i class="flex-shrink-0 bx bxs-bell-ring  me-2"></i>
-                                <span class="flex-grow-1 align-middle">Thông báo</span>
-                                <span
-                                    class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                            </span>
-                        </a>
-                    </li>
+                    </li>   
                     <li>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalTop">
                             <i class="bx bx-user me-2"></i>
@@ -105,6 +117,7 @@
 <div class="modal modal-top fade" id="modalTop" tabindex="-1">
     <div class="modal-dialog">
         <form class="modal-content">
+
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTopTitle">Thông tin cá nhân</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -118,50 +131,67 @@
                                     <strong>
                                         Mã:
                                     </strong>
-                                    19103100063
+                                    {{ Auth::user()->code ?? '' }}
                                 </li>
                                 <li class="list-group-item">
                                     <strong>
                                         Họ và Tên:
                                     </strong>
-                                    Dương Ngô Tuấn
+                                    <span class="span-name-profile">
+                                        {{ Auth::user()->name ?? '' }}
+                                    </span>
                                 </li>
                                 <li class="list-group-item">
                                     <strong>
                                         Email:
                                     </strong>
-                                    sv.1903100063@uneti.edu.vn
+                                    {{ Auth::user()->email ?? '' }}
                                 </li>
                                 <li class="list-group-item">
                                     <strong>
                                         SĐT:
                                     </strong>
-                                    0912312321
+                                    <span class="span-phone-profile">
+                                        {{ Auth::user()->phone ?? '' }}
+                                    </span>
                                 </li>
                                 <li class="list-group-item">
                                     <strong>
                                         Chức Vụ:
                                     </strong>
-                                    Giảng viên
+                                    {{ Auth::user()->name_role }}
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col mb-3">
-                        <label for="input-name" class="form-label">Họ và tên</label>
-                        <input type="text" id="input-name" class="form-control" placeholder="Nhập họ tên">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="input-new_name" class="form-label">Họ và tên</label>
+                        <input type="text" id="input-new_name" value="{{ Auth::user()->name ?? '' }}"
+                            class="form-control" placeholder="Nhập họ tên">
+                        <div class="invalid-feedback error-new_name"></div>
+                    </div>
+                    @csrf
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="input-new_phone" class="form-label">Số điện thoại</label>
+                        <input type="text" id="input-new_phone" value="{{ Auth::user()->phone ?? '' }}"
+                            name="new_phone" class="form-control" placeholder="Nhập số điện thoại">
+                        <div class="invalid-feedback error-new_phone"></div>
                     </div>
                 </div>
-                <div class="row g-2">
-                    <div class="col mb-0">
-                        <label for="input-email" class="form-label">Email</label>
-                        <input type="email" id="input-email" class="form-control" placeholder="xxxx@xxx.xx">
+                <div class="row">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="input-old_password" class="form-label">Mật khẩu hiện tại</label>
+                        <input type="password" id="input-old_password" value="" class="form-control"
+                            placeholder="Nhập mật khẩu hiện tại...">
+                        <div class="invalid-feedback error-old_password"></div>
                     </div>
-                    <div class="col mb-0">
-                        <label for="input-sdt" class="form-label">Số điện thoại</label>
-                        <input type="text" id="input-sdt" class="form-control" placeholder="Nhập số điện thoại">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="input-new_password" class="form-label">Mật khẩu mới</label>
+                        <input type="password" id="input-new_password" value="" class="form-control"
+                            placeholder="Nhập mật khẩu mới...">
+                        <div class="invalid-feedback error-new_password"></div>
                     </div>
                 </div>
             </div>
@@ -170,5 +200,127 @@
                 <button type="button" id="btn-update-profile" class="btn btn-primary">Cập nhật thông tin</button>
             </div>
         </form>
+
     </div>
 </div>
+@push('scripts')
+    <script>
+        var status = false; // default hidden 
+
+
+        //get notification
+        //get công văn theo tuần
+        function timeDifference(current, previous) {
+
+            var msPerMinute = 60 * 1000;
+            var msPerHour = msPerMinute * 60;
+            var msPerDay = msPerHour * 24;
+            var msPerMonth = msPerDay * 30;
+            var msPerYear = msPerDay * 365;
+
+            var elapsed = current - previous;
+
+            if (elapsed < msPerMinute) {
+                return Math.round(elapsed / 1000) + ' giây trước';
+            } else if (elapsed < msPerHour) {
+                return Math.round(elapsed / msPerMinute) + ' phút trước';
+            } else if (elapsed < msPerDay) {
+                return Math.round(elapsed / msPerHour) + ' giờ trước';
+            } else if (elapsed < msPerMonth) {
+                return Math.round(elapsed / msPerDay) + ' ngày trước';
+            } else if (elapsed < msPerYear) {
+                return Math.round(elapsed / msPerMonth) + ' tháng trước';
+            } else {
+                return Math.round(elapsed / msPerYear) + ' năm trước';
+            }
+        }
+        var current = Date.now();
+        async function getAllNotification() {
+
+            await $.ajax({
+                type: "get",
+                url: "{{ route('api.dispatche.getDispatcheReceiveByWeek') }}",
+                dataType: "json",
+                success: function(response) {
+                    $('#total_noti').append(response.data.length);
+                    $.each(response.data, function(index, value) {
+                        let urlView = "{{ route('dispatche.receive.view', ':id') }}";
+                        urlView = urlView.replace(':id', value.id);
+                        $('#ul-noti').append(`
+                        <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3  d-flex align-items-center">
+                                        <div class="avatar">
+                                            <span class="avatar-initial rounded-circle bg-label-primary">CVĐ</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-0 ">
+                                            <a href="${urlView}" class="text-secondary">${value.tittle.length > 75 ? value.tittle.substring(0, 75) + '...' : value.tittle}</a>
+                                            </p>
+                                        <small class="text-muted">${timeDifference(current, new Date(value.created_at))}</small>
+                                    </div>
+                                </div>
+                            </li>
+                `);
+                    });
+
+                },
+                error: function(response) {
+                    console.error(response);
+                }
+            });
+
+        }
+        getAllNotification();
+
+
+        $(document).on('click', '#btn-update-profile', () => {
+            let new_name = $('#input-new_name').val();
+            let new_phone = $('#input-new_phone').val();
+            let old_password = $('#input-old_password').val();
+            let new_password = $('#input-new_password').val();
+            let _token = $('input[name=_token]').val();
+            let data = {
+                'new_name': new_name,
+                'new_phone': new_phone,
+                '_token': _token
+            }
+            if (old_password !== '' || new_password !== '') {
+                data = {
+                    'new_name': new_name,
+                    'new_phone': new_phone,
+                    'old_password': old_password,
+                    'new_password': new_password,
+                    '_token': _token
+                }
+            }
+            $.ajax({
+                type: "post",
+                url: "{{ route('api.profile.update') }}",
+                data: data,
+                dataType: "json",
+                success: function(response) {
+                    $.each(response.data, function(index, value) {
+                        $(`.span-${index}-profile`).text(value);
+                    });
+                    toastr["success"](response.message, "Thông báo");
+                    $('#modalTop').modal('hide');
+                },
+                error: function(response) {
+                    if (response.responseJSON.errors) {
+
+                        $.each(response.responseJSON.errors, function(index,
+                            value) {
+                            $(`#input-${index}`).addClass(
+                                'is-invalid');
+                            $(`.error-${index}`).text(value[0]);
+                        });
+                    } else {
+                        toastr["error"](response.responseJSON.message, "Thông báo");
+                    }
+                }
+            });
+        });
+    </script>
+@endpush

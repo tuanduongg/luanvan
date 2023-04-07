@@ -33,13 +33,34 @@
                                     <option value="9">K9</option>
                                 </select>
                             </div>
-                            <div class="col-md-3 mb-2">
+                            <div class="col-md-3 mb-3">
                                 <button class="btn btn-outline-secondary" id="btn-reset" type="button">
                                     <span class="tf-icons bx bx-refresh me-1"></span>
                                     Làm mới
                                 </button>
                             </div>
-                            <div class="col-md-5 text-end">
+                            {{-- <div class="col-md-5 text-end">
+                                <button id="btn-export" class="btn btn-info me-2" type="button">
+                                    <span class="tf-icons bx bx-export me-1"></span>
+                                    Xuất Excel
+                                </button>
+                                <button class="btn btn-primary" type="button" id="btn-create-theses" data-bs-toggle="modal"
+                                    data-bs-target="#modal-theses">
+                                    <span class="tf-icons bx bx-plus-circle me-1"></span>
+                                    Thêm mới
+                                </button>
+                            </div> --}}
+                        </div>
+                        <div class="row mt-xs-2     ">
+                            <div class="col d-md-flex justify-content-end ">
+                                <button id="btn-import" class="btn btn-secondary me-2 d-md-inline-block d-none"
+                                    type="button">
+                                    <label for="input-import">
+                                        <span class="tf-icons bx bx-import me-1"></span>
+                                        Nhập Excel
+                                    </label>
+                                </button>
+                                <input type="file" class="d-none" id="input-import" accept=".xlsx" name="input-import">
                                 <button class="btn btn-primary" type="button" id="btn-create-theses" data-bs-toggle="modal"
                                     data-bs-target="#modal-theses">
                                     <span class="tf-icons bx bx-plus-circle me-1"></span>
@@ -56,13 +77,27 @@
                         <table class="table card-table " id="table-theses">
                             <thead class="">
                                 <tr>
-                                    <th>Mã luận văn</th>
-                                    <th>Tên đề tài</th>
-                                    <th style="min-width: 170px;">Ngày bắt đầu</th>
-                                    <th style="min-width: 170px;">Ngày kết thúc</th>
-                                    <th>Niên khoá</th>
-                                    <th>Vị trí lưu trữ</th>
-                                    <th>Hành động</th>
+                                    <th class="text-primary text-center"
+                                        style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">STT</th>
+                                    <th class="text-primary"
+                                        style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Mã<br>luận văn
+                                    </th>
+                                    <th class="text-primary text-center"
+                                        style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Tên đề tài
+                                    </th>
+                                    <th class="text-primary"
+                                        style="background-color: #ffff;position: sticky; top: 0; z-index: 1;min-width: 170px;">
+                                        Ngày bắt đầu</th>
+                                    <th class="text-primary"
+                                        style="background-color: #ffff;position: sticky; top: 0; z-index: 1; min-width: 170px;">
+                                        Ngày kết thúc</th>
+                                    <th class="text-primary"
+                                        style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Niên khoá</th>
+                                    <th class="text-primary"
+                                        style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Vị trí<br>lưu
+                                        trữ</th>
+                                    <th class="text-primary"
+                                        style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -82,6 +117,7 @@
             </div>
         </div>
     </div>
+    <div class="loading"></div>
     <!-- Modal -->
     <div class="modal fade" id="modal-theses" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -106,7 +142,8 @@
                         <div class="row">
                             <div class="col mb-3">
                                 <label for="content" class="form-label">Nội dung</label>
-                                <textarea class="form-control" name="content" placeholder="Nhập tóm tắt nội dung" id="input-content" rows="3"></textarea>
+                                <textarea class="form-control" name="content" placeholder="Nhập tóm tắt nội dung" id="input-content"
+                                    rows="3"></textarea>
                                 <div class="invalid-feedback error-content">
 
                                 </div>
@@ -173,11 +210,14 @@
                         <div class="row row g-2 mb-3">
                             <div class="col">
                                 <label for="input-archivist" class="form-label">Người lưu trữ</label>
-                                <input class="form-control" name="archivist" type="text" placeholder="Người lưu trữ" id="input-archivist">
+                                <input class="form-control" name="archivist" type="text" placeholder="Người lưu trữ"
+                                    id="input-archivist">
                                 <div class="invalid-feedback error-archivist"></div>
                             </div>
                             <div class="col">
-                                <label for="file" class="form-label">File</label>
+                                <label for="file" class="form-label">File
+                                    <span class="text-lowercase"> (nếu có)</span>
+                                </label>
                                 <input class="form-control" type="file" name="file" id="input-file">
                                 <div class="invalid-feedback error-file"></div>
                             </div>
@@ -198,6 +238,7 @@
 
 @push('scripts')
     <script src="{{ asset('dist/js/tagify.js') }}"></script>
+    <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script>
         function handleClickPanigate(currentPage, lastPage) {
             event.preventDefault();
@@ -216,6 +257,9 @@
                 url: url,
                 data: data,
                 dataType: "json",
+                beforeSend: function() {
+                    $(".loading").show();
+                },
                 success: function(response) {
                     $('.pagination').empty();
                     $('#table-theses > tbody').empty();
@@ -225,6 +269,7 @@
                     }
                     let student = response.data;
                     showData(student.data, student.current_page, student.last_page, student.links);
+                    $('.loading').hide();
                 },
                 error: function(response) {
                     console.error(response);
@@ -286,6 +331,7 @@
                         </li>
                     `);
             });
+            let start = ((current_page - 1) * 10) + 1;
 
             $.each(data, function(index, value) {
                 let urlView = "{{ route('theses.view', 'id') }}";
@@ -293,21 +339,21 @@
                 $('#table-theses > tbody').append(`
                 
                         <tr>
+                            <td>${start++}</td>
                             <td>${value.code}</td>
-                            <td class="fw-bold">${value.tittle}</td>
+                            <td class=""><a class="text-normal " style="color: #697a8d" href="${urlView}">
+                                    ${value.tittle}
+                                    </a>    </td>
                             <td>${formatDate(value.start_date)}</td>
                             <td>${formatDate(value.end_date)}</td>
                             <td><span class="badge bg-label-secondary me-1 ">${value.school_year}</span></td>
                             <td>${value.storage_location}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                    <div class="dropdown d-flex">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow me-2"
                                             data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                            <a href="${urlView}" class="btn hide-arrow p-0"><i class='bx bx-show-alt'></i></a>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="${urlView}">
-                                                <i class="bx bx-detail me-1"></i>
-                                                Xem chi tiết
-                                            </a>
                                             <a class="dropdown-item" id='btn-edit-theses' data-bs-toggle="modal" data-bs-target="#modal-theses" data-id=${value.id} href="javascript:void(0);">
                                                 <i class="bx bx-edit-alt me-1"></i>
                                                 Sửa
@@ -325,7 +371,199 @@
 
 
         $(document).ready(function() {
-            
+
+            function validateImport(data, type) {
+
+                if (arrCodes.includes(data[0])) {
+                    return "Số công văn đã tồn tại";
+                }
+
+                if (data[1] && data[1].length > 200) {
+                    return "Tiêu đề tối đa 200 ký tự";
+                }
+
+                if (data[2] && data[2].length > 500) {
+                    return "Nội dung tối đa 500 ký tự";
+                }
+                if (type == 2) {
+                    if (data[4] && data[4].length > 50) {
+                        return "Nơi nhận tối đa 50 ký tự";
+                    }
+                    if (data[5] && data[5].length > 50) {
+                        return "Người ký tối đa 50 ký tự";
+                    }
+                    if (!isDate(data[6])) {
+                        return "Ngày ký Không đúng định dạng ngày tháng năm";
+                    }
+                    if (!isDate(data[7])) {
+                        return "Ngày ban hành Không đúng định dạng ngày tháng năm";
+                    }
+                    if (data[8] && data[8].length > 50) {
+                        return "Nơi ban hành tối đa 50 ký tự";
+                    }
+                    if (!isDate(data[9])) {
+                        return "Ngày hiệu lực Không đúng định dạng ngày tháng năm";
+                    }
+                    if (!isDate(data[10])) {
+                        return "Ngày hết hiệu lực Không đúng định dạng ngày tháng năm";
+                    }
+                    if (data[11] && data[11].length > 50) {
+                        return "Người lưu trữ tối đa 50 ký tự";
+                    }
+                    if (data[12] && data[12].length > 50) {
+                        return "Nơi lưu trữ tối đa 50 ký tự";
+                    }
+                } else {
+                    if (data[4] && data[4].length > 50) {
+                        return "Người ký tối đa 50 ký tự";
+                    }
+                    if (!isDate(data[5])) {
+                        return "Ngày ký Không đúng định dạng ngày tháng năm";
+                    }
+                    if (!isDate(data[6])) {
+                        return "Ngày ban hành Không đúng định dạng ngày tháng năm";
+                    }
+                    if (data[7] && data[7].length > 50) {
+                        return "Nơi ban hành tối đa 50 ký tự";
+                    }
+                    if (!isDate(data[8])) {
+                        return "Ngày hiệu lực Không đúng định dạng ngày tháng năm";
+                    }
+                    if (!isDate(data[9])) {
+                        return "Ngày hết hiệu lực Không đúng định dạng ngày tháng năm";
+                    }
+                    if (data[10] && data[10].length > 50) {
+                        return "Người lưu trữ tối đa 50 ký tự";
+                    }
+                    if (data[11] && data[11].length > 50) {
+                        return "Nơi lưu trữ tối đa 50 ký tự";
+                    }
+                }
+
+                return "";
+            }
+            //handle import excel
+            function handleImportFile(e) {
+                var file = e.target.files[0];
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var data = e.target.result;
+                    var workbook = XLSX.read(e.target.result, {
+                        dateNF: 'mm/dd/yyyy',
+                        cellDates: true,
+                        raw: true
+                    });
+                    var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                        header: 1,
+                        cellDates: true,
+                        dateNF: 'yyyy-mm-dd',
+                        raw: false
+                    });
+                    let isAccept = false;
+                    let flagAccept = false;
+                    var arrReult = [];
+                    console.log(jsonData);
+                    for (let i = 0; i < jsonData.length; i++) {
+                        if (jsonData[i].length === 13 && !isNaN(jsonData[i][0])) {
+                            console.log(jsonData[i]);
+                            isAccept = true;
+                            if (jsonData[i+1].length === 5 && !isNaN(jsonData[i][0])) {
+                                flagAccept = true;
+                                console.log(jsonData[i+1]);
+                            }
+                            if(flagAccept === false) {
+                                toastr.error(`Lỗi hàng ${(i + 1)} file excel:` + msg, "Lỗi Định Dạng File");
+                            }
+                            // let msg = validateImport(jsonData[i],1);
+                            // if (msg !== '') { // lỗi
+                            //     toastr.options.timeOut = 0;
+                            //     toastr.options.extendedTimeOut = 0;
+                            //     toastr.error(`Lỗi hàng ${(i + 1)} file excel:` + msg, "Lỗi Nhập File");
+                            //     return;
+                            // };
+                            // jsonData[i][5] = formatDate(jsonData[i][5], 'yyyy-mm-dd');
+                            // jsonData[i][6] = formatDate(jsonData[i][6], 'yyyy-mm-dd');
+                            // jsonData[i][8] = formatDate(jsonData[i][8], 'yyyy-mm-dd');
+                            // jsonData[i][9] = formatDate(jsonData[i][9], 'yyyy-mm-dd');
+                            // arrReult.push(jsonData[i]);
+                        }
+                    };
+
+                    if (isAccept === false) {
+                        toastr["error"]("file excel không đúng định dạng", "Thông báo");
+                        return;
+                    }
+                    //call ajax
+                    // let url = "{{ route('api.dispatche.storeMultiple', ':type') }}";
+                    // url = url.replace(':type', 1)
+                    // $.ajax({
+                    //     type: "post",
+                    //     url: url,
+                    //     data: {
+                    //         data: arrReult
+                    //     },
+                    //     dataType: "json",
+                    //     success: function(response) {
+                    //         toastr["success"]("Thêm mới thành công", "Thông báo");
+                    //         getData();
+                    //     },
+                    //     error: function(res) {
+                    //         toastr["error"](res.responseJSON.message, "Thông báo");
+                    //     }
+                    // });
+
+
+
+                };
+                reader.readAsArrayBuffer(file);
+                $("#input-import").val(null);
+            }
+
+            function getAllCode() {
+                let url = "{{ route('api.dispatche.getAllCode') }}";
+                $.ajax({
+                    type: "get",
+                    async: true,
+                    url: url,
+                    dataType: "json",
+                    success: function(response) {
+                        arrCodes = response.data;
+                    },
+                    error: function(res) {
+                        console.log(res);
+                    }
+                });
+                return null;
+            }
+
+            $(document).on('change', '#input-import', (e) => {
+                Swal.fire({
+                    title: 'Thông Báo!',
+                    text: "Bạn chắc chắn muốn nhập từ excel?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: "Không",
+                    confirmButtonText: 'Vâng!đúng rồi'
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        toastr.clear();
+                        // getAllCode();
+                        setTimeout(() => {
+                            handleImportFile(e);
+                        }, 500);
+                    } else {
+                        $("#input-import").val(null);
+                    }
+                })
+
+            });
+            //end handle import excel
+
+
             $(document).on('focus', 'input,textarea', (e) => {
                 $(e.target).removeClass('is-invalid');
             });
@@ -413,77 +651,6 @@
                 couter = true;
                 // return data;
             });
-            // function formatState(state) {
-            //     if (!state.id) {
-            //         return state.text;
-            //     }
-            //     var baseUrl = "admin/images/flags";
-            //     var $state = $(
-            //         '<span>' + state.text + '</span>'
-            //     );
-            //     return $state;
-            // };
-
-            // const URL = "{{ route('api.student.select2') }}";
-            let config = {
-                // templateResult: function(data, container) {
-                //     if (data.element) {
-                //         $(container).css({'z-index':'1000'});
-                //         $(data.element).css({'z-index':'1000'});
-                //     }
-                //     return data.text;
-                // },
-                placeholder: "Nhập mã sinh viên....",
-                // allowClear: true,
-                // tags: false,
-                // width: '100%',
-                // minimumInputLength: 3,
-                // maximumSelectionLength: 2,
-                // maximumResultsForSearch: 10,
-                // templateResult: formatState,
-                // ajax: {
-                //     url: URL,
-                //     dataType: "json",
-                //     type: "GET",
-                //     delay: 250,
-                //     data: function(params) {
-
-                //         var queryParameters = {
-                //             student_name: params.term
-                //         }
-                //         return queryParameters;
-                //     },
-                //     processResults: function(data) {
-                //         return {
-                //             results: $.map(data.data, function(item) {
-
-                //                 return {
-                //                     text: item.student_name,
-                //                     id: item.student_code
-                //                 }
-                //             })
-                //         };
-                //     }
-                // }
-            }
-            // $('#input-msv').select2(config);
-            // $(document).on('click', '.select2-container', function() {
-            //     $(".select2-results").css({
-            //         'z-index': '10900 !important'
-            //     });
-            //     // $(".select2-results").addClass('dropdown-menu show');
-            //     $(".select2-results__options").css({
-            //         'z-index': '10900 !important'
-            //     });
-            //     $(".select2-results").addClass("bg-primary");
-            //     $(".select2-results__options").addClass("bg-primary");
-            //     $(".select2-results__option").addClass("bg-primary");
-            //     // alert(1);
-            // });
-            // // $(".select2-container").on("bg-primary");
-
-            // $('.select2-search__field').addClass('form-control');
-            // generate random whitelist items (for the demo)
 
 
 
@@ -615,7 +782,7 @@
 
                 $('#btn-store-theses').show();
                 $('#btn-update-theses').hide();
-                $('.modal-title').text('Thêm mới');
+                $('.modal-title').text('Thêm mới luận văn');
                 emptyInput();
             });
 
@@ -717,25 +884,6 @@
                 };
                 getAjax("{{ route('api.theses.filter') }}", data);
             });
-
-            // //hanle submit form search
-            // $(document).on('submit', '#form-search', function(e) {
-            //     e.preventDefault();
-            //     let searchVal = $('#input-search').val();
-            //     let school_year = $('#filter-school-year').val();
-            //     $('input[name=hidden-search').val(searchVal);
-            //     $('input[name=hidden-school_year').val(school_year);
-            //     let data = {
-            //         'school_year': school_year,
-            //         'search': searchVal,
-            //     };
-            //     getAjax("{{ route('api.theses.filter') }}", data, data);
-            // });
-
-            // $(document).on('change', '#filter-school-year', function() {
-            //     $('#form-search').submit();
-            // });
-
 
 
 

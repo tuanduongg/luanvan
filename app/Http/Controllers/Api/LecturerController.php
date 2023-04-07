@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Lecturer;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -34,11 +35,12 @@ class LecturerController extends Controller
     {
         $rules = [
             'code' => 'required|unique:lecturers',
-            'name' => 'required',
+            'name' => 'required|max:50',
             'email' => 'required|email',
-            'phone' => 'required',
+            'phone' => 'required|max:10',
             'role' => 'required',
-            'password' => 'required',
+            'password' => 'required|min:6|max:50',
+            'confirm_password' => 'required|min:6|max:50|required_with:password|same:password',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -46,16 +48,18 @@ class LecturerController extends Controller
         if ($validator->fails()) {
             return $this->responseError($validator->errors());
         }
-        $this->model->create($request->all());
+        $data = $request->all();
+        $data['password'] = Hash::make($request->get('password'));
+        $this->model->create($data);
         return $this->responseSuccess(null, 'Thêm mới thành công!');
     }
     public function update(Request $request)
     {
         $rules = [
             'code' => ['required', Rule::unique('lecturers')->ignore($request->get('id'))],
-            'name' => 'required',
-            'email' => 'required',
-            'phone' => 'required',
+            'name' => 'required|max:50',
+            'email' => 'required|email',
+            'phone' => 'required|max:10',
             'role' => 'required',
         ];
 
@@ -73,7 +77,7 @@ class LecturerController extends Controller
         $student->role = $request->get('role');
 
         if(!empty($request->get('password'))) { //nếu có password mới thì cập nhật lại
-            $student->password = $request->get('password');
+            $student->password = Hash::make($request->get('password'));
         }
 
         $student->save();

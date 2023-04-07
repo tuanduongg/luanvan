@@ -23,13 +23,14 @@ class CreateDispatchesTable extends Migration
             $table->string('receiver')->nullable(true);
             $table->string('signer')->nullable(false);
             $table->string('sign_date')->nullable(false);
-            $table->dateTime('date_issued')->nullable(false);
+            $table->date('issued_date')->nullable(false);
             $table->string('published_place')->nullable(false);
             $table->date('effective_date')->nullable(false); // ngày hiệu lực
             $table->date('expiration_date')->nullable(false); // ngày hết hiệu lực
             $table->string('archivist'); // nhân viên lưu trữ
             $table->string('storage_location'); // nơi lưu trữ
-            $table->text('file')->nullable(true); // file ảnh hoặc pdf
+            $table->integer('role')->default(1); //loại đến or đi (1 đến 2 đi)
+            $table->text('file')->nullable(true); // file ảnh hoặc pdf,docx
             $table->timestamps();
         });
     }

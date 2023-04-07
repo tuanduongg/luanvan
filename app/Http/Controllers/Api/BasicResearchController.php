@@ -142,7 +142,6 @@ class BasicResearchController extends Controller
             'id' => 'required',
             'tittle' => 'required|string|max:200',
             'content' => 'required|string|max:500',
-            'lecturer_id' => 'required',
             'leader_id' => 'required|exists:App\Models\Lecturer,code',
             'year' => 'required',
             'archivist' => 'required',

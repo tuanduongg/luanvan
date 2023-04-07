@@ -22,15 +22,10 @@
                             </div>
                             <div class="col-md-2 mb-2">
                                 <select class="form-select " id="filter-school-year">
-                                    <option value="-1">Niên Khoá</option>
-                                    <option value="16">K16</option>
-                                    <option value="15">K15</option>
-                                    <option value="14">K14</option>
-                                    <option value="13">K13</option>
-                                    <option value="12">K12</option>
-                                    <option value="11">K11</option>
-                                    <option value="10">K10</option>
-                                    <option value="9">K9</option>
+                                    <option value="-1">Năm học</option>
+                                    @for ($i = date("Y"); $i >= 2015; $i--)
+                                        <option value="{{ ($i-1) .'-'.$i }}">{{ ($i-1) .'-'. $i }}</option>
+                                    @endfor
                                 </select>
                             </div>
                             <div class="col-md-3 mb-2">
@@ -56,11 +51,12 @@
                         <table class="table card-table " id="table-data">
                             <thead class="">
                                 <tr>
-                                    <th>Tên đề tài</th>
-                                    <th style="min-width: 170px;">Ngày bắt đầu</th>
-                                    <th>Niên khoá</th>
-                                    <th>Vị trí lưu trữ</th>
-                                    <th>Hành động</th>
+                                    <th class="text-primary text-center" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">STT</th>
+                                    <th class="text-primary text-center" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Tên đề tài</th>
+                                    <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;min-width: 170px;">Ngày bắt đầu</th>
+                                    <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Năm học</th>
+                                    <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Vị trí<br>lưu trữ</th>
+                                    <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,6 +76,7 @@
             </div>
         </div>
     </div>
+    <div class="loading"></div>
     <!-- Modal -->
     <div class="modal fade" id="modal-data" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -131,9 +128,9 @@
                             <div class="col mb-0">
                                 <label for="school_year" class="form-label">Niên khoá</label>
                                 <select id="input-school_year" name="school_year" class="form-select">
-                                    <option value="13">K13</option>
-                                    <option value="12">K12</option>
-                                    <option value="11">K11</option>
+                                    @for ($i = date("Y"); $i >= 2015; $i--)
+                                        <option value="{{ ($i-1) .'-'.$i }}">{{ ($i-1) .'-'. $i }}</option>
+                                    @endfor
                                 </select>
                                 <div class="invalid-feedback error-school_year">
 
@@ -202,6 +199,9 @@
                 url: url,
                 data: data,
                 dataType: "json",
+                beforeSend: function() {
+                    $(".loading").show();
+                },
                 success: function(response) {
                     $('.pagination').empty();
                     $('#table-data > tbody').empty();
@@ -211,6 +211,7 @@
                     }
                     let student = response.data;
                     showData(student.data, student.current_page, student.last_page, student.links);
+                    $('.loading').hide();
                 },
                 error: function(response) {
                     console.error(response);
@@ -272,6 +273,7 @@
                         </li>
                     `);
             });
+            let start = ((current_page - 1) * 10) + 1;
 
             $.each(data, function(index, value) {
                 let urlView = "{{ route('creativeidea.view', 'id') }}";
@@ -279,19 +281,19 @@
                 $('#table-data > tbody').append(`
                 
                         <tr>
-                            <td class="fw-bold">${value.tittle}</td>
+                            <td class="">${start++}</td>
+                            <td class=""><a class="text-normal " style="color: #697a8d" href="${urlView}">
+                                    ${value.tittle}
+                                    </a>    </td>
                             <td>${formatDate(value.start_date)}</td>
                             <td><span class="badge bg-label-secondary me-1 ">${value.school_year}</span></td>
                             <td>${value.storage_location}</td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                    <div class="dropdown d-flex">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow me-2"
                                             data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                            <a href="${urlView}" class="btn hide-arrow p-0"><i class='bx bx-show-alt'></i></a>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="${urlView}">
-                                                <i class="bx bx-detail me-1"></i>
-                                                Xem chi tiết
-                                            </a>
                                             <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-data" data-id=${value.id} href="javascript:void(0);">
                                                 <i class="bx bx-edit-alt me-1"></i>
                                                 Sửa

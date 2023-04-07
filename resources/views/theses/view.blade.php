@@ -19,7 +19,13 @@
                                 <span class="fw-bold">
                                     Thời gian :
                                 </span>
-                                {{date('d-m-Y', strtotime($theses->start_date)) }} đến {{ date('d-m-Y', strtotime($theses->end_date)) }}
+                                <span class="text-primary">
+                                    {{ date('d-m-Y', strtotime($theses->start_date)) }} 
+                                </span>
+                                đến
+                                <span class="text-primary">
+                                    {{ date('d-m-Y', strtotime($theses->end_date)) }}
+                                </span>
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
@@ -28,10 +34,16 @@
                             <div class="ms-3">
                                 <ul class="">
                                     <li>
-                                        Họ và tên: {{ $theses->lecturer->name }}
+                                        Họ và tên: 
+                                        <span class="text-primary">
+                                            {{ $theses->lecturer->name }}
+                                        </span>
                                     </li>
                                     <li>
-                                        Mã giảng viên: {{ $theses->lecturer->code }}
+                                        Mã giảng viên: 
+                                        <span class="text-primary">
+                                            {{ $theses->lecturer->code }}
+                                        </span>
                                     </li>
                                 </ul>
                             </div>
@@ -45,14 +57,23 @@
                                 @forelse ($listStudent as $student)
                                     <ul class="">
                                         <li>
-                                            Họ và tên: {{ $student->student_name }}
+                                            Họ và tên: 
+                                            <span class="text-primary">
+                                                {{ $student->student_name }}
+                                            </span>
                                         </li>
                                         <li>
-                                            Mã sinh viên: {{ $student->student_code }}
+                                            Mã sinh viên: 
+                                            <span class="text-primary">
+                                                {{ $student->student_code }}
+                                            </span>
                                         </li>
                                         <li>
-                                            Lớp: {{ $student->student_class }}
-
+                                            Lớp: 
+                                            <span class="text-primary">
+                                                {{ $student->student_class }}
+                                            </span>
+                                            
                                         </li>
                                     </ul>
                                 @empty
@@ -64,7 +85,9 @@
                                 <span class="fw-bold">
                                     Niên khoá :
                                 </span>
-                                {{ $theses->school_year }}
+                                <span class="text-primary">
+                                    {{ $theses->school_year }}
+                                </span>
                             </p>
                         </div>
                         <div class="col-12 col-md-7">
@@ -73,13 +96,17 @@
                                 <span class="fw-bold">
                                     Nơi lưu trữ :
                                 </span>
-                                {{ $theses->storage_location }}
+                                <span class="text-primary">
+                                    {{ $theses->storage_location }}
+                                </span>
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
                                     Người lưu trữ :
                                 </span>
-                                {{ $theses->archivist }}
+                                <span class="text-primary">
+                                    {{ $theses->archivist }}
+                                </span>
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
@@ -90,40 +117,45 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        @if (!empty($theses->file))
-                            @switch($theses->extension_file)
-                                @case('jpg')
-                                @case('png')
+                        <div class="col col-lg-6 m-auto">
+                            @if (!empty($theses->file))
+                                @switch($theses->extension_file)
+                                    @case('jpg')
+                                    @case('png')
 
-                                @case('img')
-                                    <img src="{{ url('/uploads/storage/' . $theses->file) }}" alt="" srcset="">
-                                @break
+                                    @case('img')
+                                        <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $theses->file) }}" alt="" srcset="">
+                                    @break
 
-                                @case('doc')
-                                @case('docx')
-                                    <iframe src="https://docs.google.com/gview?url={{ url("/uploads/storage/" . $theses->file) }}&embedded=true"></iframe>
-                                @break
+                                    @case('doc')
+                                    @case('docx')
+                                        <iframe class="w-100 h-100"
+                                            src="https://docs.google.com/gview?url={{ url('/uploads/storage/' . $theses->file) }}&embedded=true"></iframe>
+                                    @break
 
-                                @case('pdf')
-                                    <embed src="{{ url('/uploads/storage/' . $theses->file) }}" width="100%" style="height: auto; min-height: 800px;" />
-                                @break
+                                    @case('pdf')
+                                    <embed class="w-100 h-100" src="{{ url('/uploads/storage/' . $theses->file) }}" width="100%"
+                                        style="height: auto; min-height: 800px;" />
+                                    @break
 
-                                @default
-                            @endswitch
-                            <br>
-                        @endif
+                                    @default
+                                @endswitch
+                                <br>
+                            @endif
+                        </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col text-end">
-                            <a href="{{ asset("/uploads/storage/" . $theses->file) }}" class="btn-sm" role="button" aria-pressed="true">
-                                <i class='bx bxs-download'></i>
-                                Tải Xuống
-
-                            </a>
-                            {{-- <a class="btn btn-outline-secondary me-2 btn-sm">
-                                <span class="tf-icons bx bxs-download me-1"></span> Tải xuống
-                            </a> --}}
+                        <div class="col-4 text-start">
+                            <a href="javascript:history.back()"><i class='bx bx-arrow-back'></i>Trở lại</a>
                         </div>
+                        @if (!empty($theses->file))
+                            <div class="col-8 text-end">
+                                <a href="{{ asset('/uploads/storage/' . $theses->file) }}">
+                                    <i class='bx bxs-download'></i>
+                                    Tải xuống file {{ '.' . $theses->extension_file }}
+                                </a>
+                            </div>
+                        @endif
                     </div>
 
 

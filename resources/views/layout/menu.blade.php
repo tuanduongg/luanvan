@@ -1,7 +1,7 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand p-2" style="background-color: #39527b">
         <a href="/" class="app-brand-link w-100 h-100 ">
-            <img src="http://media.uneti.edu.vn/Media/2_SVUNETI/Images/sv-logo-dashboard.png" class="w-100 h-100 " alt="logo">
+            <img src="{{ asset('dist/img/logo/logokhoa.png') }}" class="w-100 h-auto" alt="logo">
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -29,18 +29,18 @@
 
             <ul class="menu-sub ">
                 <li class="menu-item ">
-                    <a href="/cong-van" class="menu-link text-white">
+                    <a href="{{route('dispatche.receive')}}" class="menu-link text-white">
                         <div data-i18n="Công văn đến">Công văn đến</div>
                     </a>
                 </li>
                 <li class="menu-item ">
-                    <a href="#" class="menu-link text-white">
+                    <a href="{{route('dispatche.send')}}" class="menu-link text-white">
                         <div data-i18n="Công văn đi">Công văn đi</div>
                     </a>
                 </li>
                 <li class="menu-item ">
                     <a href="/loai-cong-van" class="menu-link text-white">
-                        <div data-i18n="Công văn đi">Loại công văn</div>
+                        <div data-i18n="loaị công văn">Loại công văn</div>
                     </a>
                 </li>
 
@@ -70,7 +70,7 @@
             <ul class="menu-sub">
                 <li class="menu-item">
                     <a href="{{ route('basicresearch') }}" class="menu-link text-white">
-                        <div data-i18n="Basic">Giảng viên</div>
+                        <div data-i18n="Basic">Cơ sở</div>
                     </a>
                 </li>
                 <li class="menu-item">

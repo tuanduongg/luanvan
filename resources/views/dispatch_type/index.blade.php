@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-12">
             <div class="h1">
-                Quản lý loại công văn
+                Loại công văn
             </div>
         </div>
     </div>
@@ -31,9 +31,10 @@
                     <table class="table card-table " id="table-dispatch-type">
                         <thead>
                             <tr>
-                                <th>Mã loại</th>
-                                <th>Tên loại</th>
-                                <th>Hành động</th>
+                                <th class="text-primary text-center" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">STT</th>
+                                <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Mã loại</th>
+                                <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Tên loại</th>
+                                <th class="text-primary" style="background-color: #ffff;position: sticky; top: 0; z-index: 1;">Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -114,6 +115,7 @@
                         $.each(response.data, function(index, value) {
                             $('#table-dispatch-type > tbody').append(`
                             <tr>
+                                <td class="text-center">${index+1}</td>
                                 <td><span class="badge bg-label-primary me-1">${value.type_code}</span></td>
                                 <td>${value.type_name}</td>
                                 <td>

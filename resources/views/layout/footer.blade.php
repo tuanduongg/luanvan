@@ -1,5 +1,5 @@
-<footer class="content-footer footer bg-footer-theme">
-    <div class="container-xxl d-flex flex-wrap justify-content-center">
+<footer class="content-footer footer bg-footer-theme" style="padding-bottom: 30px;">
+    <div class="container-xxl d-flex flex-wrap justify-content-center" style="">
         <div class="mb-2 mb-md-0">
             ©
             <script>

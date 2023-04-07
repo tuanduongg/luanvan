@@ -7,8 +7,7 @@
                     <p class="card-title">
                         <span class="fw-bold" style="font-size: 18px">Đề tài: </span>
                         <span style="font-size: 18px">
-
-                            {{ $studentresearch->tittle }}
+                            {{ $basicresearch->tittle ?? '' }}
                         </span>
                     </p>
                     <hr>
@@ -16,22 +15,37 @@
                     <div class="row">
                         <div class="col-12 col-md-5">
                             <p class="card-text">
-                                <span class="fw-bold">
+                                <span class="fw-bold ">
                                     Năm thực hiện :
                                 </span>
-                                {{ $studentresearch->year }}
+                                
+                                <span class="text-primary">
+                                    {{ $basicresearch->year ?? '' }}
+                                </span>
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
-                                    Giảng viên hướng dẫn :
+                                    Trưởng Nhóm :
                                 </span>
                             <div class="ms-3">
                                 <ul class="">
                                     <li>
-                                        Họ và tên: {{ $studentresearch->lecturer->name }}
+                                        Họ và tên: 
+                                        <span class="text-primary">
+                                            {{ $leader->name ?? '' }}
+                                        </span>
                                     </li>
                                     <li>
-                                        Mã giảng viên: {{ $studentresearch->lecturer->code }}
+                                        Mã: 
+                                        <span class="text-primary">
+                                            {{ $leader->code ?? '' }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        Email: 
+                                        <span class="text-primary">
+                                            {{ $leader->email ?? '' }}
+                                        </span>
                                     </li>
                                 </ul>
                             </div>
@@ -39,20 +53,28 @@
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
-                                    Sinh viên thực hiện :
+                                    Thành viên :
                                 </span>
                             <div class="ms-3">
-                                @forelse ($listStudent as $student)
+                                @forelse ($listLecturers as $lecturer)
                                     <ul class="">
                                         <li>
-                                            Họ và tên: {{ $student->student_name }}
+                                            Họ và tên: 
+                                            <span class="text-primary">
+                                                {{ $lecturer->name ?? '' }}
+                                            </span>
                                         </li>
                                         <li>
-                                            Mã sinh viên: {{ $student->student_code }}
+                                            Mã: 
+                                            <span class="text-primary">
+                                                {{ $lecturer->code ?? '' }}
+                                            </span>
                                         </li>
                                         <li>
-                                            Lớp: {{ $student->student_class }}
-
+                                            Email: 
+                                            <span class="text-primary">
+                                                {{ $lecturer->email ?? '' }}
+                                            </span>
                                         </li>
                                     </ul>
                                 @empty
@@ -64,7 +86,10 @@
                                 <span class="fw-bold">
                                     Kết quả :
                                 </span>
-                                {{ $studentresearch->result }}
+                                <span class="text-primary">
+
+                                    {{ $basicresearch->result ?? '' }}
+                                </span>
                             </p>
                         </div>
                         <div class="col-12 col-md-7">
@@ -73,59 +98,71 @@
                                 <span class="fw-bold">
                                     Nơi lưu trữ :
                                 </span>
-                                {{ $studentresearch->storage_location }}
+                                
+                                <span class="text-primary">
+                                    {{ $basicresearch->storage_location ?? '' }}
+                                </span>
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
                                     Người lưu trữ :
                                 </span>
-                                {{ $studentresearch->archivist }}
+                                
+                                <span class="text-primary">
+                                    {{ $basicresearch->archivist ?? '' }}
+                                </span>
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
                                     Tóm tắt nội dung :
-                                </span>
-                                {{ $studentresearch->content }}
+                                </span> 
+                                    {{ $basicresearch->content ?? '' }}
                             </p>
                         </div>
                     </div>
+                    <hr>
                     <div class="row mt-3">
-                        @if (!empty($studentresearch->file))
-                            @switch($studentresearch->extension_file)
-                                @case('jpg')
-                                @case('png')
+                        <div class="col col-lg-6 m-auto">
+                            @if (!empty($basicresearch->file))
+                                @switch($basicresearch->extension_file)
+                                    @case('jpg')
+                                    @case('png')
 
-                                @case('img')
-                                    <img src="{{ url('/uploads/storage/' . $studentresearch->file) }}" alt="" srcset="">
-                                @break
+                                    @case('img')
+                                        <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $basicresearch->file) }}" alt=""
+                                            srcset="">
+                                    @break
 
-                                @case('doc')
-                                @case('docx')
-                                    <iframe src="https://docs.google.com/gview?url={{ url("/uploads/storage/" . $studentresearch->file) }}&embedded=true"></iframe>
-                                @break
+                                    @case('doc')
+                                    @case('docx')
+                                        <iframe class="w-100 h-100"
+                                            src="https://docs.google.com/gview?url={{ url('/uploads/storage/' . $basicresearch->file) }}&embedded=true"></iframe>
+                                    @break
 
-                                @case('pdf')
-                                    <embed src="{{ url('/uploads/storage/' . $studentresearch->file) }}" width="100%" style="height: auto; min-height: 800px;" />
-                                @break
+                                    @case('pdf')
+                                        <embed class="w-100 h-100" src="{{ url('/uploads/storage/' . $basicresearch->file) }}" width="100%"
+                                            style="height: auto; min-height: 800px;" />
+                                    @break
 
-                                @default
-                            @endswitch
-                            <br>
-                        @endif
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col text-end">
-                            <a href="{{ asset("/uploads/storage/" . $studentresearch->file) }}" class="btn-sm" role="button" aria-pressed="true">
-                                <i class='bx bxs-download'></i>
-                                Tải Xuống
-
-                            </a>
-                            {{-- <a class="btn btn-outline-secondary me-2 btn-sm">
-                                <span class="tf-icons bx bxs-download me-1"></span> Tải xuống
-                            </a> --}}
+                                    @default
+                                @endswitch
+                                <br>
+                            @endif
                         </div>
                     </div>
-
+                    <div class="row mt-3">
+                        <div class="col-4 text-start">
+                            <a href="javascript:history.back()"><i class='bx bx-arrow-back'></i>Trở lại</a>
+                        </div>
+                        @if (!empty($basicresearch->file))
+                        <div class="col-8 text-end">
+                            <a href="{{ asset("/uploads/storage/" . $basicresearch->file) }}">
+                                <i class='bx bxs-download'></i>
+                                Tải xuống file {{'.' . $basicresearch->extension_file}}
+                            </a>
+                        </div>
+                        @endif
+                    </div>
 
                 </div>
             </div>
