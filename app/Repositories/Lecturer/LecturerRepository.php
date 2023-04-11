@@ -69,5 +69,10 @@ class LecturerRepository extends BaseRepository {
         $this->model::query()->create($data);
     }
 
+    public function getNameAndEmail() {
+        $data = $this->model::query()->where('role','=',3)->select(['name','email'])->get();
+        return $data;
+    }
+
     
 }

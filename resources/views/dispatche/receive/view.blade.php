@@ -19,7 +19,7 @@
                         <span class="fw-bold d-inline" style="font-size: 20px">
                             <i style="font-size: 20px" class='bx bxs-bookmark-alt'></i>
                             Tiêu đề: 
-                            <span class="fw-normal" style="font-size: 17px;">
+                            <span class="fw-normal text-primary" style="font-size: 17px;">
                                 {{ $dispatche->tittle }}
                             </span>
                         </span>
@@ -124,8 +124,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col ms-3">
-                            {{ $dispatche->content }}
+                        <div class="col ms-3 text-primary">
+                            {!! $dispatche->content !!}
                         </div>
                     </div>
                     <div class="row mt-3">

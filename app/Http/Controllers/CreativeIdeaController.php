@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\CreativeIdea\CreativeIdeaRepository;
 use App\Repositories\CreativeIdeaStudent\CreativeIdeaStudentRepository;
+use Illuminate\Support\Str;
 
 class CreativeIdeaController extends Controller
 {
@@ -18,9 +19,11 @@ class CreativeIdeaController extends Controller
             abort(404);
         }
         $listStudent = (new CreativeIdeaStudentRepository())->getStudentsByIdCreativeIdea($id);
+        $tittlePage = ' - Ý Tưởng Sáng Tạo Khởi Nghiệp | ' . Str::slug($creativeidea->tittle);
         return view('creative_idea.view',[
             'creativeidea' => $creativeidea,
             'listStudent' => $listStudent,
+            'tittlePage' => $tittlePage,
         ]);
     }
 }

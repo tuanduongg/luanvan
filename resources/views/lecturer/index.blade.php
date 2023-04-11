@@ -84,6 +84,7 @@
                                 <div class="invalid-feedback error-code">
 
                                 </div>
+                                <input type="hidden" value="{{ Auth::user()->role }}" name="role">
                             </div>
                             <input type="hidden" name="id">
                             <div class="col-12 col-md-6 mb-0">
@@ -137,9 +138,12 @@
                             <div class="col-12 col-md-6 mb-0">
                                 <label for="select-nienkhoa" class="form-label">Chức vụ</label>
                                 <select id="select-nienkhoa" required name="role" class="form-select">
-                                    <option value="1">Trưởng khoa</option>
+                                    @if ((int) Auth::user()->role === 1)
+                                        <option value="1">Trưởng khoa</option>
+                                    @endif
                                     <option value="2">Phó khoa</option>
                                     <option selected value="3">Giảng viên</option>
+                                    <option selected value="4">Khác</option>
                                 </select>
                                 <div class="invalid-feedback error-student_school_year">
 
@@ -233,14 +237,19 @@
                 switch (parseInt(value.role)) {
                     case 1:
                         roleName = 'Trưởng khoa';
-                        classColor = 'warning';
+                        classColor = 'danger';
                         break;
                     case 2:
                         roleName = 'Phó khoa';
-                        classColor = 'info';
+                        classColor = 'warning';
                         break;
                     case 3:
                         roleName = 'Giảng viên';
+                        classColor = 'info'
+                        break;
+                    case 4:
+                        roleName = 'Khác';
+                        classColor = 'secondary';
                         break;
 
                     default:
@@ -311,18 +320,20 @@
         }
 
         function getData(page = 1, filter = '') {
+            let role = $('input[name=role]').val();
+            console.log(role);
             let url = "{{ route('api.lecturer.getAll') }}";
             let data = {
                 'page': page,
+                'role': role
             };
-            // let oldFilter = '';
-            console.log(filter);
             if (filter != '') {
                 url = "{{ route('api.lecturer.filter') }}";
                 data = {
                     "page": page,
                     'student_school_year': filter.student_school_year,
                     'search': filter.name,
+                    'role': role
                 }
             }
 

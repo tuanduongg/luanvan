@@ -23,7 +23,7 @@
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown"
                     data-bs-auto-close="outside" aria-expanded="false">
                     <i class="bx bx-bell bx-sm"></i>
-                    <span class="badge bg-danger rounded-pill badge-notifications" id="total_noti"></span>
+                    <span class="badge bg-danger rounded-pill badge-notifications" id="total_notification"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end py-0" id="dropdown-noti" style="width: 300px; ">
                     <li class="dropdown-menu-header border-bottom">
@@ -46,7 +46,8 @@
                         </div>
                     </li>
                     <li class="dropdown-menu-footer border-top">
-                        <a href="{{route('dispatche.receive')}}" class="dropdown-item d-flex justify-content-center p-3">
+                        <a href="{{ route('dispatche.receive') }}"
+                            class="dropdown-item d-flex justify-content-center p-3">
                             Xem tất cả
                         </a>
                     </li>
@@ -83,7 +84,7 @@
                     </li>
                     <li>
                         <div class="dropdown-divider"></div>
-                    </li>   
+                    </li>
                     <li>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#modalTop">
                             <i class="bx bx-user me-2"></i>
@@ -92,8 +93,9 @@
                     </li>
                     <li>
                         <a class="dropdown-item" href="#">
-                            <i class="bx bx-cog me-2"></i>
-                            <span class="align-middle">Thiết lập</span>
+                            {{-- <i class="bx bx-cog me-2"></i> --}}
+                            <i class='bx bx-align-justify'></i>
+                            <span class="align-middle">Thống kê cá nhân</span>
                         </a>
                     </li>
 
@@ -200,126 +202,108 @@
                 <button type="button" id="btn-update-profile" class="btn btn-primary">Cập nhật thông tin</button>
             </div>
         </form>
-
+       
     </div>
 </div>
 @push('scripts')
     <script>
-        var status = false; // default hidden 
-
-
+        
+        
         //get notification
         //get công văn theo tuần
-        function timeDifference(current, previous) {
-
-            var msPerMinute = 60 * 1000;
-            var msPerHour = msPerMinute * 60;
-            var msPerDay = msPerHour * 24;
-            var msPerMonth = msPerDay * 30;
-            var msPerYear = msPerDay * 365;
-
-            var elapsed = current - previous;
-
-            if (elapsed < msPerMinute) {
-                return Math.round(elapsed / 1000) + ' giây trước';
-            } else if (elapsed < msPerHour) {
-                return Math.round(elapsed / msPerMinute) + ' phút trước';
-            } else if (elapsed < msPerDay) {
-                return Math.round(elapsed / msPerHour) + ' giờ trước';
-            } else if (elapsed < msPerMonth) {
-                return Math.round(elapsed / msPerDay) + ' ngày trước';
-            } else if (elapsed < msPerYear) {
-                return Math.round(elapsed / msPerMonth) + ' tháng trước';
-            } else {
-                return Math.round(elapsed / msPerYear) + ' năm trước';
+        
+        
+        
+        $(document).ready(function() {
+            var status = false; // default hidden 
+            async function getAllNotification() {
+                var current = Date.now();
+                $.ajax({
+                    type: "get",
+                    url: "{{ route('api.dispatche.getDispatcheReceiveByWeek') }}",
+                    dataType: "json",
+                    success: function(response) {
+                        $('#total_notification').append(response.data.length);
+                        $.each(response.data, function(index, value) {
+                            let urlView =
+                                "{{ route('dispatche.receive.view', [':id', ':slug']) }}";
+                            urlView = urlView.replace(':id', value.id);
+                            urlView = urlView.replace(':slug', string_to_slug(value
+                                .tittle));
+                            $('#ul-noti').append(`
+                                    <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3  d-flex align-items-center">
+                                                    <div class="avatar">
+                                                        <span class="avatar-initial rounded-circle bg-label-primary">CVĐ</span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <p class="mb-0 ">
+                                                        <a href="${urlView}" class="text-secondary">${value.tittle.length > 75 ? value.tittle.substring(0, 75) + '...' : value.tittle}</a>
+                                                        </p>
+                                                    <small class="text-muted">${timeDifference(current, new Date(value.created_at))}</small>
+                                                </div>
+                                            </div>
+                                        </li>
+                            `);
+                        });
+    
+                    },
+                    error: function(response) {
+                        console.error(response);
+                    }
+                });
+    
             }
-        }
-        var current = Date.now();
-        async function getAllNotification() {
+            getAllNotification();
 
-            await $.ajax({
-                type: "get",
-                url: "{{ route('api.dispatche.getDispatcheReceiveByWeek') }}",
-                dataType: "json",
-                success: function(response) {
-                    $('#total_noti').append(response.data.length);
-                    $.each(response.data, function(index, value) {
-                        let urlView = "{{ route('dispatche.receive.view', ':id') }}";
-                        urlView = urlView.replace(':id', value.id);
-                        $('#ul-noti').append(`
-                        <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                                <div class="d-flex">
-                                    <div class="flex-shrink-0 me-3  d-flex align-items-center">
-                                        <div class="avatar">
-                                            <span class="avatar-initial rounded-circle bg-label-primary">CVĐ</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 ">
-                                            <a href="${urlView}" class="text-secondary">${value.tittle.length > 75 ? value.tittle.substring(0, 75) + '...' : value.tittle}</a>
-                                            </p>
-                                        <small class="text-muted">${timeDifference(current, new Date(value.created_at))}</small>
-                                    </div>
-                                </div>
-                            </li>
-                `);
-                    });
-
-                },
-                error: function(response) {
-                    console.error(response);
-                }
-            });
-
-        }
-        getAllNotification();
-
-
-        $(document).on('click', '#btn-update-profile', () => {
-            let new_name = $('#input-new_name').val();
-            let new_phone = $('#input-new_phone').val();
-            let old_password = $('#input-old_password').val();
-            let new_password = $('#input-new_password').val();
-            let _token = $('input[name=_token]').val();
-            let data = {
-                'new_name': new_name,
-                'new_phone': new_phone,
-                '_token': _token
-            }
-            if (old_password !== '' || new_password !== '') {
-                data = {
+            $(document).on('click', '#btn-update-profile', () => {
+                let new_name = $('#input-new_name').val();
+                let new_phone = $('#input-new_phone').val();
+                let old_password = $('#input-old_password').val();
+                let new_password = $('#input-new_password').val();
+                let _token = $('input[name=_token]').val();
+                let data = {
                     'new_name': new_name,
                     'new_phone': new_phone,
-                    'old_password': old_password,
-                    'new_password': new_password,
                     '_token': _token
                 }
-            }
-            $.ajax({
-                type: "post",
-                url: "{{ route('api.profile.update') }}",
-                data: data,
-                dataType: "json",
-                success: function(response) {
-                    $.each(response.data, function(index, value) {
-                        $(`.span-${index}-profile`).text(value);
-                    });
-                    toastr["success"](response.message, "Thông báo");
-                    $('#modalTop').modal('hide');
-                },
-                error: function(response) {
-                    if (response.responseJSON.errors) {
-
-                        $.each(response.responseJSON.errors, function(index,
-                            value) {
-                            $(`#input-${index}`).addClass(
-                                'is-invalid');
-                            $(`.error-${index}`).text(value[0]);
-                        });
-                    } else {
-                        toastr["error"](response.responseJSON.message, "Thông báo");
+                if (old_password !== '' || new_password !== '') {
+                    data = {
+                        'new_name': new_name,
+                        'new_phone': new_phone,
+                        'old_password': old_password,
+                        'new_password': new_password,
+                        '_token': _token
                     }
                 }
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('api.profile.update') }}",
+                    data: data,
+                    dataType: "json",
+                    success: function(response) {
+                        $.each(response.data, function(index, value) {
+                            $(`.span-${index}-profile`).text(value);
+                        });
+                        toastr["success"](response.message, "Thông báo");
+                        $('#modalTop').modal('hide');
+                    },
+                    error: function(response) {
+                        if (response.responseJSON.errors) {
+
+                            $.each(response.responseJSON.errors, function(index,
+                                value) {
+                                $(`#input-${index}`).addClass(
+                                    'is-invalid');
+                                $(`.error-${index}`).text(value[0]);
+                            });
+                        } else {
+                            toastr["error"](response.responseJSON.message, "Thông báo");
+                        }
+                    }
+                });
             });
         });
     </script>

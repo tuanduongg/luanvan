@@ -23,14 +23,15 @@
                             <div class="col-md-2 mb-2">
                                 <select class="form-select " id="filter-school-year">
                                     <option value="-1">Niên Khoá</option>
-                                    <option value="16">K16</option>
-                                    <option value="15">K15</option>
+                                    @for ($i = $allSchoolYear; $i >= 1; $i--)
+                                        <option value="{{ $i }}">K{{ $i }}</option>
+                                    @endfor {{-- <option value="15">K15</option>
                                     <option value="14">K14</option>
                                     <option value="13">K13</option>
                                     <option value="12">K12</option>
                                     <option value="11">K11</option>
                                     <option value="10">K10</option>
-                                    <option value="9">K9</option>
+                                    <option value="9">K9</option> --}}
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3">
@@ -51,23 +52,26 @@
                                 </button>
                             </div> --}}
                         </div>
-                        <div class="row mt-xs-2     ">
-                            <div class="col d-md-flex justify-content-end ">
-                                <button id="btn-import" class="btn btn-secondary me-2 d-md-inline-block d-none"
-                                    type="button">
-                                    <label for="input-import">
-                                        <span class="tf-icons bx bx-import me-1"></span>
-                                        Nhập Excel
-                                    </label>
-                                </button>
-                                <input type="file" class="d-none" id="input-import" accept=".xlsx" name="input-import">
-                                <button class="btn btn-primary" type="button" id="btn-create-theses" data-bs-toggle="modal"
-                                    data-bs-target="#modal-theses">
-                                    <span class="tf-icons bx bx-plus-circle me-1"></span>
-                                    Thêm mới
-                                </button>
+                        @if ((int) Auth::user()->role !== 3)
+                            <div class="row mt-xs-2     ">
+                                <div class="col d-md-flex justify-content-end ">
+                                    <button id="btn-import" class="btn btn-secondary me-2 d-md-inline-block d-none"
+                                        type="button">
+                                        <label for="input-import">
+                                            <span class="tf-icons bx bx-import me-1"></span>
+                                            Nhập Excel
+                                        </label>
+                                    </button>
+                                    <input type="file" class="d-none" id="input-import" accept=".xlsx"
+                                        name="input-import">
+                                    <button class="btn btn-primary" type="button" id="btn-create-theses"
+                                        data-bs-toggle="modal" data-bs-target="#modal-theses">
+                                        <span class="tf-icons bx bx-plus-circle me-1"></span>
+                                        Thêm mới
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        @endif
 
                     </form>
                 </div>
@@ -177,9 +181,9 @@
                             <div class="col mb-0">
                                 <label for="school_year" class="form-label">Niên khoá</label>
                                 <select id="input-school_year" name="school_year" class="form-select">
-                                    <option value="13">K13</option>
-                                    <option value="12">K12</option>
-                                    <option value="11">K11</option>
+                                    @for ($i = $allSchoolYear; $i >= 1; $i--)
+                                        <option value="{{ $i }}">K{{ $i }}</option>
+                                    @endfor
                                 </select>
                                 <div class="invalid-feedback error-school_year">
 
@@ -297,6 +301,8 @@
             getAjax(url, data);
         };
 
+
+
         function showData(data, current_page, last_page, links) {
             $('#table-theses > tbody').empty(); // xoá dữ liệu trong tbody
             $('.pagination').empty();
@@ -334,14 +340,15 @@
             let start = ((current_page - 1) * 10) + 1;
 
             $.each(data, function(index, value) {
-                let urlView = "{{ route('theses.view', 'id') }}";
+                let urlView = "{{ route('theses.view', ['id', 'slug']) }}";
                 urlView = urlView.replace('id', value.id);
+                urlView = urlView.replace('slug', string_to_slug(value.tittle));
                 $('#table-theses > tbody').append(`
                 
                         <tr>
                             <td>${start++}</td>
                             <td>${value.code}</td>
-                            <td class=""><a class="text-normal " style="color: #697a8d" href="${urlView}">
+                            <td class=""><a class=" td-link" href="${urlView}">
                                     ${value.tittle}
                                     </a>    </td>
                             <td>${formatDate(value.start_date)}</td>
@@ -350,9 +357,12 @@
                             <td>${value.storage_location}</td>
                                 <td>
                                     <div class="dropdown d-flex">
+                                        @if ((int) Auth::user()->role !== 3)
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow me-2"
                                             data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                            @endif
                                             <a href="${urlView}" class="btn hide-arrow p-0"><i class='bx bx-show-alt'></i></a>
+                                            @if ((int) Auth::user()->role !== 3)
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" id='btn-edit-theses' data-bs-toggle="modal" data-bs-target="#modal-theses" data-id=${value.id} href="javascript:void(0);">
                                                 <i class="bx bx-edit-alt me-1"></i>
@@ -363,6 +373,7 @@
                                                 Xoá
                                             </a>
                                         </div>
+                                        @endif
                                     </div>
                                 </td>
                         </tr>`);
@@ -371,76 +382,67 @@
 
 
         $(document).ready(function() {
+            var arrLecturers = [];
+            var arrStudents = [];
 
-            function validateImport(data, type) {
+            function removeThsTsName(name) {
+                return name.includes('ths.') ? name.split('ths.')[1].trim() : name.includes('ts.') ? name.split(
+                    'ts.')[1].trim() : name;
 
-                if (arrCodes.includes(data[0])) {
-                    return "Số công văn đã tồn tại";
+            }
+
+            function getLecturerByName(arr, nameLec = "") {
+                let data = arr.filter((item) => {
+                    let name = removeThsTsName(item.name.toString());
+                    // console.log(nameLec.toString().toLowerCase());
+                    // console.log(name.includes(nameLec.toString().toLowerCase()));
+                    nameLec = removeThsTsName(nameLec.toLowerCase());
+                    return name.toLowerCase().includes(nameLec);
+                });
+                console.log(data);
+                return data;
+            }
+
+            function getStudentByCode(arr, code) {
+                return arrStudents.filter((item) => {
+                    return item.student_code == code;
+                });
+            }
+
+            function validateImport(data) {
+                if (data.length > 4) {
+
+                    // let checkMsv = getStudentByCode(arrStudents, data[1]);
+                    // if (checkMsv.length < 1) {
+                    //     return `Mã sinh viên (${data[1]}) không tồn tại trong hệ thống`;
+                    // }
+
+                    if (data[5] && data[5].length > 200) {
+                        return "Tên đề tài tối đa 200 ký tự";
+                    }
+                    if (data[6] && data[6].length > 500) {
+                        return "Nội dung tối đa 500 ký tự";
+                    }
+                    if (data[8] && !isDate(data[8])) {
+                        return "Ngày bắt đầu Không đúng định dạng ngày tháng năm";
+                    }
+                    if (data[9] && !isDate(data[9])) {
+                        return "Ngày kết thúc Không đúng định dạng ngày tháng năm";
+                    }
+
+                    if (data[5]) {
+                        let checkNameLecturer = getLecturerByName(arrLecturers, data[5]);
+                        if (checkNameLecturer.length < 1) {
+                            return `(${data[5]}) không có trong hệ thống`;
+                        } else if (checkNameLecturer.length > 1) {
+                            return `Tồn tại ${checkNameLecturer.length} giảng viên có tên (${data[5]})`
+                        }
+                    }
+
+                    return "";
                 }
+                return "Không đúng định dạng file"
 
-                if (data[1] && data[1].length > 200) {
-                    return "Tiêu đề tối đa 200 ký tự";
-                }
-
-                if (data[2] && data[2].length > 500) {
-                    return "Nội dung tối đa 500 ký tự";
-                }
-                if (type == 2) {
-                    if (data[4] && data[4].length > 50) {
-                        return "Nơi nhận tối đa 50 ký tự";
-                    }
-                    if (data[5] && data[5].length > 50) {
-                        return "Người ký tối đa 50 ký tự";
-                    }
-                    if (!isDate(data[6])) {
-                        return "Ngày ký Không đúng định dạng ngày tháng năm";
-                    }
-                    if (!isDate(data[7])) {
-                        return "Ngày ban hành Không đúng định dạng ngày tháng năm";
-                    }
-                    if (data[8] && data[8].length > 50) {
-                        return "Nơi ban hành tối đa 50 ký tự";
-                    }
-                    if (!isDate(data[9])) {
-                        return "Ngày hiệu lực Không đúng định dạng ngày tháng năm";
-                    }
-                    if (!isDate(data[10])) {
-                        return "Ngày hết hiệu lực Không đúng định dạng ngày tháng năm";
-                    }
-                    if (data[11] && data[11].length > 50) {
-                        return "Người lưu trữ tối đa 50 ký tự";
-                    }
-                    if (data[12] && data[12].length > 50) {
-                        return "Nơi lưu trữ tối đa 50 ký tự";
-                    }
-                } else {
-                    if (data[4] && data[4].length > 50) {
-                        return "Người ký tối đa 50 ký tự";
-                    }
-                    if (!isDate(data[5])) {
-                        return "Ngày ký Không đúng định dạng ngày tháng năm";
-                    }
-                    if (!isDate(data[6])) {
-                        return "Ngày ban hành Không đúng định dạng ngày tháng năm";
-                    }
-                    if (data[7] && data[7].length > 50) {
-                        return "Nơi ban hành tối đa 50 ký tự";
-                    }
-                    if (!isDate(data[8])) {
-                        return "Ngày hiệu lực Không đúng định dạng ngày tháng năm";
-                    }
-                    if (!isDate(data[9])) {
-                        return "Ngày hết hiệu lực Không đúng định dạng ngày tháng năm";
-                    }
-                    if (data[10] && data[10].length > 50) {
-                        return "Người lưu trữ tối đa 50 ký tự";
-                    }
-                    if (data[11] && data[11].length > 50) {
-                        return "Nơi lưu trữ tối đa 50 ký tự";
-                    }
-                }
-
-                return "";
             }
             //handle import excel
             function handleImportFile(e) {
@@ -463,30 +465,56 @@
                     let isAccept = false;
                     let flagAccept = false;
                     var arrReult = [];
-                    console.log(jsonData);
                     for (let i = 0; i < jsonData.length; i++) {
-                        if (jsonData[i].length === 13 && !isNaN(jsonData[i][0])) {
-                            console.log(jsonData[i]);
+                        if (jsonData[i].length === 13 && !isNaN(parseInt(jsonData[i][0]))) {
                             isAccept = true;
-                            if (jsonData[i+1].length === 5 && !isNaN(jsonData[i][0])) {
+                            if (jsonData[i + 1].length === 5 && !isNaN(parseInt(jsonData[i + 1][0]))) {
                                 flagAccept = true;
-                                console.log(jsonData[i+1]);
+                            } else {
+                                toastr.error(`Lỗi hàng ${(i + 2)} file excel`, "Lỗi Định Dạng File");
                             }
-                            if(flagAccept === false) {
-                                toastr.error(`Lỗi hàng ${(i + 1)} file excel:` + msg, "Lỗi Định Dạng File");
-                            }
-                            // let msg = validateImport(jsonData[i],1);
-                            // if (msg !== '') { // lỗi
-                            //     toastr.options.timeOut = 0;
-                            //     toastr.options.extendedTimeOut = 0;
-                            //     toastr.error(`Lỗi hàng ${(i + 1)} file excel:` + msg, "Lỗi Nhập File");
-                            //     return;
-                            // };
-                            // jsonData[i][5] = formatDate(jsonData[i][5], 'yyyy-mm-dd');
-                            // jsonData[i][6] = formatDate(jsonData[i][6], 'yyyy-mm-dd');
-                            // jsonData[i][8] = formatDate(jsonData[i][8], 'yyyy-mm-dd');
-                            // jsonData[i][9] = formatDate(jsonData[i][9], 'yyyy-mm-dd');
-                            // arrReult.push(jsonData[i]);
+                            let msg = validateImport(jsonData[i]);
+                            let msg2 = validateImport(jsonData[i + 1]);
+                            if (msg !== '' || msg2 !== '') { // lỗi
+                                toastr.options.timeOut = 0;
+                                toastr.options.extendedTimeOut = 0;
+                                toastr.error(`Lỗi hàng ${ msg !== '' ? (i + 1) : (i + 2)} file excel:` + (
+                                    msg !== '' ? msg : msg2), "Lỗi Nhập File");
+                                return;
+                            };
+                            let randomStr = jsonData[i][10] + Date.now().toString().slice(-5) + i;
+                            // if(jsonData[5]) {
+                            let lec_id = getLecturerByName(arrLecturers, jsonData[i][5])[0].id;
+                            // }
+                            let regex = /[0-9]+a/gm; // lấy niên khoá sinh viên từ lớp ex: DHTI13A1HN -> 13A
+                            let found1 = jsonData[i][4].toLowerCase().match(regex)
+                            let found2 = jsonData[i + 1][4].toLowerCase().match(regex)
+
+                            ;
+                            //code : LV + niên khoá + i
+                            let obj = {
+                                code: `LV${randomStr}`,
+                                tittle: jsonData[i][6].trim(),
+                                content: jsonData[i][7].trim().replace(new RegExp('\r?\n', 'g'), '<br/>'),
+                                start_date: formatDate(jsonData[i][8], 'yyyy-mm-dd'),
+                                end_date: formatDate(jsonData[i][9], 'yyyy-mm-dd'),
+                                lecturer_id: lec_id,
+                                school_year: jsonData[i][10],
+                                archivist: jsonData[i][11],
+                                storage_location: jsonData[i][12],
+                                students: [{
+                                    student_code: jsonData[i][1],
+                                    student_name: `${jsonData[i][2] + ' ' + jsonData[i][3]}`,
+                                    student_class: `${jsonData[i][4]}`,
+                                    student_school_year: found1[0].slice(0, found1[0].length - 1),
+                                }, {
+                                    student_code: jsonData[i + 1][1],
+                                    student_name: `${jsonData[i+1][2] + ' ' + jsonData[i+1][3]}`,
+                                    student_class: `${jsonData[i+1][4]}`,
+                                    student_school_year: found2[0].slice(0, found2[0].length - 1),
+                                }]
+                            };
+                            arrReult.push(obj);
                         }
                     };
 
@@ -495,23 +523,22 @@
                         return;
                     }
                     //call ajax
-                    // let url = "{{ route('api.dispatche.storeMultiple', ':type') }}";
-                    // url = url.replace(':type', 1)
-                    // $.ajax({
-                    //     type: "post",
-                    //     url: url,
-                    //     data: {
-                    //         data: arrReult
-                    //     },
-                    //     dataType: "json",
-                    //     success: function(response) {
-                    //         toastr["success"]("Thêm mới thành công", "Thông báo");
-                    //         getData();
-                    //     },
-                    //     error: function(res) {
-                    //         toastr["error"](res.responseJSON.message, "Thông báo");
-                    //     }
-                    // });
+                    let url = "{{ route('api.theses.storeMultiple') }}";
+                    $.ajax({
+                        type: "post",
+                        url: url,
+                        data: {
+                            data: arrReult
+                        },
+                        dataType: "json",
+                        success: function(response) {
+                            toastr["success"]("Thêm mới thành công", "Thông báo");
+                            getData();
+                        },
+                        error: function(res) {
+                            toastr["error"](res.responseJSON.message, "Thông báo");
+                        }
+                    });
 
 
 
@@ -520,15 +547,16 @@
                 $("#input-import").val(null);
             }
 
-            function getAllCode() {
-                let url = "{{ route('api.dispatche.getAllCode') }}";
+            function getAllLecturerName() {
+                let url = "{{ route('api.lecturer.getAllName') }}";
                 $.ajax({
                     type: "get",
                     async: true,
                     url: url,
                     dataType: "json",
                     success: function(response) {
-                        arrCodes = response.data;
+                        arrLecturers = response.data;
+                        return;
                     },
                     error: function(res) {
                         console.log(res);
@@ -551,7 +579,7 @@
 
                     if (result.isConfirmed) {
                         toastr.clear();
-                        // getAllCode();
+                        getAllLecturerName();
                         setTimeout(() => {
                             handleImportFile(e);
                         }, 500);
@@ -594,13 +622,6 @@
             // TagifyStudentListEl.addEventListener('change', onChange)
             // let couter = 1;
 
-            // function onChange(e) {
-            //     // if (JSON.parse(e.target.value).length >= 2) { //litmit add tags = 2
-            //     //     $('#btn-add-input-msv').addClass('d-none');
-            //     // } else {
-            //     //     $('#btn-add-input-msv').removeClass('d-none');
-            //     // }
-            // }
             const button = TagifyStudentListEl.nextElementSibling; // "add new tag" action-button
 
             button.addEventListener("click", onAddButtonClick);
@@ -616,7 +637,6 @@
                     return;
                 } else {
                     if (JSON.parse(inputVal).length < 2) { //litmit add tags = 2
-                        // $('#btn-add-input-msv').addClass('d-none');
                         TagifyStudentList.addEmptyTag();
                         return;
                     }
@@ -666,10 +686,8 @@
                 $('input[name=storage_location]').val('');
                 // $('select[name=role]').val('');
                 $("select[name=role]").prop("selectedIndex", 0);
-                $('select[name=email]').val('');
-                $('select[name=password]').val('');
+                $('input[name=file]').val('');
                 resetClassInput('is-invalid');
-
             }
 
             function resetClassInput(className) {
@@ -682,11 +700,13 @@
                 $('input[name=start_date]').removeClass(className);
                 $('input[name=end_date]').removeClass(className);
                 $('input[name=storage_location]').removeClass(className);
-                $("select[name=role]").removeClass(className);;
-                $('select[name=email]').removeClass(className);
-                $('select[name=password]').removeClass(className);
+                $("select[name=role]").removeClass(className);
+                $('input[name=file]').removeClass(className);
             }
 
+            //on modal close
+
+            //
             //load all data from server to table
             getData();
 

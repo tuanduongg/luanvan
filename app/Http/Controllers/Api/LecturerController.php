@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Lecturer;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -21,7 +22,12 @@ class LecturerController extends Controller
     }
     public function getAll(Request $request)
     {
-        $data = $this->model->orderBy('created_at', 'DESC')->paginate(10)->onEachSide(1);
+        $role = $request->get('role');
+        $data = $this->model->orderBy('created_at', 'DESC');
+        if((int)$role == 2) {
+            $data = $data->where('role','=','3');
+        }
+        $data = $data->paginate(10)->onEachSide(1);
         return $this->responseSuccess($data);
     }
 
@@ -55,13 +61,17 @@ class LecturerController extends Controller
     }
     public function update(Request $request)
     {
+        // dd($request->all());
         $rules = [
             'code' => ['required', Rule::unique('lecturers')->ignore($request->get('id'))],
             'name' => 'required|max:50',
             'email' => 'required|email',
-            'phone' => 'required|max:10',
+            'phone' => 'required|min:10|max:10',
             'role' => 'required',
         ];
+        if($request->has('password') && !empty($request->get('password'))) {
+            $rules['password'] ='required|min:6|max:50';
+        }
 
         $validator = Validator::make($request->all(), $rules);
 
@@ -93,19 +103,28 @@ class LecturerController extends Controller
     public function filter(Request $request)
     {
         $name = $request->get('search');
+        $role = $request->get('role');
         $data = [];
         if ( !empty($name)) {
             $query = $this->model
-                ->where(
-                    'name',
-                    'like',
-                    '%' . $name . '%',
-                );
+            ->where(
+                'name',
+                'like',
+                '%' . $name . '%',
+            );
+            if((int)$role == 2) {
+                $data = $query->where('role','=','3');
+            }
             $data = $query
                 ->paginate(10)
                 ->onEachSide(1);
         } else {
-            $data = $this->model->paginate(10)->onEachSide(1);
+            if((int)$role == 2) {
+                $data = $data = $this->model->where('role','=','3')->paginate(10)->onEachSide(1);
+            }else {
+
+                $data = $this->model->paginate(10)->onEachSide(1);
+            }
         }
         return $this->responseSuccess($data);
     }
@@ -121,5 +140,10 @@ class LecturerController extends Controller
             return $this->responseSuccess($data);
         // }
         // return; 
+    }
+
+    public function getAllName() {
+        $data = $this->model::query()->get(['id','name','code']);
+        return $this->responseSuccess($data);
     }
 }

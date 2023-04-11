@@ -38,7 +38,6 @@ function formatDate(dateParam, type = "dd/mm/yyyy") {
     }
     return result;
 }
-
 $(document).on("focus", "input,textarea", (e) => {
     $(e.target).removeClass("is-invalid");
 });
@@ -104,7 +103,7 @@ function validateImportExcel(data, type) {
         if (data[12] && data[12].length > 50) {
             return "Nơi lưu trữ tối đa 50 ký tự";
         }
-    }else {
+    } else {
         if (data[4] && data[4].length > 50) {
             return "Người ký tối đa 50 ký tự";
         }
@@ -136,7 +135,7 @@ function validateImportExcel(data, type) {
 
 function html_table_to_excel(idTabel) {
     let now = new Date().toLocaleString();
-    hideCols([".td-action",".td-stt"]);
+    hideCols([".td-action", ".td-stt"]);
     var data = document.getElementById(idTabel);
 
     var file = XLSX.utils.table_to_book(data, {
@@ -157,13 +156,72 @@ function html_table_to_excel(idTabel) {
     });
 
     XLSX.writeFile(file, `${now}.xlsx`);
-    showCols([".td-action",".td-stt"]);
+    showCols([".td-action", ".td-stt"]);
 }
 
 const export_button = document.getElementById("btn-export");
-
 export_button.addEventListener("click", () => {
     html_table_to_excel("table-data");
 });
+function string_to_slug(title) {
+    var slug;
 
+    //Đổi chữ hoa thành chữ thường
+    slug = title.toLowerCase();
 
+    //Đổi ký tự có dấu thành không dấu
+    slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, "a");
+    slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, "e");
+    slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, "i");
+    slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, "o");
+    slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, "u");
+    slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, "y");
+    slug = slug.replace(/đ/gi, "d");
+    //Xóa các ký tự đặt biệt
+    slug = slug.replace(
+        /\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi,
+        ""
+    );
+    //Đổi khoảng trắng thành ký tự gạch ngang
+    slug = slug.replace(/ /gi, "-");
+    //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+    //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
+    slug = slug.replace(/\-\-\-\-\-/gi, "-");
+    slug = slug.replace(/\-\-\-\-/gi, "-");
+    slug = slug.replace(/\-\-\-/gi, "-");
+    slug = slug.replace(/\-\-/gi, "-");
+    //Xóa các ký tự gạch ngang ở đầu và cuối
+    slug = "@" + slug + "@";
+    slug = slug.replace(/\@\-|\-\@|\@/gi, "");
+    //In slug ra textbox có id “slug”
+    return slug;
+}
+
+// function slugify(text)
+// {
+//     return text.toLowerCase().replace(/ /g,'-').replace(/[^\w-]+/g,'');
+// }
+
+function timeDifference(current, previous) {
+    var msPerMinute = 60 * 1000;
+    var msPerHour = msPerMinute * 60;
+    var msPerDay = msPerHour * 24;
+    var msPerMonth = msPerDay * 30;
+    var msPerYear = msPerDay * 365;
+
+    var elapsed = current - previous;
+
+    if (elapsed < msPerMinute) {
+        return Math.round(elapsed / 1000) + " giây trước";
+    } else if (elapsed < msPerHour) {
+        return Math.round(elapsed / msPerMinute) + " phút trước";
+    } else if (elapsed < msPerDay) {
+        return Math.round(elapsed / msPerHour) + " giờ trước";
+    } else if (elapsed < msPerMonth) {
+        return Math.round(elapsed / msPerDay) + " ngày trước";
+    } else if (elapsed < msPerYear) {
+        return Math.round(elapsed / msPerMonth) + " tháng trước";
+    } else {
+        return Math.round(elapsed / msPerYear) + " năm trước";
+    }
+}

@@ -6,7 +6,7 @@
                 <div class="card-body">
                     <p class="card-title">
                         <span class="fw-bold" style="font-size: 18px">Đề tài: </span>
-                        <span style="font-size: 18px">
+                        <span style="font-size: 18px" class="text-primary">
                             {{ $creativeidea->tittle }}
                         </span>
                     </p>
@@ -119,7 +119,9 @@
                                 <span class="fw-bold">
                                     Tóm tắt nội dung :
                                 </span>
+                                <span class="text-primary">
                                     {{ $creativeidea->content }}
+                                </span>
 
                             </p>
                         </div>

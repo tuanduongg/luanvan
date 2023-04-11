@@ -6,6 +6,7 @@ use Illuminate\Validation\Rule;
 use App\Traits\ResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
+use App\Repositories\Student\StudentRepository;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -123,5 +124,10 @@ class StudentController extends Controller
             return $this->responseSuccess($data);
         // }
         // return; 
+    }
+
+    public function getAllId() {
+        $data = (new StudentRepository())->getAllId();
+        return $this->responseSuccess($data);
     }
 }

@@ -56,7 +56,7 @@ class DispatcheController extends Controller
             'expiration_date' => 'required|date|after_or_equal:effective_date',
             'storage_location' => 'required|string|max:100',
             'archivist' => 'required|max:50',
-            'file' => 'file|max:10000|mimes:doc,docx,pdf,jpg,png',
+            'file' => 'file|max:10240|mimes:doc,docx,pdf,jpg,png',
         ];
         if ((int)$request->get('role') == 2) {
             $rules['receiver'] = 'required|max:50';
@@ -90,7 +90,7 @@ class DispatcheController extends Controller
             'expiration_date' => 'required|date|after_or_equal:effective_date',
             'storage_location' => 'required|string|max:100',
             'archivist' => 'required|max:50',
-            'file' => 'file|max:10000|mimes:doc,docx,pdf,jpg,png',
+            'file' => 'file|max:10240|mimes:doc,docx,pdf,jpg,png',
         ];
         if ($request->get('role') == 2) {
             $rules['receiver'] = 'required|max:50';

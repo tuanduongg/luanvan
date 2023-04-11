@@ -47,5 +47,8 @@ class ThesesStudentRepository extends BaseRepository
         return $data;
     }
 
+    public function storeMultiple($data) {
+        return $this->model::query()->insert($data);
+    }
     
 }

@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\EmailJob;
+use App\Models\Dispatche;
 use App\Models\DispatchType;
 use App\Repositories\Dispatche\DispatcheRepository;
 use App\Repositories\DispatchType\DispatchTypeRepository;
+use App\Repositories\Lecturer\LecturerRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class DispatcheController extends Controller
 {
@@ -32,19 +36,22 @@ class DispatcheController extends Controller
             'listDates' =>  $this->listDates,
         ]);
     }
-    
+
     public function show($id)
     {
         $dispatche = $this->repository->findById($id);
         if (empty($dispatche)) {
             abort(404);
         }
+        $tittlePage = ' - Công Văn Đến | ' . Str::slug($dispatche->tittle);
         return view('dispatche.receive.view', [
             'dispatche' => $dispatche,
+            'tittlePage' => $tittlePage,
         ]);
     }
 
-    public function dispatcheSend() {
+    public function dispatcheSend()
+    {
         return view('dispatche.send.index', [
             'tittlePage' => '- Công Văn Đi',
             'dispatch_types' =>  $this->dispatch_types,
@@ -52,21 +59,18 @@ class DispatcheController extends Controller
         ]);
     }
 
-    public function dispatcheSendShow($id) {
+    public function dispatcheSendShow($id)
+    {
         $dispatche = $this->repository->findById($id);
         if (empty($dispatche)) {
             abort(404);
         }
+        $tittlePage = ' - Công Văn Đi | ' . Str::slug($dispatche->tittle);
         return view('dispatche.send.view', [
             'dispatche' => $dispatche,
+            'tittlePage' => $tittlePage,
         ]);
     }
 
-    public function testMail() {
-        // dd($_ENV['key'] = 'value');
-        Mail::send('email.index',['name'=>'this is my test name'],function($mail) {
-            $mail->to('sv.19103100193@uneti.edu.vn','thảo chó');
-            $mail->subject('thảo chó');
-        });
-    }
+    
 }

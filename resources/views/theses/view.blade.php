@@ -6,7 +6,7 @@
                 <div class="card-body">
                     <p class="card-title">
                         <span class="fw-bold" style="font-size: 18px">Đề tài: </span>
-                        <span style="font-size: 18px">
+                        <span style="font-size: 18px" class="text-primary">
 
                             {{ $theses->tittle }}
                         </span>
@@ -17,16 +17,13 @@
                         <div class="col-12 col-md-5">
                             <p class="card-text">
                                 <span class="fw-bold">
-                                    Thời gian :
+                                    Mã luận văn :
                                 </span>
                                 <span class="text-primary">
-                                    {{ date('d-m-Y', strtotime($theses->start_date)) }} 
-                                </span>
-                                đến
-                                <span class="text-primary">
-                                    {{ date('d-m-Y', strtotime($theses->end_date)) }}
+                                    {{ $theses->code }} 
                                 </span>
                             </p>
+                            
                             <p class="card-text">
                                 <span class="fw-bold">
                                     Giảng viên hướng dẫn :
@@ -81,17 +78,31 @@
                                 @endforelse
                             </div>
                             </p>
+                            
+                        </div>
+                        <div class="col-12 col-md-7">
+                            <p class="card-text">
+                                <span class="fw-bold">
+                                    Thời gian :
+                                </span>
+                                <span class="text-primary">
+                                    {{ date('d-m-Y', strtotime($theses->start_date)) }} 
+                                </span>
+                                đến
+                                <span class="text-primary">
+                                    {{ date('d-m-Y', strtotime($theses->end_date)) }}
+                                </span>
+                            </p>
                             <p class="card-text">
                                 <span class="fw-bold">
                                     Niên khoá :
                                 </span>
                                 <span class="text-primary">
                                     {{ $theses->school_year }}
+                                    {{-- {{ dd($theses->format_school_year) }} --}}
+                                    {{ '('. $theses->format_school_year[0] .'-'. $theses->format_school_year[count($theses->format_school_year)-1].')' }}
                                 </span>
                             </p>
-                        </div>
-                        <div class="col-12 col-md-7">
-
                             <p class="card-text">
                                 <span class="fw-bold">
                                     Nơi lưu trữ :
@@ -112,7 +123,9 @@
                                 <span class="fw-bold">
                                     Tóm tắt nội dung :
                                 </span>
-                                {{ $theses->content }}
+                                <span class="text-primary">
+                                    {!! $theses->content !!}
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -164,3 +177,12 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        // var currentUrl = window.location.href;
+        // var id = currentUrl.split('/').at(-1);
+        // history.pushState({}, null, `/${id}/test`);
+        // console.log(id);
+    </script>
+@endpush

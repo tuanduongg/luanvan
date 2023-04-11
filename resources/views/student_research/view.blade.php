@@ -6,7 +6,7 @@
                 <div class="card-body">
                     <p class="card-title">
                         <span class="fw-bold" style="font-size: 18px">Đề tài: </span>
-                        <span style="font-size: 18px">
+                        <span style="font-size: 18px" class="text-primary">
                             {{ $studentresearch->tittle }}
                         </span>
                     </p>
@@ -19,9 +19,8 @@
                                     Năm thực hiện :
                                 </span>
                                 <span class="text-primary">
+                                    {{ $studentresearch->year }}
                                 </span>
-                                
-                                {{ $studentresearch->year }}
                             </p>
                             <p class="card-text">
                                 <span class="fw-bold">
@@ -109,9 +108,9 @@
                                     Tóm tắt nội dung :
                                 </span>
                                 <span class="text-primary">
+                                    {{ $studentresearch->content }}
                                 </span>
                                 
-                                {{ $studentresearch->content }}
                             </p>
                         </div>
                     </div>

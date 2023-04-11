@@ -11,10 +11,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\StringHepler;
 use App\Helpers\DateHelper;
+use App\Models\ThesesStudent;
 use Carbon\Carbon;
 use App\Repositories\Lecturer\LecturerRepository;
 use App\Repositories\Student\StudentRepository;
 use App\Repositories\ThesesStudent\ThesesStudentRepository;
+use Illuminate\Support\Facades\File;
 
 class ThesesController extends Controller
 {
@@ -63,10 +65,13 @@ class ThesesController extends Controller
         $rules = [
             'tittle' => 'required|string|max:200',
             'content' => 'required|string|max:500',
-            'year' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
             'archivist' => 'required',
+            'lecturer_id' => 'required',
+            'school_year' => 'required',
             'storage_location' => 'required',
-            'file' => 'max:10000|mimes:doc,docx,pdf,jpg,png',
+            'file' => 'max:10240|mimes:doc,docx,pdf,jpg,png',
         ];
         $validator = Validator::make($request->all(), $rules);
 
@@ -136,12 +141,11 @@ class ThesesController extends Controller
             'content' => 'required|string|max:500',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
-            // 'student_id' => 'required',
             'lecturer_id' => 'required',
             'school_year' => 'required',
             'archivist' => 'required',
             'storage_location' => 'required',
-            'file' => 'max:10000|mimes:doc,docx,pdf,jpg,png',
+            'file' => 'max:10240|mimes:doc,docx,pdf,jpg,png',
         ];
         $validator = Validator::make($request->all(), $rules);
 
@@ -198,12 +202,18 @@ class ThesesController extends Controller
 
     public function distroy(Request $request)
     {
-        $student = $this->model->findOrFail($request->get('id'));
-        if ($student) {
+        $obj = $this->model->findOrFail($request->get('id'));
+        if ($obj) {
+            if (!empty($obj->file)) {
+
+                if (File::exists(public_path('uploads/storage/'. $obj->file),)) {
+                    File::delete(public_path('uploads/storage/'. $obj->file),);
+                }
+            }
             (new ThesesStudentRepository())->deleteByIdTheses($request->get('id'));
-            $student->delete();
+            $obj->delete();
+            return $this->responseSuccess('', 'Xoá thành công!');
         }
-        return $this->responseSuccess('', 'Xoá thành công!');
     }
     public function filter(Request $request)
     {
@@ -228,23 +238,42 @@ class ThesesController extends Controller
             $data = $this->model->paginate(10)->onEachSide(1);
         }
         return $this->responseSuccess($data);
+    }
 
-        // $search = $request->get('search');
-        // $data = [];
-        // if (!empty($search)) {
-        //     $query = $this->model
-        //         ->where(
-        //             'tittle',
-        //             'like',
-        //             '%' . $search . '%',
-        //         );
-        //     $data = $query
-                
-        //         ->paginate(10)
-        //         ->onEachSide(1);
-        // } else {
-        //     $data = $this->model->paginate(10)->onEachSide(1);
-        // }
-        // return $this->responseSuccess($data);
+    public function storeMultiple(Request $request)
+    {
+        // dd();
+        $data =  $request->get('data');
+        foreach ($data as $item) {
+            // dd($item['code']);
+            //tạo luận văn->lấy id
+            $newTheses = new $this->model();
+            $newTheses->code = $item['code'];
+            $newTheses->tittle = $item['tittle'];
+            $newTheses->content = $item['content'];
+            $newTheses->start_date = $item['start_date'];
+            $newTheses->end_date = $item['end_date'];
+            $newTheses->lecturer_id = $item['lecturer_id'];
+            $newTheses->school_year = $item['school_year'];
+            $newTheses->archivist = $item['archivist'];
+            $newTheses->storage_location = $item['storage_location'];
+            $newTheses->save();
+            // $item['updated_at'] = Carbon::now();  // remove if not using timestamps
+            // $item['created_at'] = Carbon::now();  // remove if not using timestamps
+            // dd($newTheses);
+            //tạo sinh viên->lấy id
+            $idStudents = (new StudentRepository())->storeMultiple($item['students']);
+            (new ThesesStudentRepository())->storeMultiple([
+                [
+                    'student_id' => $idStudents[0],
+                    'theses_id' => $newTheses->id,
+                ],
+                [
+                    'student_id' => $idStudents[1],
+                    'theses_id' => $newTheses->id,
+                ],
+            ]);
+        }
+        return $this->responseSuccess('');
     }
 }

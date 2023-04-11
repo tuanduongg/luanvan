@@ -84,7 +84,7 @@ return [
     'mac_address' => 'The :attribute must be a valid MAC address.',
     'max' => [
         'numeric' => 'Tối đa :max.',
-        'file' => 'The :attribute must not be greater than :max kilobytes.',
+        'file' => 'Dung lượng :attribute phải nhỏ hơn 10Mb.',
         'string' => 'Tối đa :max ký tự.',
         'array' => 'The :attribute must not have more than :max items.',
     ],
@@ -195,6 +195,8 @@ return [
         'type_id' => 'Kiểu công văn',
         'receiver' => 'Nơi nhận',
         'new_phone' => 'Số điện thoại',
+        'start' => 'Ngày bắt đầu',
+        'end' => 'Ngày kết thúc',
 
     ],
 

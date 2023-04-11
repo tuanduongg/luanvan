@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\EmailJob;
 use App\Models\Dispatche;
 use Illuminate\Support\Facades\Mail;
 
@@ -15,10 +16,9 @@ class DispatcheObserver
      */
     public function created(Dispatche $dispatche)
     {
-        // Mail::send('email.test',['name'=>'this is my test name'],function($mail) {
-        //     $mail->to('sv.19103100193@uneti.edu.vn','thảo chó');
-        //     $mail->subject('thảo chó');
-        // });
+        if ($dispatche->role == 1) {
+            dispatch(new EmailJob($dispatche));
+        }
     }
 
     /**

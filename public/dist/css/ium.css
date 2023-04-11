@@ -65,3 +65,7 @@
 .table-responsive::-webkit-scrollbar {
    display: none;
 }
+
+.active-menu {
+   background-color: #5f69e67d ;
+}

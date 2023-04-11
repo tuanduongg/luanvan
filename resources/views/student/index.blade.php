@@ -230,7 +230,7 @@
             }
         }
 
-        function getAjax(url, data,page = 1) {
+        function getAjax(url, data, page = 1) {
             $.ajax({
                 type: "get",
                 url: url,
@@ -256,6 +256,7 @@
             });
         }
 
+
         function getData(page = 1, filter = '') {
             let url = "{{ route('api.student.getAll') }}";
             let data = {
@@ -272,10 +273,9 @@
 
             $('#btn-update-student').hide();
             $('#table-student > tbody').empty();
-            getAjax(url, data,page);
+            getAjax(url, data, page);
         };
         $(document).ready(function() {
-
 
             //load all data from server to table
             getData();

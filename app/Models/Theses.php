@@ -31,9 +31,18 @@ class Theses extends Model
         return $this->belongsTo(Lecturer::class);
     }
 
-    public function getExtensionFileAttribute() {
+    public function getExtensionFileAttribute()
+    {
         // return explode('.',$this->file)[1]
         return (new SplFileInfo($this->file))->getExtension();
     }
-    
+
+    public function getFormatSchoolYearAttribute()
+    {
+        $yearStart = (int)$this->school_year + 2006; //năm thành lập 2007
+        for ($i = 0; $i < 5; $i++) {
+            $yearYear[] = $yearStart + $i;
+        }
+        return $yearYear;
+    }
 }

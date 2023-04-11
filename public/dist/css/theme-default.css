@@ -557,10 +557,11 @@ html[dir=rtl] .border-primary {
 }
 
 a {
-  color: #696cff;
+  color: #667580;
+  text-decoration: none;
 }
 a:hover {
-  color: #787bff;
+  color: #5f61e6;
 }
 
 .fill-primary {

@@ -1,4 +1,4 @@
-<footer class="content-footer footer bg-footer-theme" style="padding-bottom: 30px;">
+{{-- <footer class="content-footer footer bg-footer-theme" style="padding-bottom: 30px;">
     <div class="container-xxl d-flex flex-wrap justify-content-center" style="">
         <div class="mb-2 mb-md-0">
             ©
@@ -10,4 +10,4 @@
         </div>
 
     </div>
-</footer>
+</footer> --}}

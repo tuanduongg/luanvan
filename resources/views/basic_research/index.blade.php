@@ -34,6 +34,7 @@
                                     Làm mới
                                 </button>
                             </div>
+                            @if ((int)Auth::user()->role !== 3)
                             <div class="col-md-5 text-end">
                                 <button class="btn btn-primary" type="button" id="btn-create" data-bs-toggle="modal"
                                     data-bs-target="#modal-basic-research">
@@ -41,6 +42,7 @@
                                     Thêm mới
                                 </button>
                             </div>
+                            @endif
                         </div>
 
                     </form>
@@ -284,12 +286,13 @@
             });
             let start = ((current_page - 1) * 10) + 1;
             $.each(data, function(index, value) {
-                let urlView = "{{ route('basicresearch.view', 'id') }}";
+                let urlView = "{{ route('basicresearch.view', ['id','slug']) }}";
                 urlView = urlView.replace('id', value.id);
+                urlView = urlView.replace('slug', string_to_slug(value.tittle));
                 $('#table-data > tbody').append(`
                         <tr>
                             <td class="text-center">${start++}</td>
-                            <td class=""><a class="text-normal " style="color: #697a8d" href="${urlView}">
+                            <td class=""><a class="text-normal " href="${urlView}">
                                     ${value.tittle}
                                     </a>    </td>
                             <td><span class="badge bg-label-secondary me-1 ">${value.year}</span></td>
@@ -297,9 +300,12 @@
                             <td>${value.storage_location}</td>
                                 <td>
                                     <div class="dropdown d-flex">
+                                        @if ((int)Auth::user()->role !== 3)
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow me-2"
                                             data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                        @endif
                                             <a href="${urlView}" class="btn hide-arrow p-0"><i class='bx bx-show-alt'></i></a>
+                                            @if ((int)Auth::user()->role !== 3)
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-basic-research" data-id=${value.id} href="javascript:void(0);">
                                                 <i class="bx bx-edit-alt me-1"></i>
@@ -310,6 +316,7 @@
                                                 Xoá
                                             </a>
                                         </div>
+                                        @endif
                                     </div>
                                 </td>
                         </tr>`);

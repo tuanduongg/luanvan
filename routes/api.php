@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ThesesController;
 use App\Http\Controllers\Api\StudentResearchController;
 use App\Http\Controllers\Api\BasicResearchController;
 use App\Http\Controllers\Api\DispatcheController;
+use App\Http\Controllers\Api\EventController;
 use App\Models\BasicResearch;
 use App\Repositories\DispatchType\DispatchTypeRepository;
 use Illuminate\Http\Request;
@@ -30,7 +31,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
-        'prefix' => 'dispatche'
+        'prefix' => 'home',
+        'middleware' =>'authapi',
+    ],
+    function () {
+        Route::get('/get-data/theses-chart', [\App\Http\Controllers\Api\HomeController::class, 'dataThesesChart'])->name('api.home.dataThesesChart');
+        Route::get('/get-data/creative-chart', [\App\Http\Controllers\Api\HomeController::class, 'dataCreativeChart'])->name('api.home.dataCreativeChart');
+        Route::get('/get-data/research-chart', [\App\Http\Controllers\Api\HomeController::class, 'dataResearchChart'])->name('api.home.dataResearchChart');
+        Route::get('/get-data', [\App\Http\Controllers\Api\HomeController::class, 'getAllRecordEachTable'])->name('api.home.getAllRecordEachTable');
+        
+    }
+);
+Route::group(
+    [
+        'prefix' => 'dispatche',
+        'middleware' =>'authapi',
     ],
     function () {
         Route::get('/get-all/{type}', [DispatcheController::class, 'getAll'])->name('api.dispatche.getAll');
@@ -48,7 +63,8 @@ Route::group(
 
 Route::group(
     [
-        'prefix' => 'dispatch-type'
+        'prefix' => 'dispatch-type',
+        'middleware' =>'authapi',
     ],
     function () {
         Route::get('/get-all', [DispatchTypeController::class, 'getAll'])->name('api.dispatch-type.getAll');
@@ -56,12 +72,12 @@ Route::group(
         Route::post('/store', [DispatchTypeController::class, 'store'])->name('api.dispatch-type.store');
         Route::put('/update', [DispatchTypeController::class, 'update'])->name('api.dispatch-type.update');
         Route::post('/distroy', [DispatchTypeController::class, 'distroy'])->name('api.dispatch-type.distroy');
-        Route::get('/test/{name}', [DispatchTypeRepository::class, 'getIdByName']);
     }
 );
 Route::group(
     [
-        'prefix' => 'student'
+        'prefix' => 'student',
+        'middleware' =>'authapi',
     ],
     function () {
         Route::get('/get-all', [StudentController::class, 'getAll'])->name('api.student.getAll');
@@ -71,11 +87,13 @@ Route::group(
         Route::post('/distroy', [StudentController::class, 'distroy'])->name('api.student.distroy');
         Route::get('/filter', [StudentController::class, 'filter'])->name('api.student.filter');
         Route::get('/select-two', [StudentController::class, 'selectTwo'])->name('api.student.select2');
+        Route::get('/get-all-id', [StudentController::class, 'getAllId'])->name('api.student.getAllId');
     }
 );
 Route::group(
     [
-        'prefix' => 'lecturer'
+        'prefix' => 'lecturer',
+        'middleware' =>'authapi',
     ],
     function () {
         Route::get('/get-all', [LecturerController::class, 'getAll'])->name('api.lecturer.getAll');
@@ -85,11 +103,13 @@ Route::group(
         Route::post('/distroy', [LecturerController::class, 'distroy'])->name('api.lecturer.distroy');
         Route::get('/filter', [LecturerController::class, 'filter'])->name('api.lecturer.filter');
         Route::get('/select-two', [LecturerController::class, 'selectTwo'])->name('api.lecturer.select2');
+        Route::get('/get-all-name', [LecturerController::class, 'getAllName'])->name('api.lecturer.getAllName');
     }
 );
 Route::group(
     [
-        'prefix' => 'theses'
+        'prefix' => 'theses',
+        'middleware' =>'authapi',
     ],
     function () {
         Route::get('/get-all', [ThesesController::class, 'getAll'])->name('api.theses.getAll');
@@ -98,11 +118,13 @@ Route::group(
         Route::post('/update', [ThesesController::class, 'update'])->name('api.theses.update');
         Route::post('/distroy', [ThesesController::class, 'distroy'])->name('api.theses.distroy');
         Route::get('/filter', [ThesesController::class, 'filter'])->name('api.theses.filter');
+        Route::post('/store-multiple', [ThesesController::class, 'storeMultiple'])->name('api.theses.storeMultiple');
     }
 );
 Route::group(
     [
-        'prefix' => 'creativeidea'
+        'prefix' => 'creativeidea',
+        'middleware' =>'authapi',
     ],
     function () {
         Route::get('/get-all', [CreativeIdeaController::class, 'getAll'])->name('api.creativeidea.getAll');
@@ -115,7 +137,8 @@ Route::group(
 );
 Route::group(
     [
-        'prefix' => 'studentresearch'
+        'prefix' => 'studentresearch',
+        'middleware' =>'authapi',
     ],
     function () {
         Route::get('/get-all', [StudentResearchController::class, 'getAll'])->name('api.studentresearch.getAll');
@@ -129,7 +152,8 @@ Route::group(
 
 Route::group(
     [
-        'prefix' => 'basicresearch'
+        'prefix' => 'basicresearch',
+        'middleware' =>'authapi',
     ],
     function () {
         Route::get('/get-all', [BasicResearchController::class, 'getAll'])->name('api.basicresearch.getAll');
@@ -138,6 +162,20 @@ Route::group(
         Route::post('/update', [BasicResearchController::class, 'update'])->name('api.basicresearch.update');
         Route::post('/distroy', [BasicResearchController::class, 'distroy'])->name('api.basicresearch.distroy');
         Route::get('/filter', [BasicResearchController::class, 'filter'])->name('api.basicresearch.filter');
+    }
+);
+
+Route::group(
+    [
+        'prefix' => 'event',
+        'middleware' =>'authapi',
+    ],
+    function () {
+        Route::get('/get-all', [EventController::class, 'getAll'])->name('api.event.getAll');
+        Route::get('/find', [EventController::class, 'find'])->name('api.event.find');
+        Route::post('/store', [EventController::class, 'store'])->name('api.event.store');
+        Route::post('/update', [EventController::class, 'update'])->name('api.event.update');
+        Route::post('/distroy', [EventController::class, 'distroy'])->name('api.event.distroy');
     }
 );
 

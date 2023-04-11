@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\EmailJob;
+use App\Mail\LecturerEmail;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail as FacadesMail;
+use Mail;
 
 class AuthController extends Controller
 {
     public function login()
     {
+        if(Auth::check() ) {
+            return redirect()->route('home');
+        }
         return view('auth.login');
     }
 
@@ -47,4 +54,6 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('auth.login');
     }
+
+    
 }

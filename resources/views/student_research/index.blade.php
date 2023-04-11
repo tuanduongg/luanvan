@@ -39,11 +39,13 @@
                                     <span class="tf-icons bx bx-export me-1"></span>
                                     Xuất Excel
                                 </button> --}}
-                                <button class="btn btn-primary" type="button" id="btn-create-theses" data-bs-toggle="modal"
-                                    data-bs-target="#modal-theses">
-                                    <span class="tf-icons bx bx-plus-circle me-1"></span>
-                                    Thêm mới
-                                </button>
+                                @if ((int) Auth::user()->role !== 3)
+                                    <button class="btn btn-primary" type="button" id="btn-create-theses"
+                                        data-bs-toggle="modal" data-bs-target="#modal-theses">
+                                        <span class="tf-icons bx bx-plus-circle me-1"></span>
+                                        Thêm mới
+                                    </button>
+                                @endif
                             </div>
                         </div>
 
@@ -296,12 +298,13 @@
             });
             let start = ((current_page - 1) * 10) + 1;
             $.each(data, function(index, value) {
-                let urlView = "{{ route('studentresearch.view', 'id') }}";
+                let urlView = "{{ route('studentresearch.view', ['id', 'slug']) }}";
                 urlView = urlView.replace('id', value.id);
+                urlView = urlView.replace(':slug', string_to_slug(value.tittle));
                 $('#table-data > tbody').append(`
                         <tr>
                             <td>${start++}</td>
-                            <td class=""><a class="text-normal " style="color: #697a8d" href="${urlView}">
+                            <td class=""><a  href="${urlView}">
                                     ${value.tittle}
                                     </a>    </td>
                             <td><span class="badge bg-label-secondary me-1 ">${value.year}</span></td>
@@ -309,9 +312,12 @@
                             <td>${value.storage_location}</td>
                                 <td>
                                     <div class="dropdown d-flex">
+                                        @if ((int) Auth::user()->role !== 3)
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow me-2"
                                             data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                            @endif
                                             <a href="${urlView}" class="btn hide-arrow p-0"><i class='bx bx-show-alt'></i></a>
+                                            @if ((int) Auth::user()->role !== 3)
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" id='btn-edit-theses' data-bs-toggle="modal" data-bs-target="#modal-theses" data-id=${value.id} href="javascript:void(0);">
                                                 <i class="bx bx-edit-alt me-1"></i>
@@ -322,6 +328,7 @@
                                                 Xoá
                                             </a>
                                         </div>
+                                        @endif
                                     </div>
                                 </td>
                         </tr>`);
@@ -330,6 +337,7 @@
 
 
         $(document).ready(function() {
+
 
             $(document).on('focus', 'input,textarea', (e) => {
                 $(e.target).removeClass('is-invalid');

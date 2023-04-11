@@ -77,6 +77,7 @@
                                 </button>
                             </div>
                         </div>
+                        @if ((int)Auth::user()->role <= 2) 
                         <div class="row mt-xs-2     ">
                             <div class="col d-md-flex justify-content-end ">
 
@@ -100,6 +101,7 @@
                                 </button>
                             </div>
                         </div>
+                        @endif
 
                     </form>
                 </div>
@@ -502,8 +504,9 @@
 
             let start = ((current_page - 1) * 10) + 1;
             $.each(data, function(index, value) {
-                let urlView = "{{ route('dispatche.send.view', 'id') }}";
+                let urlView = "{{ route('dispatche.send.view',[ 'id','slug']) }}";
                 urlView = urlView.replace('id', value.id);
+                urlView = urlView.replace('slug', string_to_slug(value.tittle));
                 let color = 'secondary';
                 switch (value.type_code.toLowerCase()) {
                     case 'cvht':
@@ -520,7 +523,7 @@
                             <td class="td-stt">${start++}</td>
                             <td class="">${value.code}</td>
                             <td class="">
-                                <a class="text-normal " style="color: #697a8d" href="${urlView}">
+                                <a class="text-normal " href="${urlView}">
                                     ${value.tittle}
                                     </a>
                             </td>
@@ -528,22 +531,26 @@
                             <td>${formatDate(value.expiration_date)}</td>
                             <td>${formatDate(value.issued_date)}</td>
                             <td>${value.receiver}</td>
-                            <td ><span class="badge bg-label-${color} me-1  text-uppercase">${value.type_name}</span></td>
+                            <td><span class="badge bg-label-${color} me-1  text-uppercase">${value.type_name}</span></td>
                                 <td class="td-action">
                                     <div class="dropdown d-flex">
+                                        @if ((int)Auth::user()->role !== 3)
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow me-2"
                                             data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                            @endif
                                             <a href="${urlView}" class="btn hide-arrow p-0"><i class='bx bx-show-alt'></i></a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-basic-research" data-id=${value.id} href="javascript:void(0);">
-                                                <i class="bx bx-edit-alt me-1"></i>
-                                                Sửa
-                                            </a>
-                                            <a class="dropdown-item" id='btn-delete' data-id=${value.id} href="javascript:void(0);">
-                                                <i class="bx bx-trash me-1"></i>
-                                                Xoá
-                                            </a>
-                                        </div>
+                                            @if ((int)Auth::user()->role !==3)
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-basic-research" data-id=${value.id} href="javascript:void(0);">
+                                                        <i class="bx bx-edit-alt me-1"></i>
+                                                        Sửa
+                                                        </a>
+                                                        <a class="dropdown-item" id='btn-delete' data-id=${value.id} href="javascript:void(0);">
+                                                            <i class="bx bx-trash me-1"></i>
+                                                            Xoá
+                                                        </a>
+                                                </div>
+                                            @endif
                                     </div>
                                 </td>
                         </tr>`);

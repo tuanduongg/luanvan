@@ -2,6 +2,7 @@
 @push('css')
 @endpush
 @section('content')
+    
     <div class="row">
         <div class="col-12">
             <div class="h1">
@@ -10,6 +11,10 @@
         </div>
     </div>
     <div class="row">
+        <div class="col ">
+        </div>
+    </div>
+    <div class="row mt-3">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -71,6 +76,8 @@
                                 </button>
                             </div>
                         </div>
+                        @if ((int)Auth::user()->role <= 2) 
+                            
                         <div class="row mt-xs-2     ">
                             <div class="col d-md-flex justify-content-end ">
                                 <button id="btn-import" class="btn btn-secondary me-2 d-md-inline-block d-none"
@@ -92,6 +99,7 @@
                                 </button>
                             </div>
                         </div>
+                        @endif
 
                     </form>
                 </div>
@@ -262,6 +270,7 @@
                         </div>
                     </form>
                 </div>
+                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Đóng</button>
                     <button type="button" id="btn-store" class="btn btn-primary">Lưu thay đổi</button>
@@ -389,8 +398,12 @@
             let start = ((current_page - 1) * 10) + 1;
 
             $.each(data, function(index, value) {
-                let urlView = "{{ route('dispatche.receive.view', ':id') }}";
-                urlView = urlView.replace(':id', value.id);
+                // let urlView = "{{ route('dispatche.receive.view', ['id','slug']) }}";
+                // urlView = urlView.replace('id', value.id);
+                // urlView = urlView.replace('slug', string_to_slug("tesst tun"));
+                let urlView = "{{ route('dispatche.receive.view',['id','slug']) }}";
+                urlView = urlView.replace('id', value.id);
+                urlView = urlView.replace('slug', string_to_slug(value.tittle));
                 let color = 'secondary';
                 switch (value.type_code.toLowerCase()) {
                     case 'cvht':
@@ -408,7 +421,7 @@
                             <td class="td-stt">${start++}</td>
                             <td class="">${value.code}</td>
                             <td class="">
-                                <a class="text-normal " style="color: #697a8d" href="${urlView}">
+                                <a class="text-normal "  href="${urlView}">
                                     ${value.tittle}
                                     </a>    
                             </td>
@@ -419,20 +432,23 @@
                             <td><span class="badge bg-label-${color} me-1  text-uppercase">${value.type_name}</span></td>
                                 <td class="td-action">
                                     <div class="dropdown d-flex">
+                                        @if ((int)Auth::user()->role != 3)
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow me-2"
                                             data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                            @endif
                                             <a href="${urlView}" class="btn hide-arrow p-0"><i class='bx bx-show-alt'></i></a>
-                                        <div class="dropdown-menu">
-                                            
-                                            <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-dispatche-re" data-id=${value.id} href="javascript:void(0);">
-                                                <i class="bx bx-edit-alt me-1"></i>
-                                                Sửa
-                                            </a>
-                                            <a class="dropdown-item" id='btn-delete' data-id=${value.id} href="javascript:void(0);">
-                                                <i class="bx bx-trash me-1"></i>
-                                                Xoá
-                                            </a>
-                                        </div>
+                                            @if ((int)Auth::user()->role != 3)
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" id='btn-edit' data-bs-toggle="modal" data-bs-target="#modal-dispatche-re" data-id=${value.id} href="javascript:void(0);">
+                                                        <i class="bx bx-edit-alt me-1"></i>
+                                                        Sửa
+                                                        </a>
+                                                        <a class="dropdown-item" id='btn-delete' data-id=${value.id} href="javascript:void(0);">
+                                                            <i class="bx bx-trash me-1"></i>
+                                                            Xoá
+                                                        </a>
+                                                </div>
+                                            @endif
                                     </div>
                                 </td>
                         </tr>`);
@@ -583,9 +599,9 @@
             }
 
             //remove validate onfocus input
-            $(document).on('focus', 'input,textarea', (e) => {
-                $(e.target).removeClass('is-invalid');
-            });
+            // $(document).on('focus', 'input,textarea', (e) => {
+            //     $(e.target).removeClass('is-invalid');
+            // });
 
             function resetClassInput(className) {
                 $('textarea[name=tittle]').removeClass(className);
@@ -634,7 +650,6 @@
                         $('input[name=published_place]').val(response.data.published_place);
                         $('input[name=issued_date]').val(formatDate(response.data.issued_date,
                             'yyyy-mm-dd'));
-                        console.log(formatDate(response.data.issued_date, 'yyyy-mm-dd'));
                         $('input[name=expiration_date]').val(response.data.expiration_date);
                         $('input[name=effective_date]').val(response.data.effective_date);
                         $('input[name=archivist]').val(response.data.archivist);

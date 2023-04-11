@@ -69,7 +69,7 @@ class StudentResearchController extends Controller
             'archivist' => 'required',
             'storage_location' => 'required',
             'result' => 'required',
-            'file' => 'max:10000|mimes:doc,docx,pdf,jpg,png',
+            'file' => 'max:10240|mimes:doc,docx,pdf,jpg,png',
         ];
         $validator = Validator::make($request->all(), $rules);
 
@@ -133,7 +133,7 @@ class StudentResearchController extends Controller
             'result' => 'required',
             'archivist' => 'required',
             'storage_location' => 'required',
-            'file' => 'max:10000|mimes:doc,docx,pdf,jpg,png',
+            'file' => 'max:10240|mimes:doc,docx,pdf,jpg,png',
         ];
         $validator = Validator::make($request->all(), $rules);
 
