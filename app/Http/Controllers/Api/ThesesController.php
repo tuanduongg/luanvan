@@ -64,7 +64,7 @@ class ThesesController extends Controller
         // dd((new LecturerRepository())->getIdByCode($request->get('lecturer_id')));
         $rules = [
             'tittle' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1000',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'archivist' => 'required',
@@ -138,7 +138,7 @@ class ThesesController extends Controller
         $rules = [
             'id' => 'required',
             'tittle' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1000',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'lecturer_id' => 'required',

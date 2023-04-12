@@ -70,7 +70,7 @@ class HomeController extends Controller
         $total_basic_researchAuth = BasicResearchLecturer::query()->where('lecturer_id',$id)->count();
         $total_student_researchAuth = StudentResearch::query()->where('lecturer_id',$id)->count();
         
-        // dd($total_student_researchAuth);
+        // dd($this->getAllRecordEachTable());
         
         return view('home.index', [
             'tittlePage' => '- Trang Chủ',

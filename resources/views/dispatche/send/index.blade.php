@@ -750,7 +750,7 @@
                         $('textarea[name=tittle]').val(response.data.tittle);
                         $('textarea[name=content]').val(response.data.content);
                         $('input[name=storage_location]').val(response.data.storage_location);
-                        $('input[name=type_id]').val(response.data.type_id);
+                        $('select[name=type_id]').val( parseInt( response.data.type_id));
                         $('input[name=signer]').val(response.data.signer);
                         $('input[name=sign_date]').val(response.data.sign_date);
                         $('input[name=receiver]').val(response.data.receiver);

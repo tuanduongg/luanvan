@@ -20,6 +20,7 @@ class BasicResearchLecturerFactory extends Factory
         return [
             'lecturer_id' => $this->faker->randomElement($lecturerIds),
             'basic_research_id' => $this->faker->randomElement($basicResearchs),
+            'isLeader' => $this->faker->randomElement([0,1]),
         ];
     }
 }

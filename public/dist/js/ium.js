@@ -38,7 +38,7 @@ function formatDate(dateParam, type = "dd/mm/yyyy") {
     }
     return result;
 }
-$(document).on("focus", "input,textarea", (e) => {
+$(document).on("focus", "input,textarea,select", (e) => {
     $(e.target).removeClass("is-invalid");
 });
 
@@ -72,12 +72,12 @@ function validateImportExcel(data, type) {
         return "Tiêu đề tối đa 200 ký tự";
     }
 
-    if (data[2] && data[2].length > 500) {
-        return "Nội dung tối đa 500 ký tự";
+    if (data[2] && data[2].length > 1000) {
+        return "Nội dung tối đa 1000 ký tự";
     }
     if (type == 2) {
-        if (data[4] && data[4].length > 50) {
-            return "Nơi nhận tối đa 50 ký tự";
+        if (data[4] && data[4].length > 150) {
+            return "Nơi nhận tối đa 150 ký tự";
         }
         if (data[5] && data[5].length > 50) {
             return "Người ký tối đa 50 ký tự";

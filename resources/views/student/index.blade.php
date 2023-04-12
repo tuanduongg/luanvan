@@ -21,14 +21,20 @@
                             <div class="col-md-2 mb-2">
                                 <select class="form-select " id="filter-student-school-year">
                                     <option value="-1">Niên Khoá</option>
-                                    <option value="16">K16</option>
-                                    <option value="15">K15</option>
-                                    <option value="14">K14</option>
                                     <option value="13">K13</option>
                                     <option value="12">K12</option>
                                     <option value="11">K11</option>
                                     <option value="10">K10</option>
                                     <option value="9">K9</option>
+                                    <option value="8">K8</option>
+                                    <option value="7">K7</option>
+                                    <option value="6">K6</option>
+                                    <option value="5">K5</option>
+                                    <option value="4">K4</option>
+                                    <option value="3">K3</option>
+                                    <option value="2">K2</option>
+                                    <option value="1">K1</option>
+
                                 </select>
                             </div>
                             <div class="col-md-3 mb-2">

@@ -16,14 +16,13 @@ class StudentResearchFactory extends Factory
     {
         $arrLecturerId = Lecturer::query()->pluck('id');
         return [
-            'tittle' => $this->faker->text($maxNbChars = 200) ,
+            'tittle' => $this->faker->text($maxNbChars = 100) ,
             'content' => $this->faker->text($maxNbChars = 500) ,
             'lecturer_id' => $this->faker->randomElement($arrLecturerId),
-            'year' => $this->faker->randomElement(['2021','2022','2018','2019','2023']),
-            'result' => $this->faker->randomElement(['Chuẩn Bị Thực Hiện','Đang Thực Hiện','Hoàn Thành']),
+            'year' => $this->faker->randomElement(['2021-2022','2022-2023','2018-2019','2019-2020','2020-2021','2022-2023']),
+            'result' => $this->faker->randomElement(['Tốt','Khá','Xuất Sắc']),
             'archivist' => $this->faker->randomElement(['Đường Tuấn Hải','Lê Thu Hiền','Nguyễn Văn Ánh']),
             'storage_location' => 'Thư Viện HA10LN',
-            'file' => 'l871LphyOMANjg5BEn9H2H2F4VxM7V3K3QHv9cJZ.jpg',
         ];
     }
 }

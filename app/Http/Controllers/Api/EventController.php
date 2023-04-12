@@ -32,7 +32,7 @@ class EventController extends Controller
 
     public function store(Request $request) {
         $rules = [
-            'name' => 'required|max:100',
+            'name' => 'required|max:500',
             'start' => 'required|date',
             'end' => 'required|date',
         ];

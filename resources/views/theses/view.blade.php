@@ -130,7 +130,7 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col col-lg-6 m-auto">
+                        <div class="col col-lg-12 m-auto">
                             @if (!empty($theses->file))
                                 @switch($theses->extension_file)
                                     @case('jpg')

@@ -143,8 +143,13 @@
                             </div>
                             <div class="col mb-0">
                                 <label for="input-result" class="form-label">Kết quả</label>
-                                <input type="text" id="input-result" name="result"
-                                    placeholder="Nhập kết quả đạt được" class="form-control" id="">
+                                <select id="input-result" name="result" class="form-select">
+                                    <option value="Xuất Sắc">Xuất Sắc</option>
+                                    <option value="Tốt">Tốt</option>
+                                    <option value="Khá">Khá</option>
+                                    <option value="Trung Bình">Trung Bình</option>
+                                    <option value="Khác">Khác</option>
+                                </select>
                                 <div class="invalid-feedback error-result">
 
                                 </div>
@@ -300,7 +305,7 @@
             $.each(data, function(index, value) {
                 let urlView = "{{ route('studentresearch.view', ['id', 'slug']) }}";
                 urlView = urlView.replace('id', value.id);
-                urlView = urlView.replace(':slug', string_to_slug(value.tittle));
+                urlView = urlView.replace('slug', string_to_slug(value.tittle));
                 $('#table-data > tbody').append(`
                         <tr>
                             <td>${start++}</td>
@@ -437,8 +442,9 @@
                 $('input[name=student_id]').val('');
                 $('input[name=lecturer_id]').val('');
                 $('input[name=archivist]').val('');
-                $('input[name=result]').val('');
+                $('select[name=result]').val('');
                 $('input[name=storage_location]').val('');
+                $('input[name=file]').val('');
                 resetClassInput('is-invalid');
 
             }
@@ -449,8 +455,9 @@
                 $('input[name=student_id]').removeClass(className);
                 $('input[name=lecturer_id]').removeClass(className);
                 $('input[name=archivist]').removeClass(className);
-                $('input[name=result]').removeClass(className);
+                $('select[name=result]').removeClass(className);
                 $('input[name=storage_location]').removeClass(className);
+                $('input[name=file]').removeClass(className);
             }
 
             //load all data from server to table
@@ -477,7 +484,7 @@
                         $('textarea[name=content]').val(response.data.content);
                         $('input[name=storage_location]').val(response.data.storage_location);
                         $('input[name=lecturer_id]').val(response.data.lecturer.code);
-                        $('input[name=result]').val(response.data.result);
+                        $('select[name=result]').val(response.data.result);
 
                         if (response.data.students.length > 0) {
                             let result = '';
@@ -504,10 +511,11 @@
             //handle update dispatch type
             $(document).on('click', '#btn-update-theses', function() {
                 resetClassInput('is-invalid');
+                let formData = new FormData(document.getElementById('form-data-theses'));
                 $.ajax({
                     type: "post",
                     url: "{{ route('api.studentresearch.update') }}",
-                    data: new FormData(document.getElementById('form-data-theses')),
+                    data: formData,
                     dataType: "json",
                     processData: false,
                     contentType: false,

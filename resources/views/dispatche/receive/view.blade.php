@@ -129,15 +129,21 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col col-lg-10 m-auto">
+                        <div class="col col-lg-12 m-auto">
                             @if (!empty($dispatche->file))
+                            <hr>
                                 @switch($dispatche->extension_file)
                                     @case('jpg')
                                     @case('png')
 
                                     @case('img')
-                                        <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $dispatche->file) }}"
-                                            alt="" srcset="">
+                                            <div class="row d-flex justify-content-center ">
+                                                <div class="col col-lg-6 ">
+
+                                                    <img class="w-100 h-100" style="object-fit: cover;" src="{{ url('/uploads/storage/' . $dispatche->file) }}"
+                                                    alt="" srcset="">
+                                                </div>
+                                            </div>
                                     @break
 
                                     @case('doc')

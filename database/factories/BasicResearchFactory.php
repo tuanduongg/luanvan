@@ -14,13 +14,12 @@ class BasicResearchFactory extends Factory
     public function definition()
     {
         return [
-            'tittle' => $this->faker->text($maxNbChars = 200) ,
-            'content' => $this->faker->text($maxNbChars = 200) ,
-            'year' => $this->faker->randomElement(['2021','2022','2018','2019']),
+            'tittle' => $this->faker->text($maxNbChars = 100) ,
+            'content' => $this->faker->text($maxNbChars = 500) ,
+            'year' => $this->faker->randomElement(['2021-2022','2018-2019','2018-2019','2019-2020','2020-2021','2022-2023']),
             'archivist' => $this->faker->randomElement(['Đường Tuấn Hải','Lê Thu Hiền','Nguyễn Văn Ánh']),
             'storage_location' => 'Thư Viện HA10LN',
-            'file' => 'l871LphyOMANjg5BEn9H2H2F4VxM7V3K3QHv9cJZ.jpg',
-            'result' => $this->faker->randomElement(['Đang thực hiện','Đã hoàn thành','Đã được duyệt']),
+            'result' => $this->faker->randomElement(['Tốt','Xuất Sắc','Khá']),
         ];
     }
 }

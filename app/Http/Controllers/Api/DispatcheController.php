@@ -42,11 +42,10 @@ class DispatcheController extends Controller
     public function store(Request $request)
     {
         // dd($request->get('lecturer_id'));
-
         $rules = [
             'code' => 'required|unique:dispatches,code',
             'tittle' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1000',
             'type_id' => 'exists:dispatch_types,id',
             'signer' => 'required|max:50',
             'sign_date' => 'required|date',
@@ -56,19 +55,27 @@ class DispatcheController extends Controller
             'expiration_date' => 'required|date|after_or_equal:effective_date',
             'storage_location' => 'required|string|max:100',
             'archivist' => 'required|max:50',
-            'file' => 'file|max:10240|mimes:doc,docx,pdf,jpg,png',
+            'file' => 'file|max:10240|mimes:doc,docx,pdf,jpg,png,gif',
         ];
         if ((int)$request->get('role') == 2) {
-            $rules['receiver'] = 'required|max:50';
+            $rules['receiver'] = 'required|max:150';
         }
         $data = $request->all();
         $validator = Validator::make($data, $rules);
-
+        
         if ($validator->fails()) {
             return $this->responseError($validator->errors());
         }
+        $data = $request->all();
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            // dd($file->getClientOriginalExtension());
+            $nameFile = date('YmdHi') . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads\storage'), $nameFile);
+            $data['file'] = $nameFile;
+        }
 
-        $this->repository->create($request->all());
+        $this->repository->create($data);
 
         return $this->responseSuccess(null, 'Thêm mới thành công!');
     }
@@ -80,7 +87,7 @@ class DispatcheController extends Controller
             'id' => 'required',
             'code' => ['required', Rule::unique('dispatches')->ignore($request->get('id'))],
             'tittle' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1000',
             'type_id' => 'exists:dispatch_types,id',
             'signer' => 'required|max:50',
             'sign_date' => 'required|date',
@@ -93,7 +100,7 @@ class DispatcheController extends Controller
             'file' => 'file|max:10240|mimes:doc,docx,pdf,jpg,png',
         ];
         if ($request->get('role') == 2) {
-            $rules['receiver'] = 'required|max:50';
+            $rules['receiver'] = 'required|max:150';
         }
         $validator = Validator::make($request->all(), $rules);
 

@@ -17,7 +17,7 @@ class DispatcheController extends Controller
     private $repository;
     private $dispatch_types;
     private $listDates = [
-        'created_at' => 'Ngày tạo',
+        'created_at' => 'Mới nhất',
         'issued_date' => 'Ngày ban hành',
         'effective_date' => 'Ngày hiệu lực',
         'expiration_date' => 'Ngày hết hiệu lực',

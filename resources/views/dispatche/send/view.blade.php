@@ -33,16 +33,18 @@
                             </span>
                         </div>
                     </div>
+                    
                     <div class="row ms-3">
                         <div class="col-lg-10 col-12">
                             <div class="row mb-2">
+                                
                                 <div class="col-lg-2 col-md-3 col-xs-12">
 
                                     <span>
                                         Người ký :
                                     </span>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-xs-12 text-primary">
+                                <div class="col-lg-3 col-md-3 col-xs-12 text-primary">
                                     {{ $dispatche->signer }}
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xs-12">
@@ -50,7 +52,7 @@
                                         Ngày ký:
                                     </span>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-xs-12 text-primary">
+                                <div class="col-lg-3 col-md-3 col-xs-12 text-primary">
                                     {{ date('d/m/Y', strtotime($dispatche->sign_date)) }}
                                 </div>
                             </div>
@@ -62,7 +64,7 @@
                                         Nơi ban hành :
                                     </span>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-xs-12 text-primary">
+                                <div class="col-lg-3 col-md-3 col-xs-12 text-primary">
                                     {{ $dispatche->published_place }}
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xs-12">
@@ -70,7 +72,7 @@
                                         Ngày ban hành:
                                     </span>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-xs-12 text-primary">
+                                <div class="col-lg-3 col-md-3 col-xs-12 text-primary">
                                     {{ date('d/m/Y', strtotime($dispatche->issued_date)) }}
                                 </div>
                             </div>
@@ -81,7 +83,7 @@
                                         Ngày hiệu lực :
                                     </span>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-xs-12 text-primary">
+                                <div class="col-lg-3 col-md-3 col-xs-12 text-primary">
                                     {{ date('d/m/Y', strtotime($dispatche->effective_date)) }}
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xs-12">
@@ -89,7 +91,7 @@
                                         Ngày hết hiệu lực:
                                     </span>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-xs-12 text-primary">
+                                <div class="col-lg-3 col-md-3 col-xs-12 text-primary">
                                     {{ date('d/m/Y', strtotime($dispatche->expiration_date)) }}
                                 </div>
                             </div>
@@ -100,7 +102,7 @@
                                         Nơi lưu trữ :
                                     </span>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-xs-12 text-primary">
+                                <div class="col-lg-3 col-md-3 col-xs-12 text-primary">
                                     {{ $dispatche->storage_location }}
                                 </div>
                                 <div class="col-lg-2 col-md-3 col-xs-12">
@@ -108,8 +110,14 @@
                                         Người lưu trữ:
                                     </span>
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-xs-12 text-primary">
+                                <div class="col-lg-3 col-md-3 col-xs-12 text-primary">
                                     {{ $dispatche->archivist }}
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-12 col-md-2">Gửi đến:</div>
+                                <div class="col text-primary">
+                                    {{ $dispatche->receiver }}
                                 </div>
                             </div>
                         </div>
@@ -132,15 +140,19 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col col-lg-10 m-auto">
+                        <div class="col col-lg-12 m-auto">
                             @if (!empty($dispatche->file))
                                 @switch($dispatche->extension_file)
                                     @case('jpg')
                                     @case('png')
 
                                     @case('img')
-                                        <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $dispatche->file) }}"
+                                    <div class="row d-flex justify-content-center ">
+                                        <div class="col col-lg-6">
+                                            <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $dispatche->file) }}"
                                             alt="" srcset="">
+                                        </div>
+                                    </div>
                                     @break
 
                                     @case('doc')

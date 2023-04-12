@@ -14,6 +14,7 @@ use App\Models\Lecturer;
 use App\Models\Student;
 use App\Repositories\BasicResearchLecturer\BasicResearchLecturerRepository;
 use App\Repositories\Lecturer\LecturerRepository;
+use Illuminate\Support\Facades\File;
 
 class BasicResearchController extends Controller
 {
@@ -65,7 +66,7 @@ class BasicResearchController extends Controller
         $rules = [
             // 'code' => 'required',
             'tittle' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1000',
             // 'student_id' => 'required',
             'leader_id' => 'required|exists:App\Models\Lecturer,code',
             'year' => 'required',
@@ -141,7 +142,7 @@ class BasicResearchController extends Controller
         $rules = [
             'id' => 'required',
             'tittle' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1000',
             'leader_id' => 'required|exists:App\Models\Lecturer,code',
             'year' => 'required',
             'archivist' => 'required',
@@ -184,10 +185,16 @@ class BasicResearchController extends Controller
                 $file = $request->file('file');
                 $nameFile = date('YmdHi') . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('uploads\storage'), $nameFile);
+                // if (!empty($obj->file)) {
+
+                //     $link = '\\' . $obj->file;
+                //     unlink(public_path('uploads\storage' . $link . ''));
+                // }
                 if (!empty($obj->file)) {
 
-                    $link = '\\' . $obj->file;
-                    unlink(public_path('uploads\storage' . $link . ''));
+                    if (File::exists(public_path('uploads/storage/'. $obj->file),)) {
+                        File::delete(public_path('uploads/storage/'. $obj->file),);
+                    }
                 }
                 $obj->file = $nameFile;
             }
@@ -221,6 +228,12 @@ class BasicResearchController extends Controller
             $basicResearch = $this->model->find($request->get('id'));
             if ($basicResearch) {
                 (new BasicResearchLecturerRepository())->deleteByIdBasicResearch($request->get('id'));
+                if (!empty($basicResearch->file)) {
+
+                    if (File::exists(public_path('uploads/storage/'. $basicResearch->file),)) {
+                        File::delete(public_path('uploads/storage/'. $basicResearch->file),);
+                    }
+                }
                 $basicResearch->delete();
                 return $this->responseSuccess('', 'Xoá thành công!');
             }

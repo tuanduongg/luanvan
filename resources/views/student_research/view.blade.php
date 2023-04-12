@@ -108,7 +108,7 @@
                                     Tóm tắt nội dung :
                                 </span>
                                 <span class="text-primary">
-                                    {{ $studentresearch->content }}
+                                    {!!$studentresearch->content !!}
                                 </span>
                                 
                             </p>
@@ -116,15 +116,21 @@
                     </div>
                     <hr>
                     <div class="row mt-3">
-                        <div class="col col-lg-6 m-auto">
+                        <div class="col col-lg-12 m-auto">
                             @if (!empty($studentresearch->file))
                                 @switch($studentresearch->extension_file)
                                     @case('jpg')
                                     @case('png')
 
                                     @case('img')
-                                        <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $studentresearch->file) }}"
+                                    <div class="row d-flex justify-content-center ">
+                                        <div class="col col-lg-6 ">
+
+                                            <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $studentresearch->file) }}"
                                             alt="" srcset="">
+                                        </div>
+                                    </div>
+                                        
                                     @break
 
                                     @case('doc')

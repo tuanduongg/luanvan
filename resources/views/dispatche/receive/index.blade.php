@@ -584,7 +584,7 @@
                 $('textarea[name=tittle]').val('');
                 $('textarea[name=content]').val('');
                 $('input[name=code]').val('');
-                $('input[name=type_id]').val('');
+                $('select[name=type_id]').val('');
                 $('input[name=signer]').val('');
                 $('input[name=sign_date]').val(getCurrentDate());
                 $('input[name=published_place]').val('');
@@ -607,7 +607,7 @@
                 $('textarea[name=tittle]').removeClass(className);
                 $('textarea[name=content]').removeClass(className);
                 $('input[name=code]').removeClass(className);
-                $('input[name=type_id]').removeClass(className);
+                $('select[name=type_id]').removeClass(className);
                 $('input[name=signer]').removeClass(className);
                 $('input[name=sign_date]').removeClass(className);
                 $('input[name=published_place]').removeClass(className);
@@ -644,7 +644,7 @@
                         $('textarea[name=tittle]').val(response.data.tittle);
                         $('textarea[name=content]').val(response.data.content);
                         $('input[name=storage_location]').val(response.data.storage_location);
-                        $('input[name=type_id]').val(response.data.type_id);
+                        $('select[name=type_id]').val(response.data.type_id);
                         $('input[name=signer]').val(response.data.signer);
                         $('input[name=sign_date]').val(response.data.sign_date);
                         $('input[name=published_place]').val(response.data.published_place);

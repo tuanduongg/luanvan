@@ -215,7 +215,7 @@
                             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                 <h6 class="mb-0">Sinh viên</h6>
                                 <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0 text-primary fw-bold">{{ $totalEachTable[13]->total_record }}</h6>
+                                    <h6 class="mb-0 text-primary fw-bold">{{ $totalEachTable[12]->total_record }}</h6>
                                     <span class="text-muted">(Sinh viên)</span>
                                 </div>
                             </div>
@@ -252,7 +252,7 @@
                             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                 <h6 class="mb-0">Luận văn sinh viên</h6>
                                 <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0 text-primary fw-bold">{{ $totalEachTable[16]->total_record }}</h6>
+                                    <h6 class="mb-0 text-primary fw-bold">{{ $totalEachTable[15]->total_record }}</h6>
                                     <span class="text-muted">(Luận Văn)</span>
                                 </div>
                             </div>
@@ -276,7 +276,7 @@
                             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                 <h6 class="mb-0">Nghiên cứu khoa học sinh viên</h6>
                                 <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0 text-primary fw-bold">{{ $totalEachTable[14]->total_record }}</h6>
+                                    <h6 class="mb-0 text-primary fw-bold">{{ $totalEachTable[13]->total_record }}</h6>
                                     <span class="text-muted">(Đề tài)</span>
                                 </div>
                             </div>
@@ -288,7 +288,7 @@
                             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                 <h6 class="mb-0">Ý tưởng sáng tạo sinh viên</h6>
                                 <div class="user-progress d-flex align-items-center gap-1">
-                                    <h6 class="mb-0 text-primary fw-bold">{{ $totalEachTable[2]->total_record }}</h6>
+                                    <h6 class="mb-0 text-primary fw-bold">{{ $totalEachTable[3]->total_record }}</h6>
                                     <span class="text-muted">(Ý tưởng)</span>
                                 </div>
                             </div>

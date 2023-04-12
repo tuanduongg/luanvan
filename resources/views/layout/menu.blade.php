@@ -131,15 +131,17 @@
 
         <!-- Components -->
         <li class="menu-header small text-uppercase">
-            <span class="menu-header-text">Thiết Lập</span>
+            <span class="menu-header-text">Hệ thống</span>
         </li>
         <!-- Cards -->
+        @if ((int) Auth::user()->role < 3)
         <li class="menu-item">
-            <a href="#" class="menu-link text-white">
+            <a href="{{route('setting')}}" class="menu-link text-white">
                 <i class="menu-icon tf-icons bx bx-cog"></i>
                 <div data-i18n="Basic">Thiết lập</div>
             </a>
         </li>
+        @endif
         <li class="menu-item">
             <a href="{{ route('support') }}" class="menu-link text-white">
                 <i class="menu-icon tf-icons bx bx-support"></i>

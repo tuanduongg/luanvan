@@ -121,30 +121,25 @@
                                                 Thân gửi:{{ $lecturer->name ?? '' }}!</p>
                                             <p
                                                 style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">
-                                                Có một công văn từ {{ $dispatche->published_place }} gửi đến
+                                                Có một công văn từ {{ $dispatche->published_place ?? '' }} gửi đến
                                             </p>
                                             <p>
 
                                                 <span style="font-weight: bold;">
                                                     Tiêu đề:
                                                 </span>
-                                                {{ $dispatche->tittle }}
+                                                {{ $dispatche->tittle ?? '' }}
                                             </p>
                                             <p>
 
                                                 <span style="font-weight: bold;">
                                                     Nội dung:
                                                 </span>
-                                                {{ $dispatche->content }}
+                                                {{ $dispatche->content ?? '' }}
                                             </p>
-                                            {{-- <p
-                                            style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">
-                                            This is a really simple email template. Its sole purpose is to get the
-                                            recipient to click the button with no distractions.</p>
-                                            <p> --}}
                                             <p>Xem chi tiết tại đường dẫn dưới đây</p>
                                             <a style="color: blue;"
-                                                href="{{ route('dispatche.receive.view', [$dispatche->id, Str::slug($dispatche->tittle)]) }}">{{ route('dispatche.receive.view', [$dispatche->id, Str::slug($dispatche->tittle)]) }}</a>
+                                                href="{{ route('dispatche.receive.view', [$dispatche->id, Str::slug($dispatche->tittle ?? '')]) }}">{{ route('dispatche.receive.view', [$dispatche->id, Str::slug($dispatche->tittle ?? '')]) }}</a>
                                             </p>
                                             <p>------------------------------------------</p>
                                             <p style="">Trân trọng:</p>

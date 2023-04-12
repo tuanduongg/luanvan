@@ -124,15 +124,20 @@
                     </div>
                     <hr>
                     <div class="row mt-3">
-                        <div class="col col-lg-6 m-auto">
+                        <div class="col col-lg-12 m-auto">
                             @if (!empty($basicresearch->file))
                                 @switch($basicresearch->extension_file)
                                     @case('jpg')
                                     @case('png')
 
                                     @case('img')
-                                        <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $basicresearch->file) }}" alt=""
+                                    <div class="row d-flex justify-content-center ">
+                                        <div class="col col-lg-6 ">
+                                            <img class="w-100 h-100" src="{{ url('/uploads/storage/' . $basicresearch->file) }}" alt=""
                                             srcset="">
+                                        </div>
+                                    </div>
+                                        
                                     @break
 
                                     @case('doc')

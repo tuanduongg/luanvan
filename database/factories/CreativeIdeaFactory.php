@@ -16,10 +16,10 @@ class CreativeIdeaFactory extends Factory
     {
         $arrLecturerId = Lecturer::query()->pluck('id');
         return [
-            'tittle' => $this->faker->text($maxNbChars = 200) ,
-            'content' => $this->faker->text($maxNbChars = 200) ,
+            'tittle' => $this->faker->text($maxNbChars = 100) ,
+            'content' => $this->faker->text($maxNbChars = 500) ,
             'lecturer_id' => $this->faker->randomElement($arrLecturerId),
-            'school_year' => $this->faker->randomElement(['13','14','15','16']),
+            'school_year' => $this->faker->randomElement(['2021-2022','2022-2023','2018-2019','2019-2020','2020-2021','2022-2023']),
             'start_date' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
             'archivist' => $this->faker->randomElement(['Đường Tuấn Hải','Lê Thu Hiền','Nguyễn Văn Ánh']),
             'storage_location' => 'Thư Viện HA9LN',

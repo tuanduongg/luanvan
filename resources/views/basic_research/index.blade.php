@@ -142,8 +142,13 @@
                             </div>
                             <div class="col mb-0">
                                 <label for="input-result" class="form-label">Kết quả</label>
-                                <input type="text" id="input-result" name="result"
-                                    placeholder="Nhập kết quả đạt được" class="form-control" id="">
+                                    <select id="input-result" name="result" class="form-select">
+                                        <option value="Xuất Sắc">Xuất Sắc</option>
+                                        <option value="Tốt">Tốt</option>
+                                        <option value="Khá">Khá</option>
+                                        <option value="Trung Bình">Trung Bình</option>
+                                        <option value="Khác">Khác</option>
+                                    </select>
                                 <div class="invalid-feedback error-result">
 
                                 </div>
@@ -415,7 +420,7 @@
                 $('input[name=lecturer_id]').val('');
                 $('input[name=leader_id]').val('');
                 $('input[name=archivist]').val('');
-                $('input[name=result]').val('');
+                $('select[name=result]').val('');
                 $('input[name=storage_location]').val('');
                 resetClassInput('is-invalid');
 
@@ -432,7 +437,7 @@
                 $('input[name=student_id]').removeClass(className);
                 $('input[name=lecturer_id]').removeClass(className);
                 $('input[name=archivist]').removeClass(className);
-                $('input[name=result]').removeClass(className);
+                $('select[name=result]').removeClass(className);
                 $('input[name=leader_id]').removeClass(className);
                 $('input[name=storage_location]').removeClass(className);
             }
@@ -461,7 +466,7 @@
                         $('textarea[name=tittle]').val(response.data.tittle);
                         $('textarea[name=content]').val(response.data.content);
                         $('input[name=storage_location]').val(response.data.storage_location);
-                        $('input[name=result]').val(response.data.result);
+                        $('select[name=result]').val(response.data.result);
 
                         if (response.data.lecturers.length > 0) {
                             let result = '';
@@ -535,10 +540,12 @@
             //handle store dispatch type
             $(document).on('click', '#btn-store', function() {
                 resetClassInput('is-invalid');
+                let dataForm = new FormData(document.getElementById('form-data-theses'));
+                console.log(dataForm);
                 $.ajax({
                     type: "post",
                     url: "{{ route('api.basicresearch.store') }}",
-                    data: new FormData(document.getElementById('form-data-theses')),
+                    data: dataForm,
                     dataType: "json",
                     processData: false,
                     contentType: false,

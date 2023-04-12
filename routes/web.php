@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DispatcheController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SettingController;
 use App\Models\Lecturer;
 
 /*
@@ -75,7 +76,6 @@ Route::group(
         Route::get('/', [App\Http\Controllers\ThesesController::class, 'index'])->name('theses');
         Route::get('/{id}/{slug}', [App\Http\Controllers\ThesesController::class, 'show'])->name('theses.view')->where([
             'id' => '[0-9]+',
-            'slug' => '[a-z0-9-]+'
         ]);
     }
 );
@@ -142,6 +142,7 @@ Route::group(
         Route::post('/update', [ProfileController::class, 'update'])->name('api.profile.update');
     }
 );
-Route::view('/support','support.index')->name('support');
+Route::view('/support','support.index')->name('support')->middleware('auth');
+Route::get('/thiet-lap',[SettingController::class,'index'])->name('setting')->middleware(['auth','checkphokhoa']);
 
 

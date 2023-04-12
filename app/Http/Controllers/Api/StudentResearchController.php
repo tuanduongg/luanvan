@@ -15,6 +15,7 @@ use App\Repositories\Lecturer\LecturerRepository;
 use App\Repositories\Student\StudentRepository;
 use App\Repositories\StudentResearchStudent\StudentResearchStudentRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\File;
 
 class StudentResearchController extends Controller
 {
@@ -62,7 +63,7 @@ class StudentResearchController extends Controller
         $rules = [
             // 'code' => 'required',
             'tittle' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1000',
             // 'student_id' => 'required',
             'lecturer_id' => 'required',
             'year' => 'required',
@@ -126,7 +127,7 @@ class StudentResearchController extends Controller
         $rules = [
             'id' => 'required',
             'tittle' => 'required|string|max:200',
-            'content' => 'required|string|max:500',
+            'content' => 'required|string|max:1000',
             // 'student_id' => 'required',
             'lecturer_id' => 'required',
             'year' => 'required',
@@ -163,15 +164,22 @@ class StudentResearchController extends Controller
             $obj->year = $request->get('year');
             $obj->archivist = $request->get('archivist');
             $obj->storage_location = $request->get('storage_location');
+            $obj->result = $request->get('result');
             if ($request->hasFile('file')) {
 
                 $file = $request->file('file');
                 $nameFile = date('YmdHi') . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('uploads\storage'), $nameFile);
-                if(!empty($obj->file)) {
+                // if(!empty($obj->file)) {
 
-                    $link = '\\' . $obj->file;
-                    unlink(public_path('uploads\storage' . $link . ''));
+                //     $link = '\\' . $obj->file;
+                //     unlink(public_path('uploads\storage' . $link . ''));
+                // }
+                if (!empty($obj->file)) {
+
+                    if (File::exists(public_path('uploads/storage/'. $obj->file),)) {
+                        File::delete(public_path('uploads/storage/'. $obj->file),);
+                    }
                 }
                 // Storage::delete($obj->file); //xoa file
                 //http://luanvan-app.test/storage/uploads/kTKMZUu0r2sRNwCAMN93iUUmfnnfpOqtfHAR2i8f.png
@@ -193,6 +201,12 @@ class StudentResearchController extends Controller
     {
         $student = $this->model->findOrFail($request->get('id'));
         if ($student) {
+            if (!empty($student->file)) {
+
+                if (File::exists(public_path('uploads/storage/'. $student->file),)) {
+                    File::delete(public_path('uploads/storage/'. $student->file),);
+                }
+            }
             (new StudentResearchStudentRepository())->deleteByIdStudenResearch($request->get('id'));
             $student->delete();
         }

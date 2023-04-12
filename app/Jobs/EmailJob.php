@@ -38,9 +38,13 @@ class EmailJob implements ShouldQueue
         $lecturers = (new LecturerRepository())->getNameAndEmail();
 
         foreach ($lecturers as $key => $lecturer) {
-            Mail::to($lecturer->email)->send(new LecturerEmail($lecturer,$this->dispatche));
+            Mail::to($lecturer->email)->send(new LecturerEmail($lecturer, $this->dispatche));
         }
-        
+
         dd('Send email successfully.');
+    }
+    public function failed()
+    {
+        dd('Send email failed.');
     }
 }

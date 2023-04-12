@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\DispatchType;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use Buihuycuong\Vnfaker\VNFaker;
 class DispatcheFactory extends Factory
 {
     /**
@@ -17,14 +17,14 @@ class DispatcheFactory extends Factory
         $arrTypeID = DispatchType::query()->pluck('id');
         return [
             'code' => substr($this->faker->unixTime(),0,8),
-            'tittle' => $this->faker->text($maxNbChars = 200) ,
-            'content' => $this->faker->text($maxNbChars = 200) ,
+            'tittle' => $this->faker->text($maxNbChars = 100) ,
+            'content' => $this->faker->text($maxNbChars = 500) ,
             'type_id' => $this->faker->randomElement($arrTypeID),
-            'receiver' => $this->faker->firstName() . ' ' . $this->faker->lastName(),
-            'signer' => $this->faker->firstName() . ' ' . $this->faker->lastName(),
+            'receiver' =>VNFaker::fullname($word = 3),
+            'signer' =>VNFaker::fullname($word = 3),
             'sign_date' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
             'issued_date' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
-            'published_place' => $this->faker->randomElement(['Trường ĐHKTKTCN','Bộ Giáo Dục','Thành Phố Hà Nội']), //nơi ban hành
+            'published_place' => $this->faker->randomElement(['Trường ĐHKTKTCN','Bộ Giáo Dục','Thành Phố Hà Nội','Sở Giáo Dục và Đào Tạo']), //nơi ban hành
             'effective_date' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
             'expiration_date' => $this->faker->date($format = 'Y-m-d', $max = 'now') ,
             'archivist' => $this->faker->randomElement(['Đường Tuấn Hải','Lê Thu Hiền','Nguyễn Văn Ánh']),
